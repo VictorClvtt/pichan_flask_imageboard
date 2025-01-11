@@ -39,7 +39,7 @@ class ThreadList(MethodView):
         return new_thread, 201
 
 @blp.route('/thread/<string:id>')
-class Board(MethodView):
+class Thread(MethodView):
 
     @blp.response(200, ThreadSchema)
     def get(self, id):

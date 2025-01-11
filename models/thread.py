@@ -13,3 +13,5 @@ class ThreadModel(db.Model):
     board_id = db.Column(db.String(4), db.ForeignKey('board.id'), unique=False, nullable=False)
 
     board = db.relationship('BoardModel', back_populates='threads')
+
+    replies = db.relationship('ReplyModel', back_populates='thread', lazy='dynamic', cascade='all, delete')

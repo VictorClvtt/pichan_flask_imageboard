@@ -8,6 +8,7 @@ from db import db
 # Importing routes, classes and methods from ./resources
 from resources.board import blp as BoardBlueprint
 from resources.thread import blp as ThreadBlueprint
+from resources.reply import blp as ReplyBlueprint
 
 def create_app(db_url=None):
 
@@ -35,5 +36,6 @@ def create_app(db_url=None):
     # Registering the routes, classes and methods defined in the ./resources folder
     api.register_blueprint(BoardBlueprint)
     api.register_blueprint(ThreadBlueprint)
+    api.register_blueprint(ReplyBlueprint)
 
     return app
