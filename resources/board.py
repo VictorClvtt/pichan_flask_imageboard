@@ -1,4 +1,5 @@
 from flask.views import MethodView
+from flask import render_template
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
@@ -35,10 +36,10 @@ class BoardList(MethodView):
 @blp.route('/board/<string:id>')
 class Board(MethodView):
 
-    @blp.response(200, BoardSchema)
     def get(self, id):
         board = BoardModel.query.get_or_404(id)
-        return board
+        # Pass the board object to the template
+        return render_template('board.html', board=board)
 
     def delete(self, id):
         board = BoardModel.query.get_or_404(id)

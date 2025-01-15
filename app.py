@@ -12,6 +12,8 @@ from resources.board import blp as BoardBlueprint
 from resources.thread import blp as ThreadBlueprint
 from resources.reply import blp as ReplyBlueprint
 
+from resources.jinja2.index import blp as IndexBlueprint
+
 def create_app(db_url=None):
 
     app = Flask(__name__)
@@ -41,5 +43,7 @@ def create_app(db_url=None):
     api.register_blueprint(BoardBlueprint)
     api.register_blueprint(ThreadBlueprint)
     api.register_blueprint(ReplyBlueprint)
+
+    api.register_blueprint(IndexBlueprint)
 
     return app
