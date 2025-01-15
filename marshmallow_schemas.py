@@ -21,8 +21,14 @@ class PlainReplySchema(Schema):
     date = fields.Date(required=True)
     time = fields.Time(required=True)
 
+class PlainBoardGroupSchema(Schema):
+    id = fields.Int(dump_only=True)
+    name = fields.String(required=True)
+
 class BoardSchema(PlainBoardSchema):
     threads = fields.List(fields.Nested(PlainThreadSchema()), dump_only=True)
+    board_group_id = fields.Integer(required=True, load_only=True)
+    board_group = fields.Nested(PlainBoardGroupSchema(), dump_only=True)
 
 class ThreadSchema(PlainThreadSchema):
     board_id = fields.String(required=True, load_only=True)
@@ -32,3 +38,6 @@ class ThreadSchema(PlainThreadSchema):
 class ReplySchema(PlainReplySchema):
     thread_id = fields.String(required=True, load_only=True)
     thread = fields.Nested(PlainThreadSchema(), dump_only=True)
+
+class BoardGroupSchema(PlainBoardGroupSchema):
+    boards = fields.List(fields.Nested(PlainBoardSchema()), dump_only=True)

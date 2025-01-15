@@ -8,3 +8,6 @@ class BoardModel(db.Model):
     description = db.Column(db.String(255), unique=False, nullable=False)
 
     threads = db.relationship('ThreadModel', back_populates='board', lazy='dynamic', cascade='all, delete')
+
+    board_group_id = db.Column(db.Integer, db.ForeignKey('board_group.id'), unique=False, nullable=False)
+    board_group = db.relationship('BoardGroupModel', back_populates='boards')

@@ -2,10 +2,12 @@ import os
 
 from flask import Flask
 from flask_smorest import Api
+from flask_cors import CORS
 
 from db import db
 
 # Importing routes, classes and methods from ./resources
+from resources.board_group import blp as BoardGroupBlueprint
 from resources.board import blp as BoardBlueprint
 from resources.thread import blp as ThreadBlueprint
 from resources.reply import blp as ReplyBlueprint
@@ -13,6 +15,7 @@ from resources.reply import blp as ReplyBlueprint
 def create_app(db_url=None):
 
     app = Flask(__name__)
+    CORS(app)
 
     app.config['PROPAGATE_EXCEPTIONS'] = True
     app.config['API_TITLE'] = 'PiChan REST API'
@@ -34,6 +37,7 @@ def create_app(db_url=None):
         db.create_all()
 
     # Registering the routes, classes and methods defined in the ./resources folder
+    api.register_blueprint(BoardGroupBlueprint)
     api.register_blueprint(BoardBlueprint)
     api.register_blueprint(ThreadBlueprint)
     api.register_blueprint(ReplyBlueprint)
