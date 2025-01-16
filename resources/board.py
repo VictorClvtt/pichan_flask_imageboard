@@ -38,8 +38,9 @@ class Board(MethodView):
 
     def get(self, id):
         board = BoardModel.query.get_or_404(id)
+        boards = BoardModel.query.all()
         # Pass the board object to the template
-        return render_template('board.html', board=board)
+        return render_template('board.html', board=board, boards=boards)
 
     def delete(self, id):
         board = BoardModel.query.get_or_404(id)
