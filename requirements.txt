@@ -5,3 +5,4 @@ python-dotenv
 sqlalchemy
 flask-sqlalchemy
 flask-jwt-extended
+sqlalchemy_imageattach

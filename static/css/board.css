@@ -1,0 +1,77 @@
+.chan-button{
+    background-color: #00251391;
+    border-width: 1px;
+    border-color: #00ff80;
+    border-style: solid;
+    border-radius: 5px;
+    color: #eefff6;
+    transition: all 0.3s ease;
+}
+
+.chan-button:hover{
+    background-color: #00623171;
+    border-width: 1px;
+    border-color: #00ff80;
+    border-style: solid;
+    border-radius: 0px;
+    color: #eefff6;
+    letter-spacing: 2px;
+}
+
+.chan-button:active{
+    background-color: #00623171 !important;
+    border-width: 1px;
+    border-color: #00ff80 !important;
+    border-style: solid;
+    border-radius: 0px;
+    color: #eefff6;
+    letter-spacing: 2px;
+}
+
+.chan-button-close{
+    background-color: #222a2791;
+    border-width: 1px;
+    border-color: #bdffde;
+    border-style: solid;
+    border-radius: 5px;
+    color: #eefff6;
+    transition: all 0.3s ease;
+}
+
+.chan-button-close:hover{
+    background-color: #37433f91;
+    border-width: 1px;
+    border-color: #bdffde;
+    border-style: solid;
+    border-radius: 0px;
+    color: #eefff6;
+    transition: all 0.3s ease;
+    letter-spacing: 2px;
+}
+
+.chan-thread-info{
+    color: rgb(255, 255, 255);
+    background-color: #00ffd910;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #006c5c;
+    border-radius: 3px;
+    height: fit-content;
+    padding: 10px 20px;
+}
+
+.chan-thread-modal{
+    border-style: solid;
+    border-width: 1px;
+    border-color: #5e5e5e;
+    border-radius: 3px;
+    background-color: rgb(24 24 27);
+    color: white;
+}
+
+.chan-thread-title{
+    color: rgba(255, 255, 255, 0.800);
+    background-color: rgba(0, 255, 217, 0.075);
+    padding: 3px 5px;
+    font-size: 25px;
+}
