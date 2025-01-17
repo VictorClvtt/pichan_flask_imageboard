@@ -72,6 +72,15 @@
 .chan-thread-title{
     color: rgba(255, 255, 255, 0.800);
     background-color: rgba(0, 255, 217, 0.075);
-    padding: 3px 5px;
+    padding: 0px 5px;
+    font-size: 25px;
+    border-left: #00816d 3px solid;
+    border-radius: 2px;
+}
+
+.chan-thread-title:hover{
+    color: rgba(255, 255, 255, 0.800);
+    background-color: rgba(0, 255, 217, 0.125);
+    padding: 0px 5px;
     font-size: 25px;
 }

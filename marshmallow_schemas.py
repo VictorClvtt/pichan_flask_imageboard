@@ -33,11 +33,15 @@ class BoardSchema(PlainBoardSchema):
 class ThreadSchema(PlainThreadSchema):
     board_id = fields.String(required=True, load_only=True)
     board = fields.Nested(PlainBoardSchema(), dump_only=True)
-    replies = fields.List(fields.Nested(PlainReplySchema()), dump_only=True)
+    replies = fields.List(fields.Nested('ReplySchema'), dump_only=True)
 
 class ReplySchema(PlainReplySchema):
     thread_id = fields.String(required=True, load_only=True)
     thread = fields.Nested(PlainThreadSchema(), dump_only=True)
+
+    reply_id = fields.String(required=True, load_only=True)
+    reply = fields.Nested(PlainReplySchema(), dump_only=True)
+    reply_replies = fields.List(fields.Nested("ReplySchema"), dump_only=True)
 
 class BoardGroupSchema(PlainBoardGroupSchema):
     boards = fields.List(fields.Nested(PlainBoardSchema()), dump_only=True)

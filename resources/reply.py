@@ -24,8 +24,9 @@ class ReplyList(MethodView):
     def post(self, req_data):
 
         thread = ThreadModel.query.get(req_data['thread_id'])
-        if not thread:
-            abort(400, message='Invalid thread ID.')
+        reply = ReplyModel.query.get(req_data['reply_id'])
+        if not thread and not reply:
+            abort(400, message='Invalid thread or reply ID.')
 
         new_reply = ReplyModel(**req_data)
 
@@ -36,7 +37,7 @@ class ReplyList(MethodView):
         except SQLAlchemyError:
             abort(500, message='An error occurred while inserting the data.')  
 
-        return new_thread, 201
+        return new_reply, 201
 
 @blp.route('/reply/<string:id>')
 class Reply(MethodView):
