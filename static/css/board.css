@@ -70,17 +70,24 @@
 }
 
 .chan-thread-title{
-    color: rgba(255, 255, 255, 0.800);
-    background-color: rgba(0, 255, 217, 0.075);
+    color: rgb(255, 193, 203);
+    background-color: rgba(10, 10, 10, 0.3);
     padding: 0px 5px;
-    font-size: 25px;
-    border-left: #00816d 3px solid;
-    border-radius: 2px;
+    font-size: 1.5rem;
+    border-radius: 3px;
+    border: 1px rgba(0, 0, 0, 0.5) solid;
 }
 
 .chan-thread-title:hover{
     color: rgba(255, 255, 255, 0.800);
     background-color: rgba(0, 255, 217, 0.125);
     padding: 0px 5px;
-    font-size: 25px;
+    font-size: 1.5rem;
+}
+
+.chan-text-content{
+    font-size: 0.8rem;
+    min-height: 50px;
+    margin: 0;
+    padding: 0 0 0 2px;
 }
