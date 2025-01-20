@@ -20,7 +20,7 @@ const getFingerprint = async () => {
 };
 
 
-async function sendPostRequest(){
+async function postThread() {
     try {
         const token = await getFingerprint();
         console.log('User Token:', token);
@@ -65,7 +65,7 @@ async function sendPostRequest(){
 
         console.log('Post data:', postData);
 
-        const response = await fetch('http://127.0.0.1:5000/thread', {
+        const response = await fetch(`http://${window.location.hostname}:${window.location.port}/thread`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -77,12 +77,38 @@ async function sendPostRequest(){
             throw new Error(`Server error: ${response.status}`);
         }
 
-        
-        
+        // Assuming the server responds with the thread ID of the newly created thread
+        const responseData = await response.json();
+        console.log('Response from server:', responseData);
+
+        // Set the hash to the new thread ID
+        const newThreadId = responseData.id; // Replace with the actual key from the server response
+        window.location.hash = `t${newThreadId}`;
+
+        // Reload the page and highlight the post after load
+        location.reload();
+
     } catch (error) {
         console.error('Error sending POST request:', error);
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const hash = window.location.hash;
+    if (hash) {
+        const elementId = hash.replace('#', ''); // Remove the hash symbol
+        const element = document.getElementById(elementId);
+        if (element) {
+            // Smoothly scroll to the element
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            window.location.hash = null
+            // Highlight the post
+            highlightPost({ id: elementId });
+        } else {
+            console.log('Element not found for hash:', hash);
+        }
+    }
+});
 
 function replyModal(id){
     document.getElementById('thread_or_reply_id').value = id
@@ -144,20 +170,27 @@ async function postReply(){
 
         console.log('Reply data:', replyData);
 
-        const response = await fetch('http://127.0.0.1:5000/reply', {
+        const response = await fetch(`http://${window.location.hostname}:${window.location.port}/reply`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(replyData),
-        });
+        })
 
         if (!response.ok) {
             throw new Error(`Server error: ${response.status}`);
         }
 
         const responseData = await response.json();
-        console.log('Response from server:', responseData);
+
+        const newReplyId = responseData.id; // Replace with the actual key from the server response
+        window.location.hash = `r${newReplyId}`;
+
+        document.getElementById('reply_content').value = ''
+
+        location.reload()
+
     } catch (error) {
         console.error('Error sending POST request:', error);
     }

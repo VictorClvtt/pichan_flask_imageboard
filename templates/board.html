@@ -11,7 +11,7 @@
 </head>
 <body class="chan-bg vh-100 d-flex flex-column align-items-center">
     <nav class="chan-nav d-flex w-100 border-bottom py-1" style="height: fit-content;">
-        <ul class="d-flex gap-2 w-100 px-1 list-unstyled m-0" style="height: fit-content; width: max-content;">
+        <ul class="d-flex gap-2 w-100 px-2 list-unstyled m-0" style="height: fit-content; width: max-content;">
             {% for board in boards %}
                 <a href="{{ url_for('Boards.Board', id=board.id) }}" title="{{ board.name }}" style="font-size: 0.8rem; font-family: 'Courier New'; height: fit-content;">/{{ board.id }}</a>
             {% endfor %}
@@ -46,7 +46,7 @@
                     </div>
                     <div class="modal-footer" style="border-color: #5e5e5e;">
                     <button type="button" class="btn btn-secondary chan-button-close w-100" style="max-width: 80px;" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary chan-button w-100" style="max-width: 150px;" onclick="sendPostRequest()">Post thread</button>
+                    <button type="button" class="btn btn-primary chan-button w-100" style="max-width: 150px;" onclick="postThread()">Post thread</button>
                     </div>
                 </div>
             </div>
@@ -78,7 +78,7 @@
         <hr class="border-white w-100 my-0" style="margin-bottom: 1rem !important;">
   
         <!-- Rendering Threads and Replies -->
-        <section class="d-flex flex-column align-items-start w-100 h-100 px-2 gap-3" id="threads">
+        <section class="d-flex flex-column align-items-start w-100 h-100 px-2 gap-3" style="padding-bottom: 1rem; height: fit-content;" id="threads">
             
             {% macro count_replies(replies, c=namespace(value=0)) %}
                 
@@ -93,11 +93,10 @@
 
             {% endmacro %}
 
-            {% macro render_replies(replies, level, thread, count=namespace(value=0)) %}
+            {% macro render_replies(replies, level, thread, count=namespace(value=0), rendered=namespace(flag=False)) %}
 
-                
                 {% for reply in replies %}
-    
+                
                     {% set count.value = count.value + 1 %}
 
                     {% if count.value <= 5 %}
@@ -105,6 +104,9 @@
                         <div id="r{{ reply.id }}" class="chan-thread-info d-flex flex-column" style="min-width: 300px; margin-left: {{ 20 * level }}px; width: fit-content;">
                             <div class="d-flex align-items-center gap-1" style="height: fit-content !important;">
                                 <p class="m-0" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">User: {{ reply.user_token }}</p>
+                                {% if reply.user_token == thread.user_token %}
+                                    <p class="text-info m-0" style="font-size: 0.7rem;">(OP)</p>
+                                {% endif %}
                                 <hr class="m-0 h-100" style="width: 1px; border-left: solid 1px;">
                                 <p class="m-0" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">Reply No.{{ reply.id }}</p>
                                 <hr class="m-0 h-100" style="width: 1px; border-left: solid 1px;">
@@ -147,23 +149,21 @@
                         <!-- Render nested replies recursively with updated level -->
                         {% if reply.reply_replies %}
                             
-                            {{ render_replies(reply.reply_replies, level + 1, thread, count) }}
+                            {{ render_replies(reply.reply_replies, level + 1, thread, count, rendered) }}
                             
                         {% endif %}
                     {% endif %}
                     
-                {% if count.value == 5 %}
-                    <a href="{{ url_for('Threads.Thread', id=thread.id) }}" style="margin-left: {{ 20 * level }}px;">See all {{ count_replies(thread.replies) }} replies</a>  
-                {% endif %}      
-                     
-                    
+                    {% if count.value > 5 and not rendered.flag %}
+                        {% set rendered.flag = True %}
+                        <a href="{{ url_for('Threads.Thread', id=thread.id) }}" style="margin-left: {{ 20 * level }}px;">See all {{ count_replies(thread.replies) }} replies</a>  
+                    {% endif %}      
+
                 {% endfor %}
-                 
+
             {% endmacro %}
 
-                
 
-            <!-- Render main thread and replies -->
             {% for thread in board.threads %}
                 <div class="d-flex flex-column gap-1">
                     <!-- Thread -->

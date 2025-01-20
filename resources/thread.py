@@ -1,4 +1,5 @@
 from flask.views import MethodView
+from flask import render_template
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
@@ -41,10 +42,11 @@ class ThreadList(MethodView):
 @blp.route('/thread/<string:id>')
 class Thread(MethodView):
 
-    @blp.response(200, ThreadSchema)
     def get(self, id):
         thread = ThreadModel.query.get_or_404(id)
-        return thread
+        boards = BoardModel.query.all()
+        
+        return render_template('thread.html', thread=thread, boards=boards)
 
     def delete(self, id):
         thread = ThreadModel.query.get_or_404(id)

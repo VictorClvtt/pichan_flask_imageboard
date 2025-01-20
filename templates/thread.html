@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/board.css') }}">
+    <title>πchan - /{{ thread.board.id }}</title>
+</head>
+<body class="chan-bg vh-100 d-flex flex-column align-items-center">
+    <nav class="chan-nav d-flex w-100 border-bottom py-1" style="height: fit-content;">
+        <ul class="d-flex gap-2 w-100 px-2 list-unstyled m-0" style="height: fit-content; width: max-content;">
+            {% for board in boards %}
+                <a href="{{ url_for('Boards.Board', id=board.id) }}" title="{{ board.name }}" style="font-size: 0.8rem; font-family: 'Courier New'; height: fit-content;">/{{ board.id }}</a>
+            {% endfor %}
+        </ul>
+        <a href="{{ url_for('Index.home') }}" class="px-2" style="font-size: 0.8rem; font-family: 'Courier New'; height: fit-content;">Home</a>
+    </nav>
+    <main class="d-flex w-100 h-100 flex-column align-items-center">
+        <div class="chan-title d-flex border-bottom border-black fw-bold align-items-center align-content-center justify-content-start gap-3 w-100 px-3 bg-dark" style="background: linear-gradient(to right, #1827209c, transparent); margin-bottom: 1rem;">
+            <p class="text-success m-0">/{{ thread.board.id }}</p>
+            <p class="m-0" style="height: fit-content; font-size: 2.5rem;">-</p>
+            <p class="m-0" style="height: fit-content; font-size: 2.5rem;">{{ thread.board.name }}: </p>
+            <p class="m-0 px-1 text-white fw-light fst-italic font-monospace" style="height: fit-content; font-size: 1.2rem; background-color: rgba(0, 0, 0, 0.2); margin-top: 0.5rem !important;">Thread No.{{ thread.id }}</p>
+        </div>
+
+        <!-- New reply modal -->
+        <div class="modal fade" id="newReply" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" data-bs-theme="dark">
+                <div class="modal-content chan-thread-modal">
+                    <div class="modal-header" style="border-color: #5e5e5e;">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Reply data:</h1>
+                    <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form class="d-flex flex-column gap-2" action="" method="post">
+                            <textarea class="w-100" placeholder="Content" id="reply_content"></textarea>
+                            <input type="file" name="" accept=".jpg,.png" id="" >
+
+                            <input type="hidden" id="thread_or_reply_id" value="">
+                        </form>
+                    </div>
+                    <div class="modal-footer" style="border-color: #5e5e5e;">
+                    <button type="button" class="btn btn-secondary chan-button-close w-100" style="max-width: 80px;" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary chan-button w-100" style="max-width: 150px;" onclick="postReply()">Post reply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+  
+        <hr class="border-white w-100 my-0">
+            
+            <div class="d-flex w-100 px-2 py-1 align-items-start">
+                <a href="{{ url_for('Boards.Board', id=thread.board.id) }}" title="{{ thread.board.name }}" style="font-size: 0.8rem; font-family: 'Courier New'; height: fit-content;">Back to /{{ thread.board.id }}</a>
+            </div>
+
+        <hr class="border-white w-100 my-0" style="margin-bottom: 1rem !important;">
+  
+        <!-- Rendering Threads and Replies -->
+        <section class="d-flex flex-column align-items-start w-100 px-2 gap-3" style="padding-bottom: 1rem; height: fit-content;" id="threads">
+
+            {% macro render_replies(replies, level, thread) %}
+
+                {% for reply in replies %}
+                        
+                    <div id="r{{ reply.id }}" class="chan-thread-info d-flex flex-column" style="min-width: 300px; margin-left: {{ 20 * level }}px; width: fit-content;">
+                        <div class="d-flex align-items-center gap-1" style="height: fit-content !important;">
+                            <p class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">User: {{ reply.user_token }}</p>
+                            {% if reply.user_token == thread.user_token %}
+                                <p class="text-info m-0" style="font-size: 0.7rem;">(OP)</p>
+                            {% endif %}
+                            <hr class="m-0 h-100" style="width: 1px; border-left: solid 1px;">
+                            <p class="m-0" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">Reply No.{{ reply.id }}</p>
+                            <hr class="m-0 h-100" style="width: 1px; border-left: solid 1px;">
+                            <a
+                                onclick="highlightPost({{ 'r' ~ (reply.reply.id | string) if reply.reply else 't' ~ (reply.thread.id | string) }})"
+                                href="#{{ 'r' ~ (reply.reply.id | string) if reply.reply else 't' ~ (reply.thread.id | string) }}"
+                                class="m-0" style="font-size: 11px; color: rgba(0, 255, 166, 0.7);">
+                                Replying to: {{ 'r-' ~ (reply.reply.id | string) if reply.reply else 't-' ~ (reply.thread.id | string)}}
+                            </a>
+                        </div>
+
+                        <p style="font-size: 13px; color: rgba(255, 255, 255, 0.900); min-height: 35px;">{{ reply.content }}</p>
+
+                        <div class="d-flex justify-content-between">
+                            <div class="d-flex gap-1">
+                                <p class="m-0" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">
+                                    {{ '%02d' | format(reply.date.day) }}/{{ '%02d' | format(reply.date.month) }}/{{ reply.date.year }}
+                                </p>
+                                <hr class="m-0 h-100" style="width: 1px; border-left: solid 1px;">
+                                <p class="m-0" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">{{ reply.time }}</p>
+                                <p class="m-0" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">UTC</p>
+                            </div>
+
+                            <div class="d-flex justify-content-center gap-1">
+                                <button class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                    <i class="fa-solid fa-caret-up px-1" style="font-size: 0.9rem; padding-top: 0.15rem; background-color: rgba(0, 153, 255, 0.2); border-radius: 3px; height: fit-content;"></i>
+                                </button>
+                                <button class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                    <i class="fa-solid fa-caret-down px-1" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
+                                </button>
+                                <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('r{{ reply.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
+                                    <i style="font-size: 0.7rem;" class="fa-solid fa-reply"></i>
+                                    <p style="font-size: 0.7rem;" class="m-0">Reply</p>   
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <!-- Render nested replies recursively with updated level -->
+                    {% if reply.reply_replies %}
+                        
+                        {{ render_replies(reply.reply_replies, level + 1, thread) }}
+                        
+                    {% endif %}
+                      
+
+                {% endfor %}
+
+            {% endmacro %}
+
+
+            
+            <div class="d-flex flex-column gap-1">
+                <!-- Thread -->
+                <div id="t{{ thread.id }}" class="chan-thread-info border-info-subtle" style="min-width: 300px; width: fit-content;">
+                    <div class="d-flex gap-2">
+                        <p class="chan-thread-title m-0 text-decoration-none fst-italic" style="font-weight: 500;">{{ thread.title }}</p>
+                        <div class="d-flex flex-column justify-content-around">
+                            <p class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">User: {{ thread.user_token }}</p>
+                            <p class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">Thread No.{{ thread.id }}</p>      
+                        </div>
+                    </div>
+
+                    <p class="chan-text-content">{{ thread.content }}</p>
+
+                    <div class="d-flex justify-content-between">
+                        <div class="d-flex gap-1">
+                            <p class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">
+                                {{ '%02d' | format(thread.date.day) }}/{{ '%02d' | format(thread.date.month) }}/{{ thread.date.year }}
+                            </p>
+                            <hr class="m-0 h-100" style="width: 1px; border-left: solid 1px;">
+                            <p class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">{{ thread.time }}</p>
+                            <p class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">UTC</p>    
+                        </div>
+                        <div class="d-flex justify-content-center gap-1">
+                            <button class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                <i class="fa-solid fa-caret-up  px-1" style="font-size: 0.9rem; padding-top: 0.15rem; background-color: rgba(0, 153, 255, 0.2); border-radius: 3px; height: fit-content;"></i>
+                            </button>
+                            <button class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                            <i class="fa-solid fa-caret-down px-1" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
+                            </button>
+                            <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('t{{ thread.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
+                                <i style="font-size: 0.7rem;" class="fa-solid fa-reply"></i>
+                                <p style="font-size: 0.7rem;" class="m-0">Reply</p>   
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Render the replies for the thread, starting with level 2 for nesting -->
+                {{ render_replies(thread.replies, 2, thread) }}
+            </div>
+            
+
+
+        </section>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/board.js') }}"></script>
+</body>
+</html>
