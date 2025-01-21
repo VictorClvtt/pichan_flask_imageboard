@@ -28,7 +28,8 @@ class PlainBoardGroupSchema(Schema):
 class PlainImageSchema(Schema):
     id = fields.Int(dump_only=True)
     name = fields.String(required=True)
-    mimetype = fields.String(required=True)
+    measures = fields.String(required=True)
+    size = fields.String(required=True)
     image = fields.Raw(required=True, type="file") 
 
 class ImageSchema(PlainImageSchema):

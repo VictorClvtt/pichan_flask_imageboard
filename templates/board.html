@@ -19,10 +19,13 @@
         <a href="{{ url_for('Index.home') }}" class="px-2" style="font-size: 0.8rem; font-family: 'Courier New'; height: fit-content;">Home</a>
     </nav>
     <main class="d-flex w-100 flex-column align-items-center" style="height: fit-content;">
-        <div class="chan-title d-flex border-bottom border-black fw-bold align-items-center align-content-center justify-content-start gap-3 w-100 px-3 bg-dark" style="background: linear-gradient(to right, #1827209c, transparent);">
-            <p class="text-success m-0">/{{ board.id }}</p>
-            <p class="m-0" style="height: fit-content; font-size: 2.5rem;">-</p>
-            <p class="m-0" style="height: fit-content; font-size: 2.5rem;">{{ board.name }}</p>
+        <div class="chan-title d-flex justify-content-between border-bottom border-black fw-bold align-items-center align-content-center gap-3 w-100 px-3 bg-dark" style="background: linear-gradient(to right, #1827209c, transparent);">
+            <div class="d-flex align-items-center align-content-center justify-content-start gap-3">
+                <p class="text-success text-ellipsis m-0">/{{ board.id }}</p>
+                <p class="m-0" style="height: fit-content; font-size: 2.5rem;">-</p>
+                <p class="m-0" style="height: fit-content; font-size: 2.5rem;">{{ board.name }}</p>    
+            </div>
+            <p class="text-white-50 text-ellipsis m-0" style="font-size: 0.7rem;">{{ board.description }}</p>
         </div>
 
         <!-- Button trigger modal -->
@@ -104,7 +107,7 @@
                 
                     
 
-                    {% if count.value < 5 %}
+                    {% if count.value <= 5 %}
                         {% set count.value = count.value + 1 %}
                         <div id="r{{ reply.id }}" class="chan-thread-info d-flex flex-column" style="min-width: 300px; margin-left: {{ 20 * level }}px; width: fit-content;">
                             <div class="d-flex gap-1">
@@ -172,13 +175,16 @@
             {% for thread in board.threads %}
             <div class="d-flex flex-column align-items-start gap-3 w-100">
                 <!-- Thread -->
+                
                 <div class="d-flex gap-1">
+                        
                     <div class="d-flex flex-column justify-content-start" style="width: 30%;">
                         <img class="rounded-1" style="width: 100%; height: auto; max-height: 400px;" src="{{ url_for('Images.Image', id=thread.image.id) }}" alt="">
                         <div class="d-flex gap-1">
                             <p style="font-size: 0.7rem; color: #696969;" class="m-0">File: </p>
-                            <a style="font-size: 0.7rem;" class="m-0" href="{{ url_for('Images.Image', id=thread.image.id) }}">{{ thread.image.name }}</a>
+                            <a style="font-size: 0.7rem;" class="m-0 text-ellipsis" href="{{ url_for('Images.Image', id=thread.image.id) }}">{{ thread.image.name }}</a>
                         </div>
+                        <p style="font-size: 0.7rem; color: #696969;" class="m-0 p-0">({{ (thread.image.size|int / 1024)|int }}KB {{ thread.image.measures }})</p>                    
                     </div>
                     <div class="d-flex flex-column gap-1 w-100">
                         

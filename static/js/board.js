@@ -219,42 +219,56 @@ function highlightPost(id) {
 }
 
 const uploadImage = async (thread_id) => {
-    const fileInput = document.getElementById('image'); // Get the file input element
-    const file = fileInput.files[0]; // Get the selected file
-    const threadId = thread_id; // Thread ID
+    const fileInput = document.getElementById('image');
+    const file = fileInput.files[0];
+    const threadId = thread_id;
 
     if (!file || !threadId) {
         console.error("File and Thread ID are required");
         return;
     }
 
-    // Create FormData object
-    const formData = new FormData();
-    formData.append('image', file); // Append the file
-    formData.append('name', file.name); // Append the file name
-    formData.append('mimetype', file.type); // Append the MIME type
-    formData.append('thread_id', threadId); // Append the thread ID
+    const fileSize = file.size;
 
-    try {
-        // Make the POST request
-        const response = await fetch(`/image`, {
-            method: 'POST',
-            body: formData, // Send the FormData
-        });
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
 
-        // Check if the request was successful
-        if (response.ok) {
-            const responseData = await response.json();
-            console.log('Image uploaded successfully:', responseData);
+    img.onload = async () => {
+        const width = img.width;
+        const height = img.height;
 
-            // Reload the page or handle the response data as needed
-            window.location.reload(); // Reload the current page
-        } else {
-            const errorData = await response.json();
-            console.error('Failed to upload image:', errorData.error || response.statusText);
+        const formData = new FormData();
+        formData.append('image', file);
+        formData.append('name', file.name);
+        formData.append('size', fileSize);
+        formData.append('measures', `${width}x${height}`);
+        formData.append('thread_id', threadId);
+
+        try {
+            const response = await fetch(`/image`, {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                console.log('Image uploaded successfully:', responseData);
+                window.location.reload();
+            } else {
+                const errorData = await response.json();
+                console.error('Failed to upload image:', errorData.error || response.statusText);
+            }
+        } catch (error) {
+            console.error('Error uploading image:', error);
+        } finally {
+            URL.revokeObjectURL(img.src);
         }
-    } catch (error) {
-        console.error('Error uploading image:', error);
-    }
+    };
+
+    img.onerror = () => {
+        console.error('Error loading image to get dimensions');
+    };
 };
+
+
 
