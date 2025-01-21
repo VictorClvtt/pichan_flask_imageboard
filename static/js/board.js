@@ -19,7 +19,6 @@ const getFingerprint = async () => {
     }
 };
 
-
 async function postThread() {
     try {
         const token = await getFingerprint();
@@ -85,8 +84,7 @@ async function postThread() {
         const newThreadId = responseData.id; // Replace with the actual key from the server response
         window.location.hash = `t${newThreadId}`;
 
-        // Reload the page and highlight the post after load
-        location.reload();
+        uploadImage(responseData.id)
 
     } catch (error) {
         console.error('Error sending POST request:', error);
@@ -101,7 +99,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (element) {
             // Smoothly scroll to the element
             element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            window.location.hash = null
+            
+            // Clear the hash without modifying the history or reloading the page
+            history.replaceState(null, null, ' ');
+
             // Highlight the post
             highlightPost({ id: elementId });
         } else {
@@ -217,4 +218,43 @@ function highlightPost(id) {
     }
 }
 
+const uploadImage = async (thread_id) => {
+    const fileInput = document.getElementById('image'); // Get the file input element
+    const file = fileInput.files[0]; // Get the selected file
+    const threadId = thread_id; // Thread ID
+
+    if (!file || !threadId) {
+        console.error("File and Thread ID are required");
+        return;
+    }
+
+    // Create FormData object
+    const formData = new FormData();
+    formData.append('image', file); // Append the file
+    formData.append('name', file.name); // Append the file name
+    formData.append('mimetype', file.type); // Append the MIME type
+    formData.append('thread_id', threadId); // Append the thread ID
+
+    try {
+        // Make the POST request
+        const response = await fetch(`/image`, {
+            method: 'POST',
+            body: formData, // Send the FormData
+        });
+
+        // Check if the request was successful
+        if (response.ok) {
+            const responseData = await response.json();
+            console.log('Image uploaded successfully:', responseData);
+
+            // Reload the page or handle the response data as needed
+            window.location.reload(); // Reload the current page
+        } else {
+            const errorData = await response.json();
+            console.error('Failed to upload image:', errorData.error || response.statusText);
+        }
+    } catch (error) {
+        console.error('Error uploading image:', error);
+    }
+};
 

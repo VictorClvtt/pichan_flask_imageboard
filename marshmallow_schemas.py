@@ -25,6 +25,16 @@ class PlainBoardGroupSchema(Schema):
     id = fields.Int(dump_only=True)
     name = fields.String(required=True)
 
+class PlainImageSchema(Schema):
+    id = fields.Int(dump_only=True)
+    name = fields.String(required=True)
+    mimetype = fields.String(required=True)
+    image = fields.Raw(required=True, type="file") 
+
+class ImageSchema(PlainImageSchema):
+    thread_id = fields.String(required=True, load_only=True)
+    thread = fields.Nested(PlainThreadSchema(), dump_only=True)
+
 class BoardSchema(PlainBoardSchema):
     threads = fields.List(fields.Nested(PlainThreadSchema()), dump_only=True)
     board_group_id = fields.Integer(required=True, load_only=True)
@@ -34,6 +44,7 @@ class ThreadSchema(PlainThreadSchema):
     board_id = fields.String(required=True, load_only=True)
     board = fields.Nested(PlainBoardSchema(), dump_only=True)
     replies = fields.List(fields.Nested('ReplySchema'), dump_only=True)
+    image = fields.Nested(ImageSchema(), dump_only=True)
 
 class ReplySchema(PlainReplySchema):
     thread_id = fields.String(required=True, load_only=True)

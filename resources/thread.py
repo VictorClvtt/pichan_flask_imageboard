@@ -6,6 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from db import db
 from models.thread import ThreadModel
 from models.board import BoardModel
+from models.image import ImageModel
 from marshmallow_schemas import ThreadSchema
 
 from datetime import date
@@ -45,8 +46,9 @@ class Thread(MethodView):
     def get(self, id):
         thread = ThreadModel.query.get_or_404(id)
         boards = BoardModel.query.all()
+        image = ImageModel.query.filter_by(thread_id=id).first()
         
-        return render_template('thread.html', thread=thread, boards=boards)
+        return render_template('thread.html', thread=thread, boards=boards, image=image)
 
     def delete(self, id):
         thread = ThreadModel.query.get_or_404(id)

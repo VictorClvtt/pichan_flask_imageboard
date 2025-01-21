@@ -15,3 +15,7 @@ class ThreadModel(db.Model):
     board = db.relationship('BoardModel', back_populates='threads')
 
     replies = db.relationship('ReplyModel', back_populates='thread', lazy='dynamic', cascade='all, delete')
+
+    # One-to-one relationship with ThreadImageModel
+    image = db.relationship('ImageModel', back_populates='thread', uselist=False, cascade='all, delete')
+
