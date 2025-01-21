@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/board.css') }}">
     <title>πchan - /{{ thread.board.id }}</title>
 </head>
-<body class="chan-bg vh-100 d-flex flex-column align-items-center overflow-hidden">
+<body class="chan-bg vh-100 d-flex flex-column align-items-center">
     <nav class="chan-nav d-flex w-100 border-bottom py-1" style="height: fit-content;">
         <ul class="d-flex gap-2 w-100 px-2 list-unstyled m-0" style="height: fit-content; width: max-content;">
             {% for board in boards %}
@@ -20,7 +20,7 @@
     </nav>
     <main class="d-flex w-100 flex-column align-items-center" style="height: fit-content;">
         <div class="chan-title d-flex border-bottom border-black fw-bold align-items-center align-content-center justify-content-start gap-3 w-100 px-3 bg-dark" style="background: linear-gradient(to right, #1827209c, transparent); margin-bottom: 1rem;">
-            <p class="text-success m-0">/{{ thread.board.id }}</p>
+            <p class="text-success m-0 text-ellipsis">/{{ thread.board.id }}</p>
             <p class="m-0" style="height: fit-content; font-size: 2.5rem;">-</p>
             <p class="m-0" style="height: fit-content; font-size: 2.5rem;">{{ thread.board.name }}: </p>
             <p class="m-0 px-1 text-white fw-light fst-italic font-monospace" style="height: fit-content; font-size: 1.2rem; background-color: rgba(0, 0, 0, 0.2); margin-top: 0.5rem !important;">Thread No.{{ thread.id }}</p>
@@ -68,17 +68,17 @@
                         
                     <div id="r{{ reply.id }}" class="chan-thread-info d-flex flex-column" style="min-width: 300px; margin-left: {{ 20 * level }}px; width: fit-content;">
                         <div class="d-flex gap-1">
-                            <p class="m-0" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">User: {{ reply.user_token }}</p>
+                            <p class="m-0 text-ellipsis" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">User: {{ reply.user_token }}</p>
                             {% if reply.user_token == thread.user_token %}
-                                <p class="text-info m-0" style="font-size: 0.7rem;">(OP)</p>
+                                <p class="text-info m-0 text-ellipsis" style="font-size: 0.7rem;">(OP)</p>
                             {% endif %}
                             <hr class="m-0" style="width: 1px; border-left: solid 1px;">
-                            <p class="m-0" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">Reply No.{{ reply.id }}</p>
+                            <p class="m-0 text-ellipsis" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">Reply No.{{ reply.id }}</p>
                             <hr class="m-0" style="width: 1px; border-left: solid 1px;">
                             <a
                                 onclick="highlightPost({{ 'r' ~ (reply.reply.id | string) if reply.reply else 't' ~ (reply.thread.id | string) }})"
                                 href="#{{ 'r' ~ (reply.reply.id | string) if reply.reply else 't' ~ (reply.thread.id | string) }}"
-                                class="m-0" style="font-size: 11px; color: rgba(0, 255, 166, 0.7);">
+                                class="m-0 text-ellipsis" style="font-size: 11px; color: rgba(0, 255, 166, 0.7);">
                                 Replying to: {{ 'r-' ~ (reply.reply.id | string) if reply.reply else 't-' ~ (reply.thread.id | string)}}
                             </a>
                         </div>
@@ -131,17 +131,17 @@
                     <img class="rounded-1" style="width: 100%; height: auto; max-height: 400px;" src="{{ url_for('Images.Image', id=thread.image.id) }}" alt="">
                     <div class="d-flex gap-1">
                         <p style="font-size: 0.7rem; color: #696969;" class="m-0">File: </p>
-                        <a style="font-size: 0.7rem;" class="m-0" href="{{ url_for('Images.Image', id=thread.image.id) }}">{{ thread.image.name }}</a>
+                        <a style="font-size: 0.7rem;" class="m-0 text-ellipsis" href="{{ url_for('Images.Image', id=thread.image.id) }}">{{ thread.image.name }}</a>
                     </div>
                 </div>
                 <div class="d-flex flex-column gap-1 w-100">
                     
                     <div id="t{{ thread.id }}" class="chan-thread-info border-info-subtle" style="min-width: 300px; width: fit-content;">
                         <div class="d-flex gap-2">
-                            <a class="chan-thread-title m-0 text-decoration-none fst-italic" style="font-weight: 500;">{{ thread.title }}</a>
+                            <a class="chan-thread-page-title text-ellipsis m-0 text-decoration-none fst-italic" style="font-weight: 500;">{{ thread.title }}</a>
                             <div class="d-flex flex-column justify-content-around">
-                                <p class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">User: {{ thread.user_token }}</p>
-                                <p class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">Thread No.{{ thread.id }}</p>      
+                                <p class="m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">User: {{ thread.user_token }}</p>
+                                <p class="m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">Thread No.{{ thread.id }}</p>      
                             </div>
                         </div>
 

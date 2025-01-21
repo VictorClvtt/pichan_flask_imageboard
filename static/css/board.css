@@ -57,7 +57,7 @@
     border-color: #006c5c;
     border-radius: 3px;
     height: fit-content;
-    padding: 10px 20px;
+    padding: 10px 15px;
 }
 
 .chan-thread-modal{
@@ -70,19 +70,28 @@
 }
 
 .chan-thread-title{
-    color: rgb(255, 193, 203);
-    background-color: rgba(10, 10, 10, 0.3);
+    color: rgb(255, 255, 255);
+    background-color: rgba(3, 14, 26, 0.3);
     padding: 0px 5px;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     border-radius: 3px;
     border: 1px rgba(0, 0, 0, 0.5) solid;
 }
 
 .chan-thread-title:hover{
-    color: rgba(255, 255, 255, 0.800);
-    background-color: rgba(0, 255, 217, 0.125);
+    color: rgb(0, 19, 190);
+    background-color: rgba(180, 255, 234, 0.87);
     padding: 0px 5px;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
+}
+
+.chan-thread-page-title{
+    color: rgb(255, 255, 255);
+    background-color: rgba(3, 14, 26, 0.3);
+    padding: 0px 5px;
+    font-size: 1.4rem;
+    border-radius: 3px;
+    border: 1px rgba(0, 0, 0, 0.5) solid;
 }
 
 .chan-text-content{
@@ -91,3 +100,9 @@
     margin: 0;
     padding: 0 0 0 2px;
 }
+
+.text-ellipsis {
+    white-space: nowrap;        /* Prevents text from wrapping to a new line */
+    text-overflow: ellipsis;    /* Adds an ellipsis (...) at the end of the truncated text */
+  }
+  

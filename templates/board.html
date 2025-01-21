@@ -108,17 +108,17 @@
                         {% set count.value = count.value + 1 %}
                         <div id="r{{ reply.id }}" class="chan-thread-info d-flex flex-column" style="min-width: 300px; margin-left: {{ 20 * level }}px; width: fit-content;">
                             <div class="d-flex gap-1">
-                                <p class="m-0" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">User: {{ reply.user_token }}</p>
+                                <p class="m-0 text-ellipsis" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">User: {{ reply.user_token }}</p>
                                 {% if reply.user_token == thread.user_token %}
-                                    <p class="text-info m-0" style="font-size: 0.7rem;">(OP)</p>
+                                    <p class="text-info m-0 text-ellipsis" style="font-size: 0.7rem;">(OP)</p>
                                 {% endif %}
                                 <hr class="m-0" style="width: 1px; border-left: solid 1px;">
-                                <p class="m-0" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">Reply No.{{ reply.id }}</p>
+                                <p class="m-0 text-ellipsis" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">Reply No.{{ reply.id }}</p>
                                 <hr class="m-0" style="width: 1px; border-left: solid 1px;">
                                 <a
                                     onclick="highlightPost({{ 'r' ~ (reply.reply.id | string) if reply.reply else 't' ~ (reply.thread.id | string) }})"
                                     href="#{{ 'r' ~ (reply.reply.id | string) if reply.reply else 't' ~ (reply.thread.id | string) }}"
-                                    class="m-0" style="font-size: 11px; color: rgba(0, 255, 166, 0.7);">
+                                    class="m-0 text-ellipsis" style="font-size: 11px; color: rgba(0, 255, 166, 0.7);">
                                     Replying to: {{ 'r-' ~ (reply.reply.id | string) if reply.reply else 't-' ~ (reply.thread.id | string)}}
                                 </a>
                             </div>
@@ -159,7 +159,7 @@
                         {% endif %}
                     {% endif %}
                     
-                    {% if count.value == 5 and not rendered.flag %}
+                    {% if count.value >= 5 and not rendered.flag %}
                         {% set rendered.flag = True %}
                         <a href="{{ url_for('Threads.Thread', id=thread.id) }}" style="margin-left: {{ 20 * level }}px;">See all {{ count_replies(thread.replies) }} replies</a>  
                     {% endif %}      
@@ -168,55 +168,58 @@
 
             {% endmacro %}
 
-
+            
             {% for thread in board.threads %}
-            <div class="d-flex align-items-start gap-1">
+            <div class="d-flex flex-column align-items-start gap-3 w-100">
                 <!-- Thread -->
-                <div class="d-flex flex-column justify-content-center" style="width: 30%;">
-                    <img class="rounded-1" style="width: 100%; height: auto; max-height: 400px;" src="{{ url_for('Images.Image', id=thread.image.id) }}" alt="">
-                    <div class="d-flex gap-1">
-                        <p style="font-size: 0.7rem; color: #696969;" class="m-0">File: </p>
-                        <a style="font-size: 0.7rem;" class="m-0" href="{{ url_for('Images.Image', id=thread.image.id) }}">{{ thread.image.name }}</a>
+                <div class="d-flex gap-1">
+                    <div class="d-flex flex-column justify-content-start" style="width: 30%;">
+                        <img class="rounded-1" style="width: 100%; height: auto; max-height: 400px;" src="{{ url_for('Images.Image', id=thread.image.id) }}" alt="">
+                        <div class="d-flex gap-1">
+                            <p style="font-size: 0.7rem; color: #696969;" class="m-0">File: </p>
+                            <a style="font-size: 0.7rem;" class="m-0" href="{{ url_for('Images.Image', id=thread.image.id) }}">{{ thread.image.name }}</a>
+                        </div>
                     </div>
+                    <div class="d-flex flex-column gap-1 w-100">
+                        
+                        <div id="t{{ thread.id }}" class="chan-thread-info border-info-subtle" style="min-width: 300px; width: fit-content;">
+                            <div class="d-flex gap-2">
+                                <a class="chan-thread-title text-ellipsis m-0 text-decoration-none fst-italic" href="{{ url_for('Threads.Thread', id=thread.id) }}" style="font-weight: 500; text;">{{ thread.title }}</a>
+                                <div class="d-flex flex-column justify-content-around">
+                                    <p class="m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">User: {{ thread.user_token }}</p>
+                                    <p class="m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">Thread No.{{ thread.id }}</p>      
+                                </div>
+                            </div>
+
+                            <p class="chan-text-content">{{ thread.content }}</p>
+
+                            <div class="d-flex justify-content-between">
+                                <div class="d-flex gap-1">
+                                    <p class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">
+                                        {{ '%02d' | format(thread.date.day) }}/{{ '%02d' | format(thread.date.month) }}/{{ thread.date.year }}
+                                    </p>
+                                    <hr class="m-0 h-100" style="width: 1px; border-left: solid 1px;">
+                                    <p class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">{{ thread.time }}</p>
+                                    <p class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">UTC</p>    
+                                </div>
+                                <div class="d-flex justify-content-center gap-1">
+                                    <button class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                        <i class="fa-solid fa-caret-up  px-1" style="font-size: 0.9rem; padding-top: 0.15rem; background-color: rgba(0, 153, 255, 0.2); border-radius: 3px; height: fit-content;"></i>
+                                    </button>
+                                    <button class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                    <i class="fa-solid fa-caret-down px-1" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
+                                    </button>
+                                    <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('t{{ thread.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
+                                        <i style="font-size: 0.7rem;" class="fa-solid fa-reply"></i>
+                                        <p style="font-size: 0.7rem;" class="m-0">Reply</p>   
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {{ render_replies(thread.replies, 2, thread) }}    
+                    </div>    
                 </div>
-                <div class="d-flex flex-column gap-1 w-100">
-                    
-                    <div id="t{{ thread.id }}" class="chan-thread-info border-info-subtle" style="min-width: 300px; width: fit-content;">
-                        <div class="d-flex gap-2">
-                            <a class="chan-thread-title m-0 text-decoration-none fst-italic" href="{{ url_for('Threads.Thread', id=thread.id) }}" style="font-weight: 500; text;">{{ thread.title }}</a>
-                            <div class="d-flex flex-column justify-content-around">
-                                <p class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">User: {{ thread.user_token }}</p>
-                                <p class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">Thread No.{{ thread.id }}</p>      
-                            </div>
-                        </div>
-
-                        <p class="chan-text-content">{{ thread.content }}</p>
-
-                        <div class="d-flex justify-content-between">
-                            <div class="d-flex gap-1">
-                                <p class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">
-                                    {{ '%02d' | format(thread.date.day) }}/{{ '%02d' | format(thread.date.month) }}/{{ thread.date.year }}
-                                </p>
-                                <hr class="m-0 h-100" style="width: 1px; border-left: solid 1px;">
-                                <p class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">{{ thread.time }}</p>
-                                <p class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">UTC</p>    
-                            </div>
-                            <div class="d-flex justify-content-center gap-1">
-                                <button class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
-                                    <i class="fa-solid fa-caret-up  px-1" style="font-size: 0.9rem; padding-top: 0.15rem; background-color: rgba(0, 153, 255, 0.2); border-radius: 3px; height: fit-content;"></i>
-                                </button>
-                                <button class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
-                                <i class="fa-solid fa-caret-down px-1" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
-                                </button>
-                                <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('t{{ thread.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
-                                    <i style="font-size: 0.7rem;" class="fa-solid fa-reply"></i>
-                                    <p style="font-size: 0.7rem;" class="m-0">Reply</p>   
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    {{ render_replies(thread.replies, 2, thread) }}    
-                </div> 
+                <hr class="border-white my-0 mx-auto" style="width: 100%;"> 
             {% endfor %}
 
 
