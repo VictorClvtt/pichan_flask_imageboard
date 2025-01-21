@@ -24,7 +24,7 @@
         <section class="d-flex w-100 border py-1 px-2 gap-3" id="boards" style="max-width: 800px;">
             {% for board_group in board_groups %}
                 <div class="d-flex flex-column" id="{{ board_group.id }}">
-                    <h3 class="chan-title text-decoration-underline m-0" style="font-size: 17px;">{{ board_group.name }}:</h3>
+                    <h3 class="chan-title bg-dark text-decoration-underline m-0 px-1" style="font-size: 17px; width: fit-content;">{{ board_group.name }}:</h3>
                     
                     {% for board in board_group.boards %}
                         <a 

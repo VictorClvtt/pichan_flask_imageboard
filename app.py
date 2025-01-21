@@ -12,6 +12,7 @@ from resources.board import blp as BoardBlueprint
 from resources.thread import blp as ThreadBlueprint
 from resources.reply import blp as ReplyBlueprint
 from resources.image import blp as ImageBlueprint
+from resources.vote import blp as VoteBlueprint
 
 from resources.jinja2.index import blp as IndexBlueprint
 
@@ -45,6 +46,7 @@ def create_app(db_url=None):
     api.register_blueprint(ThreadBlueprint)
     api.register_blueprint(ReplyBlueprint)
     api.register_blueprint(ImageBlueprint)
+    api.register_blueprint(VoteBlueprint)
 
     api.register_blueprint(IndexBlueprint)
 

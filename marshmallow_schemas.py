@@ -32,6 +32,19 @@ class PlainImageSchema(Schema):
     size = fields.String(required=True)
     image = fields.Raw(required=True, type="file") 
 
+class PlainVoteSchema(Schema):
+    id = fields.Int(dump_only=True)
+    up_or_down = fields.Integer(required=True, load_only=True)
+    user_token = fields.String(required=True)
+    date = fields.Date(required=True)
+    time = fields.Time(required=True)
+
+class VoteSchema(PlainVoteSchema):
+    thread_id = fields.String(required=True, load_only=True)
+    thread = fields.Nested(PlainThreadSchema(), dump_only=True)
+    reply_id = fields.String(required=True, load_only=True)
+    reply = fields.Nested(PlainReplySchema(), dump_only=True)
+
 class ImageSchema(PlainImageSchema):
     thread_id = fields.String(required=True, load_only=True)
     thread = fields.Nested(PlainThreadSchema(), dump_only=True)

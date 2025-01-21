@@ -9,7 +9,6 @@ from models.board import BoardModel
 from models.image import ImageModel
 from marshmallow_schemas import ThreadSchema
 
-from datetime import date
 
 blp = Blueprint('Threads', __name__, description='Operations on threads')
 

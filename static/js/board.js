@@ -21,76 +21,76 @@ const getFingerprint = async () => {
 
 async function postThread() {
     try {
-        const token = await getFingerprint();
-        console.log('User Token:', token);
+        const imageInput = document.getElementById('image-t');
 
-        const titleInput = document.getElementById('title');
-        const contentInput = document.getElementById('content');
-        const boardIdInput = document.getElementById('board_id');
+        if (imageInput && imageInput.files && imageInput.files.length > 0) {
+            const token = await getFingerprint();
+            console.log('User Token:', token);
 
-        const title = titleInput ? titleInput.value.trim() : '';
-        const content = contentInput ? contentInput.value.trim() : '';
-        const board_id = boardIdInput ? boardIdInput.value.trim() : '';
+            const titleInput = document.getElementById('title');
+            const contentInput = document.getElementById('content');
+            const boardIdInput = document.getElementById('board_id');
 
-        if (!title || !content || !board_id) {
-            console.error('Title, content, or board ID is missing.');
-            return;
+            const title = titleInput ? titleInput.value.trim() : '';
+            const content = contentInput ? contentInput.value.trim() : '';
+            const board_id = boardIdInput ? boardIdInput.value.trim() : '';
+
+            if (!title || !content || !board_id) {
+                console.error('Title, content, or board ID is missing.');
+                return;
+            }
+
+            // Clear input fields after extracting their values
+            if (titleInput) titleInput.value = '';
+            if (contentInput) contentInput.value = '';
+
+            const currentDateTime = new Date();
+            const year = currentDateTime.getUTCFullYear();
+            const month = String(currentDateTime.getUTCMonth() + 1).padStart(2, '0');
+            const day = String(currentDateTime.getUTCDate()).padStart(2, '0');
+            const date = `${year}-${month}-${day}`;
+
+            const hours = String(currentDateTime.getUTCHours()).padStart(2, '0');
+            const minutes = String(currentDateTime.getUTCMinutes()).padStart(2, '0');
+            const seconds = String(currentDateTime.getUTCSeconds()).padStart(2, '0');
+            const time = `${hours}:${minutes}:${seconds}`;
+
+            const postData = {
+                user_token: token,
+                title: title,
+                content: content,
+                board_id: board_id,
+                date: date,
+                time: time,
+                type: 0,
+            };
+
+            console.log('Post data:', postData);
+
+            const response = await fetch(`/thread`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(postData),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Server error: ${response.status}`);
+            }
+
+            // Assuming the server responds with the thread ID of the newly created thread
+            const responseData = await response.json();
+            console.log('Response from server:', responseData);
+
+            // Set the hash to the new thread ID
+            const newThreadId = responseData.id; // Replace with the actual key from the server response
+            window.location.hash = `t${newThreadId}`;
+
+            uploadImage(newThreadId, null);
+        } else {
+            console.log('No image selected.');
         }
-
-        // Clear input fields after extracting their values
-        if (titleInput) titleInput.value = '';
-        if (contentInput) contentInput.value = '';
-
-        const currentDateTime = new Date();
-        const year = currentDateTime.getUTCFullYear();
-        const month = String(currentDateTime.getUTCMonth() + 1).padStart(2, '0');
-        const day = String(currentDateTime.getUTCDate()).padStart(2, '0');
-        const date = `${year}-${month}-${day}`;
-
-        const hours = String(currentDateTime.getUTCHours()).padStart(2, '0');
-        const minutes = String(currentDateTime.getUTCMinutes()).padStart(2, '0');
-        const seconds = String(currentDateTime.getUTCSeconds()).padStart(2, '0');
-        const time = `${hours}:${minutes}:${seconds}`;
-
-        const postData = {
-            user_token: token,
-            title: title,
-            content: content,
-            board_id: board_id,
-            date: date,
-            time: time,
-            type: 0,
-        };
-
-        console.log('Post data:', postData);
-
-        const response = await fetch(`/thread`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(postData),
-        });
-
-        if (!response.ok) {
-            throw new Error(`Server error: ${response.status}`);
-        }
-
-        // Assuming the server responds with the thread ID of the newly created thread
-        const responseData = await response.json();
-        console.log('Response from server:', responseData);
-
-        // Set the hash to the new thread ID
-        const newThreadId = responseData.id; // Replace with the actual key from the server response
-        window.location.hash = `t${newThreadId}`;
-
-        if(document.getElementById('image-t').files && document.getElementById('image-t').files.length > 0){
-            uploadImage(newThreadId, null)    
-        }else{
-            location.reload()
-        }
-        
-
     } catch (error) {
         console.error('Error sending POST request:', error);
     }
