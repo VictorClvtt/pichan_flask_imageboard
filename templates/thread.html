@@ -40,7 +40,7 @@
                     <div class="modal-body">
                         <form class="d-flex flex-column gap-2" action="" method="post">
                             <textarea class="w-100" placeholder="Content" id="reply_content"></textarea>
-                            <input type="file" name="" accept=".jpg,.png" id="" >
+                            <input type="file" name="" accept=".jpg,.png" id="image-r" >
 
                             <input type="hidden" id="thread_or_reply_id" value="">
                         </form>
@@ -62,7 +62,6 @@
         <hr class="border-white w-100 my-0" style="margin-bottom: 1.1rem !important;">
   
         <!-- Rendering Threads and Replies -->
-        
         <section class="d-flex flex-column overflow-scroll align-items-start w-100 px-2 gap-3" style="padding-bottom: 1rem; height: fit-content;" id="threads">
             
             {% macro render_replies(replies, level, thread) %}
@@ -86,7 +85,17 @@
                             </a>
                         </div>
 
-                        <p class="m-0" style="font-size: 13px; color: rgba(255, 255, 255, 0.900); min-height: 2.5rem;">{{ reply.content }}</p>
+                        <p class="m-0" style="font-size: 13px; color: rgba(255, 255, 255, 0.900); min-height: {{'1.5rem' if reply.image else '2.5rem'}};">{{ reply.content }}</p>
+                        {% if reply.image %}
+                            <div class="d-flex flex-column justify-content-center" style="width: 30%;">
+                                <img class="rounded-1" style="width: 100%; height: auto; max-height: 400px;" src="{{ url_for('Images.Image', id=reply.image.id) }}" alt="">
+                                <div class="d-flex gap-1">
+                                    <p style="font-size: 0.7rem; color: #696969;" class="m-0">File: </p>
+                                    <a style="font-size: 0.7rem;" class="m-0 text-ellipsis" href="{{ url_for('Images.Image', id=reply.image.id) }}">{{ reply.image.name }}</a>
+                                </div>
+                                <p style="font-size: 0.7rem; color: #696969;" class="m-0 p-0">({{ (reply.image.size|int / 1024)|int }}KB {{ reply.image.measures }})</p>                    
+                            </div>
+                        {% endif %}
 
                         <div class="d-flex justify-content-between">
                             <div class="d-flex gap-1">
@@ -130,14 +139,17 @@
             
             <div class="d-flex align-items-start gap-1">
                 <!-- Thread -->
-                <div class="d-flex flex-column justify-content-center" style="width: 30%;">
-                    <img class="rounded-1" style="width: 100%; height: auto; max-height: 400px;" src="{{ url_for('Images.Image', id=thread.image.id) }}" alt="">
-                    <div class="d-flex gap-1">
-                        <p style="font-size: 0.7rem; color: #696969;" class="m-0">File: </p>
-                        <a style="font-size: 0.7rem;" class="m-0 text-ellipsis" href="{{ url_for('Images.Image', id=thread.image.id) }}">{{ thread.image.name }}</a>
+                {% if thread.image %}
+                    <div class="d-flex flex-column justify-content-center" style="width: 30%;">
+                        <img class="rounded-1" style="width: 100%; height: auto; max-height: 400px;" src="{{ url_for('Images.Image', id=thread.image.id) }}" alt="">
+                        <div class="d-flex gap-1">
+                            <p style="font-size: 0.7rem; color: #696969;" class="m-0">File: </p>
+                            <a style="font-size: 0.7rem;" class="m-0 text-ellipsis" href="{{ url_for('Images.Image', id=thread.image.id) }}">{{ thread.image.name }}</a>
+                        </div>
+                        <p style="font-size: 0.7rem; color: #696969;" class="m-0 p-0">({{ (thread.image.size|int / 1024)|int }}KB {{ thread.image.measures }})</p>                    
                     </div>
-                    <p style="font-size: 0.7rem; color: #696969;" class="m-0 p-0">({{ (thread.image.size|int / 1024)|int }}KB {{ thread.image.measures }})</p>                    
-                </div>
+                {% endif %}
+                
                 <div class="d-flex flex-column gap-1 w-100">
                     
                     <div id="t{{ thread.id }}" class="chan-thread-info border-info-subtle" style="min-width: 300px; width: fit-content;">

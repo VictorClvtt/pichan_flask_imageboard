@@ -21,3 +21,5 @@ class ReplyModel(db.Model):
     # This relationship represents replies to this reply
     reply_replies = db.relationship('ReplyModel', back_populates='reply', lazy='dynamic', cascade='all, delete')
 
+    image = db.relationship('ImageModel', back_populates='reply', uselist=False, cascade='all, delete')
+

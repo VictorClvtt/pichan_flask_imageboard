@@ -40,22 +40,24 @@
                     </div>
                     <div class="modal-body">
                         <form class="d-flex flex-column gap-2">
-                            <input class="w-100" type="text" placeholder="Title" id="title">
-                            <textarea class="w-100" placeholder="Content" id="content"></textarea>
+                            <input class="w-100" type="text" placeholder="Title" id="title" required>
+                            <textarea class="w-100" placeholder="Content" id="content" required></textarea>
 
                             
-                                <input type="file" name="image" accept=".jpg,.png" id="image" >
-                                <input type="hidden" name="new_thread_id" value="" id="new_thread_id">
-                                <input type="submit" value="" id="submit_image" class="visually-hidden">
+                                <input type="file" name="image" accept=".jpg,.png" id="image-t" required>
+                                <input type="hidden" name="new_thread_id" value="" id="new_thread_id" required>
+                                <input type="submit" value="" id="submit_image" class="visually-hidden" required>
                            
 
-                            <input type="hidden" id="board_id" value="{{ board.id }}">
+                            <input type="hidden" id="board_id" value="{{ board.id }}" required>
+
+                            <div class="d-flex justify-content-between border-1 border-top" style="border-color: #5e5e5e; padding-top: 1rem; margin-top: 0.5rem;">
+                                <button type="button" class="btn btn-secondary chan-button-close w-100" style="max-width: 80px;" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary chan-button w-100" style="max-width: 150px;" onclick="postThread()">Post thread</button>
+                            </div>
                         </form>
                     </div>
-                    <div class="modal-footer" style="border-color: #5e5e5e;">
-                        <button type="button" class="btn btn-secondary chan-button-close w-100" style="max-width: 80px;" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary chan-button w-100" style="max-width: 150px;" onclick="postThread()">Post thread</button>
-                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -70,7 +72,8 @@
                     <div class="modal-body">
                         <form class="d-flex flex-column gap-2" action="" method="post">
                             <textarea class="w-100" placeholder="Content" id="reply_content"></textarea>
-                            <input type="file" name="" accept=".jpg,.png" id="" >
+                            <input type="hidden" name="new_reply_id" value="" id="new_reply_id">
+                            <input type="file" name="" accept=".jpg,.png" id="image-r" >
 
                             <input type="hidden" id="thread_or_reply_id" value="">
                         </form>
@@ -109,50 +112,59 @@
 
                     {% if count.value <= 5 %}
                         {% set count.value = count.value + 1 %}
-                        <div id="r{{ reply.id }}" class="chan-thread-info d-flex flex-column" style="min-width: 300px; margin-left: {{ 20 * level }}px; width: fit-content;">
-                            <div class="d-flex gap-1">
-                                <p class="m-0 text-ellipsis" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">User: {{ reply.user_token }}</p>
-                                {% if reply.user_token == thread.user_token %}
-                                    <p class="text-info m-0 text-ellipsis" style="font-size: 0.7rem;">(OP)</p>
-                                {% endif %}
-                                <hr class="m-0" style="width: 1px; border-left: solid 1px;">
-                                <p class="m-0 text-ellipsis" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">Reply No.{{ reply.id }}</p>
-                                <hr class="m-0" style="width: 1px; border-left: solid 1px;">
-                                <a
-                                    onclick="highlightPost({{ 'r' ~ (reply.reply.id | string) if reply.reply else 't' ~ (reply.thread.id | string) }})"
-                                    href="#{{ 'r' ~ (reply.reply.id | string) if reply.reply else 't' ~ (reply.thread.id | string) }}"
-                                    class="m-0 text-ellipsis" style="font-size: 11px; color: rgba(0, 255, 166, 0.7);">
-                                    Replying to: {{ 'r-' ~ (reply.reply.id | string) if reply.reply else 't-' ~ (reply.thread.id | string)}}
-                                </a>
-                            </div>
-
-                            <p class="m-0" style="font-size: 13px; color: rgba(255, 255, 255, 0.900); min-height: 2.5rem;">{{ reply.content }}</p>
-
-                            <div class="d-flex justify-content-between">
+                            <div id="r{{ reply.id }}" class="chan-thread-info d-flex flex-column" style="min-width: 300px; margin-left: {{ 20 * level }}px; width: fit-content;">
                                 <div class="d-flex gap-1">
-                                    <p class="m-0" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">
-                                        {{ '%02d' | format(reply.date.day) }}/{{ '%02d' | format(reply.date.month) }}/{{ reply.date.year }}
-                                    </p>
-                                    <hr class="m-0 h-100" style="width: 1px; border-left: solid 1px;">
-                                    <p class="m-0" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">{{ reply.time }}</p>
-                                    <p class="m-0" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">UTC</p>
+                                    <p class="m-0 text-ellipsis" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">User: {{ reply.user_token }}</p>
+                                    {% if reply.user_token == thread.user_token %}
+                                        <p class="text-info m-0 text-ellipsis" style="font-size: 0.7rem;">(OP)</p>
+                                    {% endif %}
+                                    <hr class="m-0" style="width: 1px; border-left: solid 1px;">
+                                    <p class="m-0 text-ellipsis" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">Reply No.{{ reply.id }}</p>
+                                    <hr class="m-0" style="width: 1px; border-left: solid 1px;">
+                                    <a
+                                        onclick="highlightPost({{ 'r' ~ (reply.reply.id | string) if reply.reply else 't' ~ (reply.thread.id | string) }})"
+                                        href="#{{ 'r' ~ (reply.reply.id | string) if reply.reply else 't' ~ (reply.thread.id | string) }}"
+                                        class="m-0 text-ellipsis" style="font-size: 11px; color: rgba(0, 255, 166, 0.7);">
+                                        Replying to: {{ 'r-' ~ (reply.reply.id | string) if reply.reply else 't-' ~ (reply.thread.id | string)}}
+                                    </a>
                                 </div>
 
-                                <div class="d-flex justify-content-center gap-1">
-                                    <button class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
-                                        <i class="fa-solid fa-caret-up px-1" style="font-size: 0.9rem; padding-top: 0.15rem; background-color: rgba(0, 153, 255, 0.2); border-radius: 3px; height: fit-content;"></i>
-                                    </button>
-                                    <button class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
-                                        <i class="fa-solid fa-caret-down px-1" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
-                                    </button>
-                                    <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('r{{ reply.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
-                                        <i style="font-size: 0.7rem;" class="fa-solid fa-reply"></i>
-                                        <p style="font-size: 0.7rem;" class="m-0">Reply</p>   
-                                    </button>
+                                <p class="m-0" style="font-size: 13px; color: rgba(255, 255, 255, 0.900); min-height: {{'1.5rem' if reply.image else '2.5rem'}};">{{ reply.content }}</p>
+                                {% if reply.image %}
+                                    <div class="d-flex flex-column justify-content-center" style="width: 30%;">
+                                        <img class="rounded-1" style="width: 100%; height: auto; max-height: 400px;" src="{{ url_for('Images.Image', id=reply.image.id) }}" alt="">
+                                        <div class="d-flex gap-1">
+                                            <p style="font-size: 0.7rem; color: #696969;" class="m-0">File: </p>
+                                            <a style="font-size: 0.7rem;" class="m-0 text-ellipsis" href="{{ url_for('Images.Image', id=reply.image.id) }}">{{ reply.image.name }}</a>
+                                        </div>
+                                        <p style="font-size: 0.7rem; color: #696969;" class="m-0 p-0">({{ (reply.image.size|int / 1024)|int }}KB {{ reply.image.measures }})</p>                    
+                                    </div>
+                                {% endif %}
+                                <div class="d-flex justify-content-between">
+                                    <div class="d-flex gap-1">
+                                        <p class="m-0" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">
+                                            {{ '%02d' | format(reply.date.day) }}/{{ '%02d' | format(reply.date.month) }}/{{ reply.date.year }}
+                                        </p>
+                                        <hr class="m-0 h-100" style="width: 1px; border-left: solid 1px;">
+                                        <p class="m-0" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">{{ reply.time }}</p>
+                                        <p class="m-0" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">UTC</p>
+                                    </div>
+
+                                    <div class="d-flex justify-content-center gap-1">
+                                        <button class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                            <i class="fa-solid fa-caret-up px-1" style="font-size: 0.9rem; padding-top: 0.15rem; background-color: rgba(0, 153, 255, 0.2); border-radius: 3px; height: fit-content;"></i>
+                                        </button>
+                                        <button class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                            <i class="fa-solid fa-caret-down px-1" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
+                                        </button>
+                                        <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('r{{ reply.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
+                                            <i style="font-size: 0.7rem;" class="fa-solid fa-reply"></i>
+                                            <p style="font-size: 0.7rem;" class="m-0">Reply</p>   
+                                        </button>
+                                    </div>
                                 </div>
+
                             </div>
-
-                        </div>
                         
                         <!-- Render nested replies recursively with updated level -->
                         {% if reply.reply_replies %}
@@ -177,15 +189,16 @@
                 <!-- Thread -->
                 
                 <div class="d-flex gap-1">
-                        
-                    <div class="d-flex flex-column justify-content-start" style="width: 30%;">
-                        <img class="rounded-1" style="width: 100%; height: auto; max-height: 400px;" src="{{ url_for('Images.Image', id=thread.image.id) }}" alt="">
-                        <div class="d-flex gap-1">
-                            <p style="font-size: 0.7rem; color: #696969;" class="m-0">File: </p>
-                            <a style="font-size: 0.7rem;" class="m-0 text-ellipsis" href="{{ url_for('Images.Image', id=thread.image.id) }}">{{ thread.image.name }}</a>
+                    {% if thread.image %}
+                        <div class="d-flex flex-column justify-content-start" style="width: 30%;">
+                            <img class="rounded-1" style="width: 100%; height: auto; max-height: 400px;" src="{{ url_for('Images.Image', id=thread.image.id) }}" alt="">
+                            <div class="d-flex gap-1">
+                                <p style="font-size: 0.7rem; color: #696969;" class="m-0">File: </p>
+                                <a style="font-size: 0.7rem;" class="m-0 text-ellipsis" href="{{ url_for('Images.Image', id=thread.image.id) }}">{{ thread.image.name }}</a>
+                            </div>
+                            <p style="font-size: 0.7rem; color: #696969;" class="m-0 p-0">({{ (thread.image.size|int / 1024)|int }}KB {{ thread.image.measures }})</p>                    
                         </div>
-                        <p style="font-size: 0.7rem; color: #696969;" class="m-0 p-0">({{ (thread.image.size|int / 1024)|int }}KB {{ thread.image.measures }})</p>                    
-                    </div>
+                    {% endif %}
                     <div class="d-flex flex-column gap-1 w-100">
                         
                         <div id="t{{ thread.id }}" class="chan-thread-info border-info-subtle" style="min-width: 300px; width: fit-content;">

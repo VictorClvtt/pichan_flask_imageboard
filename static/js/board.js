@@ -64,7 +64,7 @@ async function postThread() {
 
         console.log('Post data:', postData);
 
-        const response = await fetch(`http://${window.location.hostname}:${window.location.port}/thread`, {
+        const response = await fetch(`/thread`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -84,7 +84,12 @@ async function postThread() {
         const newThreadId = responseData.id; // Replace with the actual key from the server response
         window.location.hash = `t${newThreadId}`;
 
-        uploadImage(responseData.id)
+        if(document.getElementById('image-t').files && document.getElementById('image-t').files.length > 0){
+            uploadImage(newThreadId, null)    
+        }else{
+            location.reload()
+        }
+        
 
     } catch (error) {
         console.error('Error sending POST request:', error);
@@ -171,7 +176,7 @@ async function postReply(){
 
         console.log('Reply data:', replyData);
 
-        const response = await fetch(`http://${window.location.hostname}:${window.location.port}/reply`, {
+        const response = await fetch(`/reply`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -190,7 +195,12 @@ async function postReply(){
 
         document.getElementById('reply_content').value = ''
 
-        location.reload()
+        if(document.getElementById('image-r').files && document.getElementById('image-r').files.length > 0){
+            uploadImage(null, newReplyId)    
+        }else{
+            location.reload()
+        }
+        
 
     } catch (error) {
         console.error('Error sending POST request:', error);
@@ -218,15 +228,19 @@ function highlightPost(id) {
     }
 }
 
-const uploadImage = async (thread_id) => {
-    const fileInput = document.getElementById('image');
+const uploadImage = async (thread_id, reply_id) => {
+    const fileInput = document.getElementById(thread_id ? 'image-t' : 'image-r');
     const file = fileInput.files[0];
     const threadId = thread_id;
+    const replyId = reply_id
 
-    if (!file || !threadId) {
-        console.error("File and Thread ID are required");
-        return;
+    if(thread_id){
+        if (!file) {
+            console.error("File required");
+            return;
+        }    
     }
+    
 
     const fileSize = file.size;
 
@@ -243,6 +257,7 @@ const uploadImage = async (thread_id) => {
         formData.append('size', fileSize);
         formData.append('measures', `${width}x${height}`);
         formData.append('thread_id', threadId);
+        formData.append('reply_id', replyId);
 
         try {
             const response = await fetch(`/image`, {

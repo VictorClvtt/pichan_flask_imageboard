@@ -25,15 +25,11 @@ class ImageList(MethodView):
         measures = request.form.get('measures')
         size = request.form.get('size')
         thread_id = request.form.get('thread_id')
+        reply_id = request.form.get('reply_id')
 
         # Validate inputs
         if not image_file or not name or not measures or not size or not thread_id:
             return jsonify({"error": "All fields are required"}), 400
-
-        try:
-            thread_id = int(thread_id)
-        except ValueError:
-            return jsonify({"error": "Thread ID must be an integer"}), 400
 
         try:
             new_image = ImageModel(
@@ -41,7 +37,8 @@ class ImageList(MethodView):
                 measures=measures,
                 size=size,
                 image=image_file.read(),
-                thread_id=thread_id
+                thread_id=thread_id,
+                reply_id=reply_id
             )
 
             db.session.add(new_image)
