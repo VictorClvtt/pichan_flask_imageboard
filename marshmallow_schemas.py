@@ -53,7 +53,7 @@ class ImageSchema(PlainImageSchema):
     reply = fields.Nested(PlainReplySchema(), dump_only=True)
 
 class BoardSchema(PlainBoardSchema):
-    threads = fields.List(fields.Nested(PlainThreadSchema()), dump_only=True)
+    threads = fields.List(fields.Nested('ThreadSchema'), dump_only=True)
     board_group_id = fields.Integer(required=True, load_only=True)
     board_group = fields.Nested(PlainBoardGroupSchema(), dump_only=True)
 

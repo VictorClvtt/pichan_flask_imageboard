@@ -1,21 +1,34 @@
-import requests
 from flask import render_template
 from flask_smorest import Blueprint
 from models.board_group import BoardGroupModel
-
+from models.board import BoardModel
+from models.thread import ThreadModel
+from models.reply import ReplyModel
+from models.image import ImageModel
 blp = Blueprint('Index', __name__, description='Index Homepage')
 
 @blp.route('/')
 def home():
-    # Fetch data from the API
-    api_url = 'http://127.0.0.1:5000/board_group'
-    try:
-        response = requests.get(api_url)
-        response.raise_for_status()  # Raise an exception for HTTP errors
-        board_groups = response.json()  # Parse the JSON data from the API
-    except requests.exceptions.RequestException as e:
-        print(f"Error fetching data from API: {e}")
-        board_groups = []  # Fallback to empty list in case of error
+    
+    board_groups = BoardGroupModel.query.all()
+    threads = ThreadModel.query.all()
+    replies = ReplyModel.query.all()
+
+    boards = BoardModel.query.all()
+    
+
+    images = ImageModel.query.all()
+    images = [
+        {
+            "id": image.id,
+            "name": image.name,
+            "measures": image.measures,
+            "size": int(image.size),
+            "thread_id": image.thread_id,
+            "reply_id": image.reply_id,
+        }
+        for image in images
+    ]
     
     # Render the template and pass the board_groups data
-    return render_template('index.html', board_groups=board_groups)
+    return render_template('index.html', board_groups=board_groups, threads=threads, replies=replies, boards=boards, images=images)

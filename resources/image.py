@@ -5,7 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from db import db
 from models.image import ImageModel
-from marshmallow_schemas import ImageSchema
+from marshmallow_schemas import ImageSchema, PlainImageSchema
 
 blp = Blueprint('Images', __name__, description='Operations on images for threads and replies')
 
@@ -16,7 +16,22 @@ class ImageList(MethodView):
     @blp.response(200, ImageSchema(many=True))
     def get(self):
         images = ImageModel.query.all()
+        # Exclude the 'image' field from each object
+        images = [
+            {
+                "id": image.id,
+                "name": image.name,
+                "measures": image.measures,
+                "size": image.size,
+                "thread_id": image.thread_id,
+                "reply_id": image.reply_id,
+            }
+            for image in images
+        ]
+
+
         return images
+
 
     @blp.response(201, ImageSchema)
     def post(self):

@@ -13,7 +13,7 @@ blp = Blueprint('Boards', __name__, description='Operations on boards')
 @blp.route('/board')
 class BoardList(MethodView):
 
-    @blp.response(200, PlainBoardSchema(many=True))
+    @blp.response(200, BoardSchema(many=True))
     def get(self):
         return BoardModel.query.all()
     

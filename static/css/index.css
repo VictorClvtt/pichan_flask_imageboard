@@ -11,3 +11,30 @@
     height: 40px;
     background-color: rgb(39 39 42);
 }
+
+.chan-index-section{
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    max-width: 800px;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid white;
+}
+
+.chan-threads-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Create 4 equal columns */
+    gap: 20px; /* Space between items */
+}
+
+.ellipsis-multiline {
+    font-size: 0.75rem;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;  /* Change the number for more/fewer lines */
+    -webkit-box-orient: vertical;
+    text-align: center;
+    margin: 4px 0 0 0;
+}
