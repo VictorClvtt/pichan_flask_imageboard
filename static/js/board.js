@@ -322,11 +322,15 @@ async function submitVote(vote, target_id, target_type){
     })
 
     
-    highlightVotes()
+    highlightVotes(vote + target_type + target_id)
     
 }
 
-async function highlightVotes() {
+async function highlightVotes(id) {
+
+    if(id){
+        document.getElementById(id).classList.remove('voted')
+    }
     
     const token = await getFingerprint();
 
@@ -376,14 +380,6 @@ async function highlightVotes() {
     }
 }
 
-function removeHighlight(id) {
-    const element = document.getElementById(id);
-    if (element) {
-        element.classList.remove('voted');
-    } else {
-        console.warn('Element with ID ' + id + ' not found.');
-    }
-}
 
 
 highlightVotes()

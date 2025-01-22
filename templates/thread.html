@@ -108,10 +108,10 @@
                             </div>
 
                             <div class="d-flex justify-content-center gap-1">
-                                <button onclick="submitVote(1, {{ reply.id }}, 'r'); removeHighlight('1r' + {{ reply.id }})" title="{{ reply.votes|selectattr('up_or_down', 'equalto', 1)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                <button onclick="submitVote(1, {{ reply.id }}, 'r')" title="{{ reply.votes|selectattr('up_or_down', 'equalto', 1)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
                                     <i class="fa-solid fa-caret-up px-1" id="1r{{ reply.id }}" style="font-size: 0.9rem; padding-top: 0.15rem; background-color: rgba(0, 153, 255, 0.2); border-radius: 3px; height: fit-content;"></i>
                                 </button>
-                                <button onclick="submitVote(0, {{ reply.id }}, 'r'); removeHighlight('0r' + {{ reply.id }})" title="{{ reply.votes|selectattr('up_or_down', 'equalto', 0)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                <button onclick="submitVote(0, {{ reply.id }}, 'r')" title="{{ reply.votes|selectattr('up_or_down', 'equalto', 0)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
                                     <i class="fa-solid fa-caret-down px-1" id="0r{{ reply.id }}" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
                                 </button>
                                 <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('r{{ reply.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
@@ -173,10 +173,10 @@
                                 <p class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">UTC</p>    
                             </div>
                             <div class="d-flex justify-content-center gap-1">
-                                <button onclick="submitVote(1, {{ thread.id }}, 't'); removeHighlight('1t' + {{ thread.id }})" title="{{ thread.votes|selectattr('up_or_down', 'equalto', 1)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                <button onclick="submitVote(1, {{ thread.id }}, 't')" title="{{ thread.votes|selectattr('up_or_down', 'equalto', 1)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
                                     <i class="fa-solid fa-caret-up px-1" id="1t{{ thread.id }}" style="font-size: 0.9rem; padding-top: 0.15rem; background-color: rgba(0, 153, 255, 0.2); border-radius: 3px; height: fit-content;"></i>
                                 </button>
-                                <button onclick="submitVote(0, {{ thread.id }}, 't'); removeHighlight('0t' + {{ thread.id }})" title="{{ thread.votes|selectattr('up_or_down', 'equalto', 0)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                <button onclick="submitVote(0, {{ thread.id }}, 't')" title="{{ thread.votes|selectattr('up_or_down', 'equalto', 0)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
                                     <i class="fa-solid fa-caret-down px-1" id="0t{{ thread.id }}" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
                                 </button>
                                 <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('t{{ thread.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
