@@ -149,7 +149,7 @@
             <mxRectangle x="230" y="140" width="160" height="26" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="yYRuTl-swTBpcW1Qj-cw-1" value="id" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fillColor=#FF9999;strokeColor=#ae4132;fontStyle=1;fontColor=#000000;" vertex="1" parent="yYRuTl-swTBpcW1Qj-cw-0">
+        <mxCell id="yYRuTl-swTBpcW1Qj-cw-1" value="id" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fillColor=#d0cee2;strokeColor=#56517e;fontStyle=1;fontColor=#000000;" vertex="1" parent="yYRuTl-swTBpcW1Qj-cw-0">
           <mxGeometry y="26" width="160" height="26" as="geometry" />
         </mxCell>
         <mxCell id="yYRuTl-swTBpcW1Qj-cw-2" value="image" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rounded=0;shadow=0;html=0;" vertex="1" parent="yYRuTl-swTBpcW1Qj-cw-0">

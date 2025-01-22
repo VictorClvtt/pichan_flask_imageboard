@@ -19,3 +19,4 @@ class ThreadModel(db.Model):
     # One-to-one relationship with ThreadImageModel
     image = db.relationship('ImageModel', back_populates='thread', uselist=False, cascade='all, delete')
 
+    votes = db.relationship('VoteModel', back_populates='thread', lazy='dynamic', cascade='all, delete')

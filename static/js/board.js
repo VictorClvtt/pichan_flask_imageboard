@@ -268,6 +268,7 @@ const uploadImage = async (thread_id, reply_id) => {
             if (response.ok) {
                 const responseData = await response.json();
                 console.log('Image uploaded successfully:', responseData);
+                fileInput.value = ''
                 window.location.reload();
             } else {
                 const errorData = await response.json();
@@ -285,5 +286,104 @@ const uploadImage = async (thread_id, reply_id) => {
     };
 };
 
+async function submitVote(vote, target_id, target_type){
+    
+    const currentDateTime = new Date();
+    const year = currentDateTime.getUTCFullYear();
+    const month = String(currentDateTime.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(currentDateTime.getUTCDate()).padStart(2, '0');
+    const date = `${year}-${month}-${day}`;
+
+    const hours = String(currentDateTime.getUTCHours()).padStart(2, '0');
+    const minutes = String(currentDateTime.getUTCMinutes()).padStart(2, '0');
+    const seconds = String(currentDateTime.getUTCSeconds()).padStart(2, '0');
+    const time = `${hours}:${minutes}:${seconds}`;
+
+    // User token
+    const token = await getFingerprint();
+
+    const voteData = {
+        up_or_down: vote,
+        user_token: token,
+        date: date,
+        time: time,
+        thread_id: target_type == 't' ? target_id : null,
+        reply_id: target_type == 'r' ? target_id : null
+    };
+
+    console.log(voteData)
+
+    const response = await fetch(`/vote`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(voteData),
+    })
+
+    
+    highlightVotes()
+    
+}
+
+async function highlightVotes() {
+    
+    const token = await getFingerprint();
+
+    const voteData = await fetch(`/vote/token/${token}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json(); // Parse JSON data
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
+
+    if (voteData) {
+        console.log(voteData);
+
+        for (let i = 0; i < voteData.length; i++) {
+            // Access thread or reply based on the presence of 'thread' in the current voteData element
+            const currentVote = voteData[i];
+            if (currentVote.thread) {
+                elementId = `${currentVote.up_or_down}t${currentVote.thread.id}`
+                if(document.getElementById(elementId)){
+                    if(currentVote.up_or_down == 0){
+                        document.getElementById(`1t${currentVote.thread.id}`).classList.remove('voted')
+                    }else{
+                        document.getElementById(`0t${currentVote.thread.id}`).classList.remove('voted')
+                    }
+                    console.log(`${currentVote.up_or_down}t${currentVote.thread.id}`)
+                    
+                    document.getElementById(elementId).classList.add('voted')    
+                }
+            } else {
+                elementId = `${currentVote.up_or_down}r${currentVote.reply.id}`
+                if(document.getElementById(elementId)){
+                    if(currentVote.up_or_down == 0){
+                        document.getElementById(`1r${currentVote.reply.id}`).classList.remove('voted')
+                    }else{
+                        document.getElementById(`0r${currentVote.reply.id}`).classList.remove('voted')
+                    }
+                    console.log(`${currentVote.up_or_down}r${currentVote.reply.id}`)
+                    
+                    document.getElementById(elementId).classList.add('voted')
+                }
+            }
+        }
+    }
+}
+
+function removeHighlight(id) {
+    const element = document.getElementById(id);
+    if (element) {
+        element.classList.remove('voted');
+    } else {
+        console.warn('Element with ID ' + id + ' not found.');
+    }
+}
 
 
+highlightVotes()

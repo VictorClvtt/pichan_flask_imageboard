@@ -23,3 +23,5 @@ class ReplyModel(db.Model):
 
     image = db.relationship('ImageModel', back_populates='reply', uselist=False, cascade='all, delete')
 
+    votes = db.relationship('VoteModel', back_populates='reply', lazy='dynamic', cascade='all, delete')
+

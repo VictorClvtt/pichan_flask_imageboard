@@ -71,9 +71,9 @@
                     </div>
                     <div class="modal-body">
                         <form class="d-flex flex-column gap-2" action="" method="post">
-                            <textarea class="w-100" placeholder="Content" id="reply_content"></textarea>
-                            <input type="hidden" name="new_reply_id" value="" id="new_reply_id">
-                            <input type="file" name="" accept=".jpg,.png" id="image-r" >
+                            <textarea class="w-100" placeholder="Content" id="reply_content" required></textarea>
+                            <input type="hidden" name="new_reply_id" value="" id="new_reply_id" required>
+                            <input type="file" name="" accept=".jpg,.png" id="image-r">
 
                             <input type="hidden" id="thread_or_reply_id" value="">
                         </form>
@@ -151,11 +151,11 @@
                                     </div>
 
                                     <div class="d-flex justify-content-center gap-1">
-                                        <button class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
-                                            <i class="fa-solid fa-caret-up px-1" style="font-size: 0.9rem; padding-top: 0.15rem; background-color: rgba(0, 153, 255, 0.2); border-radius: 3px; height: fit-content;"></i>
+                                        <button onclick="submitVote(1, {{ reply.id }}, 'r'); removeHighlight('1r' + {{ reply.id }})" title="{{ reply.votes|selectattr('up_or_down', 'equalto', 1)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                            <i class="fa-solid fa-caret-up px-1" id="1r{{ reply.id }}" style="font-size: 0.9rem; padding-top: 0.15rem; background-color: rgba(0, 153, 255, 0.2); border-radius: 3px; height: fit-content;"></i>
                                         </button>
-                                        <button class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
-                                            <i class="fa-solid fa-caret-down px-1" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
+                                        <button onclick="submitVote(0, {{ reply.id }}, 'r'); removeHighlight('0r' + {{ reply.id }})" title="{{ reply.votes|selectattr('up_or_down', 'equalto', 0)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                            <i class="fa-solid fa-caret-down px-1" id="0r{{ reply.id }}" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
                                         </button>
                                         <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('r{{ reply.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
                                             <i style="font-size: 0.7rem;" class="fa-solid fa-reply"></i>
@@ -187,10 +187,9 @@
             {% for thread in board.threads %}
             <div class="d-flex flex-column align-items-start gap-3 w-100">
                 <!-- Thread -->
-                
                 <div class="d-flex gap-1">
                     {% if thread.image %}
-                        <div class="d-flex flex-column justify-content-start" style="width: 30%;">
+                        <div class="d-flex flex-column justify-content-start" style="max-width: 250px;">
                             <img class="rounded-1" style="width: 100%; height: auto; max-height: 400px;" src="{{ url_for('Images.Image', id=thread.image.id) }}" alt="">
                             <div class="d-flex gap-1">
                                 <p style="font-size: 0.7rem; color: #696969;" class="m-0">File: </p>
@@ -222,11 +221,11 @@
                                     <p class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">UTC</p>    
                                 </div>
                                 <div class="d-flex justify-content-center gap-1">
-                                    <button class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
-                                        <i class="fa-solid fa-caret-up  px-1" style="font-size: 0.9rem; padding-top: 0.15rem; background-color: rgba(0, 153, 255, 0.2); border-radius: 3px; height: fit-content;"></i>
+                                    <button onclick="submitVote(1, {{ thread.id }}, 't'); removeHighlight('1t' + {{ thread.id }})"                                    title="{{ thread.votes|selectattr('up_or_down', 'equalto', 1)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                        <i class="fa-solid fa-caret-up px-1" id="1t{{ thread.id }}" style="font-size: 0.9rem; padding-top: 0.15rem; background-color: rgba(0, 153, 255, 0.2); border-radius: 3px; height: fit-content;"></i>
                                     </button>
-                                    <button class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
-                                    <i class="fa-solid fa-caret-down px-1" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
+                                    <button onclick="submitVote(0, {{ thread.id }}, 't'); removeHighlight('0t' + {{ thread.id }})" title="{{ thread.votes|selectattr('up_or_down', 'equalto', 0)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                        <i class="fa-solid fa-caret-down px-1" id="0t{{ thread.id }}" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
                                     </button>
                                     <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('t{{ thread.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
                                         <i style="font-size: 0.7rem;" class="fa-solid fa-reply"></i>

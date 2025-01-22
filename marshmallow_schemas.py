@@ -34,15 +34,16 @@ class PlainImageSchema(Schema):
 
 class PlainVoteSchema(Schema):
     id = fields.Int(dump_only=True)
-    up_or_down = fields.Integer(required=True, load_only=True)
+    up_or_down = fields.Integer(required=True)
     user_token = fields.String(required=True)
     date = fields.Date(required=True)
     time = fields.Time(required=True)
 
 class VoteSchema(PlainVoteSchema):
-    thread_id = fields.String(required=True, load_only=True)
+    thread_id = fields.Integer(load_only=True, allow_none=True)
+    reply_id = fields.Integer(load_only=True, allow_none=True)
+
     thread = fields.Nested(PlainThreadSchema(), dump_only=True)
-    reply_id = fields.String(required=True, load_only=True)
     reply = fields.Nested(PlainReplySchema(), dump_only=True)
 
 class ImageSchema(PlainImageSchema):
@@ -61,6 +62,7 @@ class ThreadSchema(PlainThreadSchema):
     board = fields.Nested(PlainBoardSchema(), dump_only=True)
     replies = fields.List(fields.Nested('ReplySchema'), dump_only=True)
     image = fields.Nested(ImageSchema(), dump_only=True)
+    votes = fields.List(fields.Nested('VoteSchema'), dump_only=True)
 
 class ReplySchema(PlainReplySchema):
     thread_id = fields.String(required=True, load_only=True)
@@ -71,6 +73,8 @@ class ReplySchema(PlainReplySchema):
     reply_replies = fields.List(fields.Nested("ReplySchema"), dump_only=True)
 
     image = fields.Nested(ImageSchema(), dump_only=True)
+
+    votes = fields.List(fields.Nested('VoteSchema'), dump_only=True)
 
 class BoardGroupSchema(PlainBoardGroupSchema):
     boards = fields.List(fields.Nested(PlainBoardSchema()), dump_only=True)
