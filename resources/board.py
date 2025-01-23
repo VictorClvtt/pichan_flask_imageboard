@@ -6,6 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
 from db import db
 from models.board import BoardModel
+from models.thread import ThreadModel
 from marshmallow_schemas import PlainBoardSchema, BoardSchema
 
 blp = Blueprint('Boards', __name__, description='Operations on boards')
@@ -52,7 +53,10 @@ class Board(MethodView):
         board = BoardModel.query.get_or_404(id)
         boards = BoardModel.query.all()
 
-        return render_template('board.html', board=board, boards=boards)
+        normal_threads = ThreadModel.query.filter_by(type=0, board_id=id)
+        admin_threads = ThreadModel.query.filter_by(type=1, board_id=id)
+
+        return render_template('board.html', board=board, boards=boards, normal_threads=normal_threads, admin_threads=admin_threads)
 
     def delete(self, id):
 

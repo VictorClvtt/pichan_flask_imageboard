@@ -62,10 +62,12 @@ class Board(MethodView):
 
         board = BoardModel.query.get_or_404(id)
         boards = BoardModel.query.all()
+        normal_threads = ThreadModel.query.filter_by(type=0, board_id=id)
+        admin_threads = ThreadModel.query.filter_by(type=1, board_id=id)
 
         api_key = request.args.get('api_key', '')
 
-        return render_template('board.html', board=board, boards=boards, api_key=api_key)
+        return render_template('board.html', board=board, boards=boards, normal_threads=normal_threads, admin_threads=admin_threads, api_key=api_key)
     
 @blp.route('/thread/<string:id>')
 class Thread(MethodView):

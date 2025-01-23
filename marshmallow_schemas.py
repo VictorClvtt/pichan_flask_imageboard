@@ -17,6 +17,7 @@ class PlainThreadSchema(Schema):
 class PlainReplySchema(Schema):
     id = fields.Int(dump_only=True)
     content = fields.String(required=True)
+    type = fields.Integer(required=False)
     user_token = fields.String(required=True)
     date = fields.Date(required=True)
     time = fields.Time(required=True)

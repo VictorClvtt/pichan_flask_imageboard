@@ -55,6 +55,8 @@ async function postThread() {
             const seconds = String(currentDateTime.getUTCSeconds()).padStart(2, '0');
             const time = `${hours}:${minutes}:${seconds}`;
 
+            const type = document.getElementById('new_thread_type').value;
+
             const postData = {
                 user_token: token,
                 title: title,
@@ -62,7 +64,7 @@ async function postThread() {
                 board_id: board_id,
                 date: date,
                 time: time,
-                type: 0,
+                type: type,
             };
 
             console.log('Post data:', postData);
@@ -154,6 +156,8 @@ async function postReply(){
         // Clear input fields after extracting their values
         if (contentInput) contentInput.value = '';
 
+        const type = document.getElementById('new_reply_type').value;
+
         const currentDateTime = new Date();
         const year = currentDateTime.getUTCFullYear();
         const month = String(currentDateTime.getUTCMonth() + 1).padStart(2, '0');
@@ -168,6 +172,7 @@ async function postReply(){
         const replyData = {
             user_token: token,
             content: content,
+            type: type,
             date: date,
             time: time,
             thread_id: thread_id,

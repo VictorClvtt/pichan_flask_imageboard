@@ -47,6 +47,7 @@
                             
                                 <input type="file" name="image" accept=".jpg,.png" id="image-t" required>
                                 <input type="hidden" name="new_thread_id" value="" id="new_thread_id" required>
+                                <input type="hidden" name="new_thread_type" value="{{ 1 if api_key else 0 }}" id="new_thread_type" required>
                                 <input type="submit" value="" id="submit_image" class="visually-hidden" required>
                            
 
@@ -74,6 +75,7 @@
                         <form class="d-flex flex-column gap-2" action="" method="post">
                             <textarea class="w-100" placeholder="Content" id="reply_content" required></textarea>
                             <input type="hidden" name="new_reply_id" value="" id="new_reply_id" required>
+                            <input type="hidden" name="new_reply_type" value="{{ 1 if api_key else 0 }}" id="new_reply_type" required>
                             <input type="file" name="" accept=".jpg,.png" id="image-r">
 
                             <input type="hidden" id="thread_or_reply_id" value="">
@@ -108,17 +110,26 @@
             {% macro render_replies(replies, level, thread, count=namespace(value=0), rendered=namespace(flag=False)) %}
 
                 {% for reply in replies %}
-                
-                    
 
                     {% if count.value <= 5 %}
                         {% set count.value = count.value + 1 %}
-                            <div id="r{{ reply.id }}" class="chan-thread-info d-flex flex-column" style="min-width: 300px; margin-left: {{ 20 * level }}px; width: fit-content;">
-                                <div class="d-flex gap-1">
-                                    <p class="m-0 text-ellipsis" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">User: {{ reply.user_token }}</p>
-                                    {% if reply.user_token == thread.user_token %}
-                                        <p class="text-info m-0 text-ellipsis" style="font-size: 0.7rem;">(OP)</p>
-                                    {% endif %}
+                            <div id="r{{ reply.id }}" class="chan-{{ 'admin-' if reply.type == 1 }}thread-info d-flex flex-column" style="min-width: 300px; margin-left: {{ 20 * level }}px; width: fit-content;">
+                                <div class="d-flex justify-content-start align-content-start gap-1">
+                                    <div class="d-flex gap-1 align-items-center justify-content-start m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">
+                                        <span class="{{ 'text-info' if reply.type == 1 }} m-0" style="font-size: 0.7rem; {{ 'color: rgba(255, 255, 255, 0.700);' if reply.type == 0 }}">
+                                            {{ 'Admin:' if reply.type == 1 else 'User:' }}
+                                        </span>
+                                        <span class="m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">
+                                            {{ reply.user_token }}
+                                        </span>
+                                        {% if reply.user_token == thread.user_token %}
+                                            <span class="text-info m-0 text-ellipsis" style="font-size: 0.7rem;">(OP)</span>
+                                        {% endif %}
+                                        {% if reply.type == 1 %}
+                                            <img style="width: 15px; height: 15px;" src="{{ url_for('static', filename='pi.svg') }}" alt="">
+                                        {% endif %}
+                                    </div>
+                                    
                                     <hr class="m-0" style="width: 1px; border-left: solid 1px;">
                                     <p class="m-0 text-ellipsis" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">Reply No.{{ reply.id }}</p>
                                     <hr class="m-0" style="width: 1px; border-left: solid 1px;">
@@ -184,9 +195,65 @@
 
             {% endmacro %}
 
-            
-            {% for thread in board.threads %}
-            <div class="d-flex flex-column align-items-start gap-3 w-100">
+            {% for thread in admin_threads %}
+                <!-- Thread -->
+                <div class="d-flex gap-1">
+                    {% if thread.image %}
+                        <div class="d-flex flex-column justify-content-start" style="max-width: 235px; max-height: 400px;">
+                            <img class="rounded-1 shadow" src="{{ url_for('Images.Image', id=thread.image.id) }}" alt="">
+                            <div class="d-flex gap-1">
+                                <p style="font-size: 0.7rem; color: #696969;" class="m-0">File: </p>
+                                <a style="font-size: 0.7rem;" class="m-0 text-ellipsis" href="{{ url_for('Images.Image', id=thread.image.id) }}">{{ thread.image.name }}</a>
+                            </div>
+                            <p style="font-size: 0.7rem; color: #696969;" class="m-0 p-0">({{ (thread.image.size|int / 1024)|int }}KB {{ thread.image.measures }})</p>                    
+                        </div>
+                    {% endif %}
+                    <div class="d-flex flex-column gap-1 w-100">
+                        
+                        <div id="t{{ thread.id }}" class="chan-admin-thread-info border-info-subtle" style="min-width: 300px; width: fit-content;">
+                            <div class="d-flex gap-2">
+                                <a class="chan-thread-title text-ellipsis m-0 text-decoration-none fst-italic" href="{{ url_for('Admin.Thread' if api_key else 'Threads.Thread', id=thread.id, **({'api_key': api_key} if api_key else {})) }}" style="font-weight: 500; text;">{{ thread.title }}</a>
+                                <div class="d-flex flex-column justify-content-around">
+                                    <div class="d-flex align-items-center gap-1">
+                                        <p class="text-info m-0" style="font-size: 0.7rem;">Admin:</p>
+                                        <p class="m-0 text-ellipsis" style="font-size: 0.7rem !important; color: rgba(255, 255, 255, 0.700);">{{ thread.user_token }}</p>
+                                        <img style="width: 15px; height: 15px;" src="{{ url_for('static', filename='pi.svg') }}" alt="">
+                                    </div>
+                                    <p class="m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">Thread No.{{ thread.id }}</p>      
+                                </div>
+                            </div>
+
+                            <p class="chan-text-content">{{ thread.content }}</p>
+
+                            <div class="d-flex justify-content-between">
+                                <div class="d-flex gap-1">
+                                    <p class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">
+                                        {{ '%02d' | format(thread.date.day) }}/{{ '%02d' | format(thread.date.month) }}/{{ thread.date.year }}
+                                    </p>
+                                    <hr class="m-0 h-100" style="width: 1px; border-left: solid 1px;">
+                                    <p class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">{{ thread.time }}</p>
+                                    <p class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">UTC</p>    
+                                </div>
+                                <div class="d-flex justify-content-center gap-1">
+                                    <button onclick="submitVote(1, {{ thread.id }}, 't')"                                    title="{{ thread.votes|selectattr('up_or_down', 'equalto', 1)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                        <i class="fa-solid fa-caret-up px-1" id="1t{{ thread.id }}" style="font-size: 0.9rem; padding-top: 0.15rem; background-color: rgba(0, 153, 255, 0.2); border-radius: 3px; height: fit-content;"></i>
+                                    </button>
+                                    <button onclick="submitVote(0, {{ thread.id }}, 't')" title="{{ thread.votes|selectattr('up_or_down', 'equalto', 0)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                        <i class="fa-solid fa-caret-down px-1" id="0t{{ thread.id }}" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
+                                    </button>
+                                    <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('t{{ thread.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
+                                        <i style="font-size: 0.7rem;" class="fa-solid fa-reply"></i>
+                                        <p style="font-size: 0.7rem;" class="m-0">Reply</p>   
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {{ render_replies(thread.replies, 2, thread) }}    
+                    </div>    
+                </div>
+                <hr class="border-white my-0 mx-auto" style="width: 100%;"> 
+            {% endfor %}
+            {% for thread in normal_threads %}
                 <!-- Thread -->
                 <div class="d-flex gap-1">
                     {% if thread.image %}
