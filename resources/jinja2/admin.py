@@ -1,5 +1,6 @@
 from flask import request, jsonify
-from flask_smorest import Blueprint
+from flask_smorest import Blueprint, abort
+from flask.views import MethodView
 
 from flask import render_template
 from flask_smorest import Blueprint
@@ -9,22 +10,24 @@ from models.thread import ThreadModel
 from models.reply import ReplyModel
 from models.image import ImageModel
 
-# Trusted IP addresses
-TRUSTED_IPS = {"127.0.0.1"}
 
 # Define a Flask-Smorest Blueprint
 blp = Blueprint("Admin", __name__, url_prefix="/admin")
 
+
+API_KEYS = {"cu", "valid_api_key_2"}
+
+def validate_api_key():
+    api_key = request.args.get('api_key')  # Get the API key from the query string
+    if api_key not in API_KEYS:
+        abort(403, message="Invalid or missing API key.")
+
+
 @blp.route('/')
 @blp.alt_response(403, description="Access denied")
-def admin_endpoint():
-    """
-    Endpoint accessible only to trusted IP addresses.
-    """
-    client_ip = request.remote_addr
+def home():
 
-    if client_ip not in TRUSTED_IPS:
-        return jsonify({"error": "Access denied"}), 403
+    validate_api_key()
 
     board_groups = BoardGroupModel.query.all()
     threads = ThreadModel.query.all()
@@ -45,6 +48,35 @@ def admin_endpoint():
         }
         for image in images
     ]
+
+    api_key = request.args.get('api_key', '')
     
     # Render the template and pass the board_groups data
-    return render_template('index.html', board_groups=board_groups, threads=threads, replies=replies, boards=boards, images=images, admin=True)
+    return render_template('index.html', board_groups=board_groups, threads=threads, replies=replies, boards=boards, images=images, api_key=api_key)
+
+@blp.route('/board/<string:id>')
+class Board(MethodView):
+    def get(self, id):
+
+        validate_api_key()
+
+        board = BoardModel.query.get_or_404(id)
+        boards = BoardModel.query.all()
+
+        api_key = request.args.get('api_key', '')
+
+        return render_template('board.html', board=board, boards=boards, api_key=api_key)
+    
+@blp.route('/thread/<string:id>')
+class Thread(MethodView):
+    def get(self, id):
+
+        validate_api_key()
+
+        thread = ThreadModel.query.get_or_404(id)
+        boards = BoardModel.query.all()
+        image = ImageModel.query.filter_by(thread_id=id).first()
+
+        api_key = request.args.get('api_key', '')
+        
+        return render_template('thread.html', thread=thread, boards=boards, image=image, api_key=api_key)

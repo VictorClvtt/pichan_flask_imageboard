@@ -55,6 +55,9 @@ class Board(MethodView):
         return render_template('board.html', board=board, boards=boards)
 
     def delete(self, id):
+
+        validate_api_key()
+
         board = BoardModel.query.get_or_404(id)
 
         db.session.delete(board)
