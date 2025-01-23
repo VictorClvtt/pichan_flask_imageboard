@@ -38,3 +38,28 @@
     text-align: center;
     margin: 4px 0 0 0;
 }
+
+.chan-admin-button{
+    background-color: rgba(255, 255, 255, 0);
+    color: #ffffff;
+    border: 1px solid #ffffff;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.chan-admin-button:hover{
+    background-color: rgba(255, 255, 255, 0.175);
+    color: #ffffff;
+    border: 1px solid #ffffff;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+}
+
+.chan-admin-modal{
+    border-style: solid;
+    border-width: 1px;
+    border-color: #5e5e5e;
+    border-radius: 3px;
+    background-color: rgb(24 24 27);
+    color: white;
+}

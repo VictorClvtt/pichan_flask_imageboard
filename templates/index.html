@@ -32,12 +32,73 @@
             {% endfor %}
         </section>
 
+        {% if admin %}
+            <div class="d-flex gap-1 w-100" style="max-width: 800px; margin-top: 0.2rem;">
+                <button class="w-100 chan-admin-button" type="button" data-bs-toggle="modal" data-bs-target="#newBoardGroup">+ New Board Group</button>
+                <button class="w-100 chan-admin-button" type="button" data-bs-toggle="modal" data-bs-target="#newBoard">+ New Board</button>
+            </div>
+
+            <div class="modal fade" id="newBoardGroup" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" data-bs-theme="dark">
+                    <div class="modal-content chan-admin-modal">
+                        <div class="modal-header" style="border-color: #5e5e5e;">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Board Group data:</h1>
+                        <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form class="d-flex flex-column gap-2" action="" method="post">
+                                
+                                <input type="text" placeholder="New board group name" id="new_board_group_name">
+                                <input type="text" placeholder="API KEY" id="new_board_group_api_key">
+    
+                            </form>
+                        </div>
+                        <div class="modal-footer" style="border-color: #5e5e5e;">
+                            <button type="button" class=" chan-admin-button w-100" style="max-width: 80px;" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class=" chan-admin-button w-100" style="max-width: 200px;" onclick="newBoardGroup()">Create Board Group</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="newBoard" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" data-bs-theme="dark">
+                    <div class="modal-content chan-admin-modal">
+                        <div class="modal-header" style="border-color: #5e5e5e;">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Board Group data:</h1>
+                        <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form class="d-flex flex-column gap-2" action="" method="POST">
+                                
+                                <select id="board_group_id">
+                                        <option disabled>Board Group</option>
+                                    {% for board_group in board_groups %}
+                                        <option value="{{ board_group.id }}">{{ board_group.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <input type="text" placeholder="New board name" id="new_board_name_id">
+                                <input type="text" placeholder="New board id(/x)" id="new_board_id_id">
+                                <input type="text" placeholder="New board description" id="new_board_desc_id">
+                                <input type="text" placeholder="API KEY" id="new_board_api_key">
+    
+                            </form>
+                        </div>
+                        <div class="modal-footer" style="border-color: #5e5e5e;">
+                            <button type="button" class=" chan-admin-button w-100" style="max-width: 80px;" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class=" chan-admin-button w-100" style="max-width: 200px;" onclick="newBoard()">Create Board</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
         <h2 class="d-flex align-items-center fst-italic text-white w-100 m-0 mt-4" style="max-width: 800px; font-size: 15px; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Popular Threads:<hr class="border-white w-100 my-0 mx-1" style="height: fit-content; margin-bottom: 1px !important;"></h2>
-        <section class="chan-index-section justify-content-around" id="popular-threads">
+        <section class="chan-index-section admin-button" id="popular-threads">
             <div class="chan-threads-container">
                 {% for board in boards %}
-                    <div class="d-flex flex-column align-items-center" style="max-width: 175px; max-height: 275px;">
-                        <p class="chan-title text-decoration-underline fw-bold m-0 py-1" style="font-size: 0.9rem;">{{ board.name }}</p>
+                    
+                    {% if loop.index <= 12 %}
         
                         {% set ns = namespace(most_voted_thread = None, max_votes = 0) %}
         
@@ -51,14 +112,19 @@
                         {% endfor %}
         
                         {% if ns.most_voted_thread %}
-                            <img style="max-width: 150px; max-height: 150px; border: 1px solid rgb(66, 212, 144);" src="{{ url_for('Images.Image', id=ns.most_voted_thread.image.id) }}" alt="">
-                            <p class="ellipsis-multiline text-white">
-                                {{ ns.most_voted_thread.content }}
-                            </p>
-                        {% else %}
-                            <p>No threads with votes.</p>
+                            <div class="d-flex flex-column align-items-center" style="max-width: 175px; max-height: 275px;">
+                                <a href="{{ url_for('Boards.Board', id=ns.most_voted_thread.board.id) }}" class="chan-title text-decoration-underline fw-bold m-0 py-1" style="font-size: 0.9rem;">{{ board.name }}</a>
+                                <a href="{{ url_for('Threads.Thread', id=ns.most_voted_thread.id) }}" title="{{ ns.most_voted_thread.title }}">
+                                    <img style="max-width: 150px; max-height: 150px; border: 1px solid rgb(66, 212, 144); background: rgba(0, 255, 234, 0.05);" src="{{ url_for('Images.Image', id=ns.most_voted_thread.image.id) }}" alt="">
+                                </a>
+                                <p class="ellipsis-multiline text-white">
+                                    {{ ns.most_voted_thread.content }}
+                                </p>
+                            </div>
                         {% endif %}
-                    </div>
+
+                    {% endif %}    
+                    
                 {% endfor %}
             </div>
         </section>
@@ -73,5 +139,87 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    {% if admin %}
+        <script>
+
+            document.getElementById('new_board_id_id').value = ''
+            document.getElementById('new_board_name_id').value = ''
+            document.getElementById('new_board_desc_id').value = ''
+            document.getElementById('board_group_id').value = 'Board Group'
+            const apiKey = document.getElementById('new_board_group_api_key').value = ''
+
+            document.getElementById('new_board_group_name').value = ''
+            document.getElementById('new_board_api_key').value = ''
+
+            async function newBoardGroup(){
+
+                newBoardGroupData = {
+                    name: document.getElementById('new_board_group_name').value
+                }
+
+                const apiKey = document.getElementById('new_board_group_api_key').value
+                const response = await fetch(`/board_group?api_key=${apiKey}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(newBoardGroupData),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
+
+                const responseData = await response.json();
+
+                location.reload()
+            }
+
+            async function newBoard() {
+                // Gather form data
+                const newBoardData = {
+                    id: document.getElementById('new_board_id_id').value,
+                    name: document.getElementById('new_board_name_id').value,
+                    description: document.getElementById('new_board_desc_id').value,
+                    board_group_id: document.getElementById('board_group_id').value
+                };
+
+                // Get the API key from the form input
+                const apiKey = document.getElementById('new_board_api_key').value;
+
+                try {
+                    // Make the POST request
+                    const response = await fetch(`/board?api_key=${apiKey}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(newBoardData),
+                    });
+
+                    // If the response is not ok (status not 2xx), throw an error
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(`Server error: ${response.status} - ${errorData.message}`);
+                    }
+
+                    // Parse the response body if the request was successful
+                    const responseData = await response.json();
+
+                    // Optional: Log the response data for debugging
+                    console.log('Board created successfully:', responseData);
+
+                    // Reload the page after success
+                    location.reload();
+                } catch (error) {
+                    // Log the error message for debugging
+                    console.error('Error creating board:', error.message);
+                }
+            }
+
+        </script>
+    {% endif %}    
+
 </body>
 </html>

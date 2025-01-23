@@ -16,6 +16,8 @@ from resources.vote import blp as VoteBlueprint
 
 from resources.jinja2.index import blp as IndexBlueprint
 
+from resources.jinja2.admin import blp as AdminBlueprint
+
 def create_app(db_url=None):
 
     app = Flask(__name__)
@@ -49,5 +51,7 @@ def create_app(db_url=None):
     api.register_blueprint(VoteBlueprint)
 
     api.register_blueprint(IndexBlueprint)
+
+    api.register_blueprint(AdminBlueprint)
 
     return app

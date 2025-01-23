@@ -1,3 +1,4 @@
+from flask import request
 from flask.views import MethodView
 from flask import render_template
 from flask_smorest import Blueprint, abort
@@ -10,6 +11,14 @@ from marshmallow_schemas import PlainBoardSchema, BoardSchema
 blp = Blueprint('Boards', __name__, description='Operations on boards')
 
 
+API_KEYS = {"cu", "valid_api_key_2"}
+
+def validate_api_key():
+    api_key = request.args.get('api_key')  # Get the API key from the query string
+    if api_key not in API_KEYS:
+        abort(403, message="Invalid or missing API key.")
+
+
 @blp.route('/board')
 class BoardList(MethodView):
 
@@ -20,6 +29,9 @@ class BoardList(MethodView):
     @blp.arguments(BoardSchema)
     @blp.response(201, BoardSchema)
     def post(self, req_data):
+
+        validate_api_key()
+
         new_board = BoardModel(**req_data)
 
         # Inserting new Board

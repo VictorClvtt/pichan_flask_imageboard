@@ -1,3 +1,4 @@
+from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
@@ -7,6 +8,14 @@ from models.board_group import BoardGroupModel
 from marshmallow_schemas import PlainBoardGroupSchema, BoardGroupSchema
 
 blp = Blueprint('Board Groups', __name__, description='Operations on board groups')
+
+
+API_KEYS = {"cu", "valid_api_key_2"}
+
+def validate_api_key():
+    api_key = request.args.get('api_key')  # Get the API key from the query string
+    if api_key not in API_KEYS:
+        abort(403, message="Invalid or missing API key.")
 
 
 @blp.route('/board_group')
@@ -19,6 +28,9 @@ class BoardGroupList(MethodView):
     @blp.arguments(BoardGroupSchema)
     @blp.response(201, BoardGroupSchema)
     def post(self, req_data):
+
+        validate_api_key()
+
         new_board_group = BoardGroupModel(**req_data)
 
         # Inserting new Board Group
