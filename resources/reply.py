@@ -1,3 +1,4 @@
+from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
@@ -7,9 +8,16 @@ from models.reply import ReplyModel
 from models.thread import ThreadModel
 from marshmallow_schemas import ReplySchema
 
-from datetime import date
 
 blp = Blueprint('Replies', __name__, description='Operations on replies')
+
+
+API_KEYS = {"cu", "valid_api_key_2"}
+
+def validate_api_key():
+    api_key = request.args.get('api_key')  # Get the API key from the query string
+    if api_key not in API_KEYS:
+        abort(403, message="Invalid or missing API key.")
 
 
 @blp.route('/reply')
@@ -48,6 +56,9 @@ class Reply(MethodView):
         return reply
 
     def delete(self, id):
+
+        validate_api_key()
+
         reply = ReplyModel.query.get_or_404(id)
 
         db.session.delete(reply)

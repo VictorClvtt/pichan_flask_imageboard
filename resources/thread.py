@@ -1,3 +1,4 @@
+from flask import request
 from flask.views import MethodView
 from flask import render_template
 from flask_smorest import Blueprint, abort
@@ -11,6 +12,14 @@ from marshmallow_schemas import ThreadSchema
 
 
 blp = Blueprint('Threads', __name__, description='Operations on threads')
+
+
+API_KEYS = {"cu", "valid_api_key_2"}
+
+def validate_api_key():
+    api_key = request.args.get('api_key')  # Get the API key from the query string
+    if api_key not in API_KEYS:
+        abort(403, message="Invalid or missing API key.")
 
 
 @blp.route('/thread')
@@ -50,6 +59,9 @@ class Thread(MethodView):
         return render_template('thread.html', thread=thread, boards=boards, image=image)
 
     def delete(self, id):
+
+        validate_api_key()
+
         thread = ThreadModel.query.get_or_404(id)
 
         db.session.delete(thread)

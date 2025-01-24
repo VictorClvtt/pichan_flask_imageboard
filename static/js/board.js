@@ -86,9 +86,8 @@ async function postThread() {
             console.log('Response from server:', responseData);
 
             // Set the hash to the new thread ID
+            
             const newThreadId = responseData.id; // Replace with the actual key from the server response
-            window.location.hash = `t${newThreadId}`;
-
             uploadImage(newThreadId, null);
         } else {
             console.log('No image selected.');
@@ -101,22 +100,20 @@ async function postThread() {
 document.addEventListener('DOMContentLoaded', () => {
     const hash = window.location.hash;
     if (hash) {
-        const elementId = hash.replace('#', ''); // Remove the hash symbol
+        const elementId = hash.replace('#', '');
         const element = document.getElementById(elementId);
         if (element) {
-            // Smoothly scroll to the element
-            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            
-            // Clear the hash without modifying the history or reloading the page
-            history.replaceState(null, null, ' ');
-
-            // Highlight the post
-            highlightPost({ id: elementId });
+            setTimeout(() => {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                history.replaceState(null, null, ' '); // Remove hash without reloading
+                highlightPost({ id: elementId });
+            }, 100); // Delay to ensure full load
         } else {
             console.log('Element not found for hash:', hash);
         }
     }
 });
+
 
 function replyModal(id){
     document.getElementById('thread_or_reply_id').value = id
@@ -274,6 +271,7 @@ const uploadImage = async (thread_id, reply_id) => {
                 const responseData = await response.json();
                 console.log('Image uploaded successfully:', responseData);
                 fileInput.value = ''
+                window.location.hash = threadId ? `t${threadId}` : `r${replyId}`;
                 window.location.reload();
             } else {
                 const errorData = await response.json();
@@ -285,6 +283,9 @@ const uploadImage = async (thread_id, reply_id) => {
             URL.revokeObjectURL(img.src);
         }
     };
+
+    
+    
 
     img.onerror = () => {
         console.error('Error loading image to get dimensions');
