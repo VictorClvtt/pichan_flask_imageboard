@@ -53,14 +53,21 @@
                 <div class="modal-dialog" data-bs-theme="dark">
                     <div class="modal-content chan-admin-modal">
                         <div class="modal-header" style="border-color: #5e5e5e;">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Board Group data:</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">New Board Group data:</h1>
                         <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <form class="d-flex flex-column gap-2" action="" method="post">
+
+                                <div>
+                                    <label class="d-flex gap-1 align-items-center fst-italic text-white m-0" style="max-width: 800px; font-size: 0.8rem; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Board Group name:<hr class="border-white w-100 my-0" style="height: fit-content; margin-bottom: 1px !important;"></label>
+                                    <input class="w-100" type="text" placeholder="Enter name" id="new_board_group_name">    
+                                </div>
+                                <div>
+                                    <label class="d-flex gap-1 align-items-center fst-italic text-white m-0" style="max-width: 800px; font-size: 0.8rem; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">API Key:<hr class="border-white w-100 my-0" style="height: fit-content; margin-bottom: 1px !important;"></label>
+                                    <input class="w-100" type="text" placeholder="Enter API Key" id="new_board_group_api_key">    
+                                </div>
                                 
-                                <input type="text" placeholder="New board group name" id="new_board_group_name">
-                                <input type="text" placeholder="API KEY" id="new_board_group_api_key">
     
                             </form>
                         </div>
@@ -77,20 +84,27 @@
                 <div class="modal-dialog" data-bs-theme="dark">
                     <div class="modal-content chan-admin-modal">
                         <div class="modal-header" style="border-color: #5e5e5e;">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Board Group data:</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Board Group data:</h1>
                         <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <form class="d-flex flex-column gap-2" action="" method="POST">
                                 
-                                <select id="delete_board_group_id">
-                                        <option value="" hidden selected disabled >Board Group</option>
-                                    {% for board_group in board_groups %}
-                                        <option value="{{ board_group.id }}">{{ board_group.name }}</option>
-                                    {% endfor %}
-                                </select>
-                                <input type="text" placeholder="API KEY" id="delete_board_group_api_key">
-    
+                                <div>
+                                    <label class="d-flex gap-1 align-items-center fst-italic text-white m-0" style="max-width: 800px; font-size: 0.8rem; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Board Group:<hr class="border-white w-100 my-0" style="height: fit-content; margin-bottom: 1px !important;"></label>
+                                    
+                                    <select class="w-100" id="delete_board_group_id">
+                                            <option value="" hidden selected disabled >Select Board Group</option>
+                                        {% for board_group in board_groups %}
+                                            <option value="{{ board_group.id }}">{{ board_group.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="d-flex gap-1 align-items-center fst-italic text-white m-0" style="max-width: 800px; font-size: 0.8rem; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">API Key:<hr class="border-white w-100 my-0" style="height: fit-content; margin-bottom: 1px !important;"></label>
+                                    <input class="w-100" type="text" placeholder="Enter API Key" id="delete_board_group_api_key">    
+                                </div>
+
                             </form>
                         </div>
                         <div class="modal-footer" style="border-color: #5e5e5e;">
@@ -106,22 +120,38 @@
                 <div class="modal-dialog" data-bs-theme="dark">
                     <div class="modal-content chan-admin-modal">
                         <div class="modal-header" style="border-color: #5e5e5e;">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Board data:</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">New Board data:</h1>
                         <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <form class="d-flex flex-column gap-2" action="" method="POST">
                                 
-                                <select id="board_group_id">
-                                        <option value="" hidden selected disabled>Board Group</option>
-                                    {% for board_group in board_groups %}
-                                        <option value="{{ board_group.id }}">{{ board_group.name }}</option>
-                                    {% endfor %}
-                                </select>
-                                <input type="text" placeholder="New board name" id="new_board_name_id">
-                                <input type="text" placeholder="New board id(/x)" id="new_board_id_id">
-                                <input type="text" placeholder="New board description" id="new_board_desc_id">
-                                <input type="text" placeholder="API KEY" id="new_board_api_key">
+                                <div>
+                                    <label class="d-flex gap-1 align-items-center fst-italic text-white m-0" style="max-width: 800px; font-size: 0.8rem; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Board Group:<hr class="border-white w-100 my-0" style="height: fit-content; margin-bottom: 1px !important;"></label>
+                                    <select class="w-100" id="board_group_id">
+                                            <option value="" hidden selected disabled>Select Board Group</option>
+                                        {% for board_group in board_groups %}
+                                            <option value="{{ board_group.id }}">{{ board_group.name }}</option>
+                                        {% endfor %}
+                                    </select>    
+                                </div>
+                                <div>
+                                    <label class="d-flex gap-1 align-items-center fst-italic text-white m-0" style="max-width: 800px; font-size: 0.8rem; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Board name:<hr class="border-white w-100 my-0" style="height: fit-content; margin-bottom: 1px !important;"></label>
+                                    <input class="w-100" type="text" placeholder="Enter name" id="new_board_name_id">    
+                                </div>
+                                <div>
+                                    <label class="d-flex gap-1 align-items-center fst-italic text-white m-0" style="max-width: 800px; font-size: 0.8rem; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Board id(name abbreviation):<hr class="border-white w-100 my-0" style="height: fit-content; margin-bottom: 1px !important;"></label>
+                                    <input class="w-100" type="text" placeholder="Enter board id(name abbreviation)" id="new_board_id_id">    
+                                </div>
+                                <div>
+                                    <label class="d-flex gap-1 align-items-center fst-italic text-white m-0" style="max-width: 800px; font-size: 0.8rem; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Board description:<hr class="border-white w-100 my-0" style="height: fit-content; margin-bottom: 1px !important;"></label>
+                                    <input class="w-100" type="text" placeholder="Enter board description" id="new_board_desc_id">
+                                </div>
+                                <div>
+                                    <label class="d-flex gap-1 align-items-center fst-italic text-white m-0" style="max-width: 800px; font-size: 0.8rem; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">API Key:<hr class="border-white w-100 my-0" style="height: fit-content; margin-bottom: 1px !important;"></label>
+                                    <input class="w-100" type="text" placeholder="API KEY" id="new_board_api_key">
+                                </div>
+                                
     
                             </form>
                         </div>
@@ -138,20 +168,27 @@
                 <div class="modal-dialog" data-bs-theme="dark">
                     <div class="modal-content chan-admin-modal">
                         <div class="modal-header" style="border-color: #5e5e5e;">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Board data:</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Board data:</h1>
                         <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <form class="d-flex flex-column gap-2" action="" method="POST">
                                 
-                                <select id="delete_board_id">
-                                        <option value="" hidden selected disabled>Board</option>
-                                    {% for board in boards %}
-                                        <option value="{{ board.id }}">{{ board.name }}</option>
-                                    {% endfor %}
-                                </select>
+                                <div>
+                                    <label class="d-flex gap-1 align-items-center fst-italic text-white m-0" style="max-width: 800px; font-size: 0.8rem; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Board:<hr class="border-white w-100 my-0" style="height: fit-content; margin-bottom: 1px !important;"></label>
+                                    <select class="w-100" id="delete_board_id">
+                                            <option value="" hidden selected disabled>Board</option>
+                                        {% for board in boards %}
+                                            <option value="{{ board.id }}">{{ board.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="d-flex gap-1 align-items-center fst-italic text-white m-0" style="max-width: 800px; font-size: 0.8rem; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">API Key:<hr class="border-white w-100 my-0" style="height: fit-content; margin-bottom: 1px !important;"></label>
+                                    <input class="w-100" type="text" placeholder="Enter API Key" id="delete_board_api_key">
+                                </div>
                             
-                                <input type="text" placeholder="API KEY" id="delete_board_api_key">
+                                
     
                             </form>
                         </div>

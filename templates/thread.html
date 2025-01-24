@@ -40,9 +40,14 @@
                     </div>
                     <div class="modal-body">
                         <form class="d-flex flex-column gap-2" action="" method="post">
-                            <textarea class="w-100" placeholder="Content" id="reply_content"></textarea>
+
+                            <div>
+                                <label class="d-flex gap-1 align-items-center fst-italic text-white m-0" style="max-width: 800px; font-size: 0.8rem; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Reply content:<hr class="border-white w-100 my-0" style="height: fit-content; margin-bottom: 1px !important;"></label>
+                                <textarea class="w-100" placeholder="Enter content" id="reply_content" required></textarea> 
+                            </div>
+
                             <input type="hidden" name="new_reply_type" value="{{ 1 if api_key else 0 }}" id="new_reply_type" required>
-                            <input type="file" name="" accept=".jpg,.png" id="image-r" >
+                            <input type="file" name="" accept=".jpg,.png,.gif" id="image-r" >
 
                             <input type="hidden" id="thread_or_reply_id" value="">
                         </form>
@@ -64,7 +69,7 @@
         <hr class="border-white w-100 my-0" style="margin-bottom: 1.1rem !important;">
   
         <!-- Rendering Threads and Replies -->
-        <section class="d-flex flex-column overflow- align-items-start w-100 px-3 gap-3" style="padding-bottom: 1rem; height: fit-content;" id="threads">
+        <section class="d-flex flex-column overflow-x-auto align-items-start w-100 px-3 gap-3" style="padding-bottom: 1rem; height: fit-content;" id="threads">
             
             {% macro render_replies(replies, level, thread) %}
 
@@ -157,7 +162,7 @@
             {% if thread.type == 1 %}
                 <div class="d-flex gap-1" id="img-div-t{{ thread.id }}">
                     {% if thread.image %}
-                        <div class="d-flex flex-column justify-content-start" style="max-width: 235px; max-height: fit-content;">
+                        <div class="d-flex flex-column justify-content-start" style="max-width: 235px; max-height: fit-content; min-width: 200px;">
                             <img class="rounded-1 shadow img-fluid" src="{{ url_for('Images.Image', id=thread.image.id) }}" onclick="maxOrMin({{ thread.id }}, 't')">
                             <div class="d-flex gap-1">
                                 <p style="font-size: 0.7rem; color: #696969;" class="m-0">File: </p>
@@ -168,7 +173,7 @@
                     {% endif %}
                     <div class="d-flex flex-column gap-1 w-100">
                         
-                        <div id="t{{ thread.id }}" class="chan-admin-thread-info border-info-subtle" style="min-width: 350px; width: fit-content;">
+                        <div id="t{{ thread.id }}" class="chan-admin-thread-info border-info-subtle" style="min-width: 350px; width: fit-content; min-width: 200px;">
                             <div class="d-flex gap-2">
                                 <a class="chan-thread-title text-ellipsis m-0 text-decoration-none fst-italic" href="{{ url_for('Admin.Thread' if api_key else 'Threads.Thread', id=thread.id, **({'api_key': api_key} if api_key else {})) }}" style="font-weight: 500; text;">{{ thread.title }}</a>
                                 <div class="d-flex flex-column justify-content-around">

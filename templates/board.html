@@ -37,20 +37,24 @@
             <div class="modal-dialog" data-bs-theme="dark">
                 <div class="modal-content chan-thread-modal">
                     <div class="modal-header" style="border-color: #5e5e5e;">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Thread data:</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">New Thread data:</h1>
                     <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form class="d-flex flex-column gap-2">
-                            <input class="w-100" type="text" placeholder="Title" id="title" required>
-                            <textarea class="w-100" placeholder="Content" id="content" required></textarea>
-
                             
-                                <input type="file" name="image" accept=".jpg,.png" id="image-t" required>
-                                <input type="hidden" name="new_thread_id" value="" id="new_thread_id" required>
-                                <input type="hidden" name="new_thread_type" value="{{ 1 if api_key else 0 }}" id="new_thread_type" required>
-                                <input type="submit" value="" id="submit_image" class="visually-hidden" required>
-                           
+                            <div>
+                                <label class="d-flex gap-1 align-items-center fst-italic text-white m-0" style="max-width: 800px; font-size: 0.8rem; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Thread title:<hr class="border-white w-100 my-0" style="height: fit-content; margin-bottom: 1px !important;"></label>
+                                <input class="w-100" type="text" placeholder="Enter title" id="title" required>
+                            </div>
+                            <div>
+                                <label class="d-flex gap-1 align-items-center fst-italic text-white m-0" style="max-width: 800px; font-size: 0.8rem; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Thread content:<hr class="border-white w-100 my-0" style="height: fit-content; margin-bottom: 1px !important;"></label>
+                                <textarea class="w-100" placeholder="Enter content" id="content" required></textarea>
+                            </div>
+                            <input type="file" name="image" accept=".jpg,.png,.gif" id="image-t" required>
+                            <input type="hidden" name="new_thread_id" value="" id="new_thread_id" required>
+                            <input type="hidden" name="new_thread_type" value="{{ 1 if api_key else 0 }}" id="new_thread_type" required>
+                            <input type="submit" value="" id="submit_image" class="visually-hidden" required>
 
                             <input type="hidden" id="board_id" value="{{ board.id }}" required>
 
@@ -69,14 +73,19 @@
             <div class="modal-dialog" data-bs-theme="dark">
                 <div class="modal-content chan-thread-modal">
                     <div class="modal-header" style="border-color: #5e5e5e;">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Reply data:</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">New Reply data:</h1>
                     <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form class="d-flex flex-column gap-2" action="" method="post">
-                            <textarea class="w-100" placeholder="Content" id="reply_content" required></textarea>    
+                            
+                            <div>
+                                <label class="d-flex gap-1 align-items-center fst-italic text-white m-0" style="max-width: 800px; font-size: 0.8rem; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Reply content:<hr class="border-white w-100 my-0" style="height: fit-content; margin-bottom: 1px !important;"></label>
+                                <textarea class="w-100" placeholder="Enter content" id="reply_content" required></textarea> 
+                            </div>
+                               
                             <input type="hidden" name="new_reply_type" value="{{ 1 if api_key else 0 }}" id="new_reply_type" required>
-                            <input type="file" name="" accept=".jpg,.png" id="image-r">
+                            <input type="file" name="" accept=".jpg,.png,.gif" id="image-r">
 
                             <input type="hidden" id="thread_or_reply_id" value="">
                         </form>
@@ -198,14 +207,14 @@
             {% endmacro %}
 
         <!-- Rendering Threads and Replies -->
-        <section class="d-flex flex-column align-items-start w-100 px-3 gap-3" style="padding-bottom: 1rem; height: fit-content;" id="threads">
+        <section class="d-flex flex-column overflow-x-auto align-items-start w-100 px-3 gap-3" style="padding-bottom: 1rem; height: fit-content;" id="threads">
 
             {% if page == 1 %}
                 {% for thread in admin_threads %}
                     <!-- Thread -->
                     <div class="d-flex gap-1" id="img-div-t{{ thread.id }}">
                         {% if thread.image %}
-                            <div class="d-flex flex-column justify-content-start" style="max-width: 235px; max-height: fit-content;">
+                            <div class="d-flex flex-column justify-content-start" style="max-width: 235px; max-height: fit-content; min-width: 200px;">
                                 <img class="rounded-1 shadow img-fluid" src="{{ url_for('Images.Image', id=thread.image.id) }}" onclick="maxOrMin({{ thread.id }}, 't')">
                                 <div class="d-flex gap-1">
                                     <p style="font-size: 0.7rem; color: #696969;" class="m-0">File: </p>
@@ -270,7 +279,7 @@
                 <!-- Thread -->
                 <div class="d-flex gap-1" id="img-div-t{{ thread.id }}">
                     {% if thread.image %}
-                        <div class="d-flex flex-column justify-content-start" style="max-width: 235px; max-height: fit-content;">
+                        <div class="d-flex flex-column justify-content-start" style="max-width: 235px; max-height: fit-content; min-width: 200px;">
                             <img class="rounded-1 shadow img-fluid" src="{{ url_for('Images.Image', id=thread.image.id) }}" onclick="maxOrMin({{ thread.id }}, 't')">
                             <div class="d-flex gap-1">
                                 <p style="font-size: 0.7rem; color: #696969;" class="m-0">File: </p>
