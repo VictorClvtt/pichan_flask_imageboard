@@ -328,6 +328,45 @@
         </section>
 
     </main>
+    <nav class="d-flex">
+        <ul class="d-flex align-items-center p-0" style="height: 1.75rem; gap: 2px">
+            <!-- Previous Button -->
+            <li class="list-unstyled h-100 d-flex align-items-center" 
+                style="color: rgb(0, 255, 170); background: rgba(0, 0, 0, 0.5);" >
+                <a class="page-link px-2 {% if normal_threads.page <= 1 %}text-white-50 disabled{% endif %}" 
+                   href="{{ url_for('Admin.Board' if api_key else 'Boards.Board', id=board.id, page=normal_threads.page - 1, **({'api_key': api_key} if api_key else {})) }}" 
+                   aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+    
+            <!-- Page Numbers -->
+            {% set total_pages = normal_threads.pages %}
+            {% for i in range(1, total_pages + 1) %}
+                <li class="list-unstyled d-flex align-items-center px-1 h-100" 
+                    style="color: rgb(0, 255, 170); background: rgba(0, 0, 0, 0.5);">
+                    {% if page == i %}
+                        [<a class="px-1 text-decoration-none" 
+                        href="{{ url_for('Admin.Board' if api_key else 'Boards.Board', id=board.id, page=i, **({'api_key': api_key} if api_key else {})) }}">{{ i }}</a>]
+                    {% else %}
+                        <a class="px-1 text-decoration-none" 
+                        href="{{ url_for('Admin.Board' if api_key else 'Boards.Board', id=board.id, page=i, **({'api_key': api_key} if api_key else {})) }}">{{ i }}</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+    
+            <!-- Next Button -->
+            <li class="list-unstyled h-100 d-flex align-items-center" 
+                style="color: rgb(0, 255, 170); background: rgba(0, 0, 0, 0.5);">
+                <a class="page-link px-2 {% if normal_threads.page >= total_pages %}text-white-50 disabled{% endif %}" 
+                   href="{{ url_for('Admin.Board' if api_key else 'Boards.Board', id=board.id, page=normal_threads.page + 1, **({'api_key': api_key} if api_key else {})) }}" 
+                   aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    
 
     <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

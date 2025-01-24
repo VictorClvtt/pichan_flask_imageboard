@@ -53,10 +53,12 @@ class Board(MethodView):
         board = BoardModel.query.get_or_404(id)
         boards = BoardModel.query.all()
 
-        normal_threads = ThreadModel.query.filter_by(type=0, board_id=id)
+        page = request.args.get('page', 1, type=int)
+        normal_threads = ThreadModel.query.filter_by(type=0, board_id=id).order_by(ThreadModel.id.desc()).paginate(page=page, per_page=20, error_out=False)
+
         admin_threads = ThreadModel.query.filter_by(type=1, board_id=id)
 
-        return render_template('board.html', board=board, boards=boards, normal_threads=normal_threads, admin_threads=admin_threads)
+        return render_template('board.html', board=board, boards=boards, normal_threads=normal_threads, admin_threads=admin_threads, page=page)
 
     def delete(self, id):
 

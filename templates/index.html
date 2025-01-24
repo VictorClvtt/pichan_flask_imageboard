@@ -28,7 +28,7 @@
                         <a 
                             style="font-size: 15px;" 
                             class="mx-1" 
-                            href="{{ url_for('Admin.Board' if api_key else 'Boards.Board', id=board.id, **({'api_key': api_key} if api_key else {})) }}">
+                            href="{{ url_for('Admin.Board' if api_key else 'Boards.Board', id=board.id, page=1, **({'api_key': api_key} if api_key else {})) }}">
                             /{{ board.id + ' - ' + board.name }}
                         </a>
                     {% endfor %}
