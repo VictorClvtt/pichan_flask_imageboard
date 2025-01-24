@@ -386,6 +386,32 @@ async function highlightVotes(id) {
     }
 }
 
-
+function maxOrMin(id, post_type){
+    element = document.getElementById(`img-div-${post_type}${id}`)
+    if(post_type == 't'){
+        if(element.classList.contains('flex-column')){
+            element.classList.remove('flex-column')
+            element.getElementsByTagName('div')[0].style.maxWidth = '235px'
+            element.getElementsByTagName('div')[0].style.maxHeight = 'fit-content'
+        }else{
+            element.classList.add('flex-column')
+            element.getElementsByTagName('div')[0].style.maxWidth = 'unset';
+            element.getElementsByTagName('div')[0].style.maxHeight = 'unset'
+        }    
+    }else{
+        if(element.style.width == '30%'){
+            element.style.width = 'unset'
+            
+            element.getElementsByTagName('img')[0].style.maxHeight = 'unset'
+            element.getElementsByTagName('img')[0].style.height = 'unset'
+        }else{
+            element.style.width = '30%'
+            
+            element.getElementsByTagName('img')[0].style.maxHeight = '400px'
+            element.getElementsByTagName('img')[0].style.height = 'auto'
+        }  
+    }
+    
+}
 
 highlightVotes()
