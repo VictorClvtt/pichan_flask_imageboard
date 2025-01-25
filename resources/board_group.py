@@ -53,6 +53,9 @@ class BoardGroup(MethodView):
         return board_group
 
     def delete(self, id):
+
+        validate_api_key()
+
         board_group = BoardGroupModel.query.get_or_404(id)
 
         db.session.delete(board_group)

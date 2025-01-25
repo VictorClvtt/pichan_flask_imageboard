@@ -8,7 +8,7 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <title>πchan{{ ' - Admin' if api_key}}</title>
 </head>
-<body class="chan-bg d-flex flex-column align-items-center" style="height: fit-content;">
+<body class="chan-bg d-flex flex-column align-items-center" style="min-height: 100vh;">
     
     <main class="d-flex px-3 w-100 flex-column align-items-center py-3" style="height: fit-content;">
         <div class="d-flex flex-column align-content-center justify-content-center align-items-center" style="min-height: 100px; margin-bottom: 0.5rem;">
@@ -19,15 +19,15 @@
         </div>
         
         <h2 class="d-flex align-items-center fst-italic text-white w-100 m-0" style="max-width: 800px; font-size: 15px; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Boards:<hr class="border-white w-100 my-0 mx-1" style="height: fit-content; margin-bottom: 1px !important;"></h2>
-        <section class="chan-index-section" id="boards">
+        <section class="chan-index-section chan-threads-container overflow-y-auto" style="max-height: 275px;" id="boards">
             {% for board_group in board_groups %}
                 <div class="d-flex flex-column" id="{{ board_group.id }}">
-                    <h3 class="chan-title text-decoration-underline m-0 px-1" style="font-size: 17px; width: fit-content; background-color: rgba(0, 0, 0, 0.25);">{{ board_group.name }}:</h3>
+                    <h3 class="chan-title text-decoration-underline fst-italic m-0 px-1" style="font-size: 1.1rem; width: fit-content; background-color: rgba(0, 0, 0, 0.25);">{{ board_group.name }}:</h3>
                     
                     {% for board in board_group.boards %}
                         <a 
-                            style="font-size: 15px;" 
-                            class="mx-1" 
+                            style="font-size: 0.9rem; width: fit-content; margin: 2px 0 0 0.6rem; background-color: rgba(0, 0, 0, 0.25);" 
+                            class="px-1 text-ellipsis" 
                             href="{{ url_for('Admin.Board' if api_key else 'Boards.Board', id=board.id, page=1, **({'api_key': api_key} if api_key else {})) }}">
                             /{{ board.id + ' - ' + board.name }}
                         </a>
@@ -53,7 +53,7 @@
                 <div class="modal-dialog" data-bs-theme="dark">
                     <div class="modal-content chan-admin-modal">
                         <div class="modal-header" style="border-color: #5e5e5e;">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">New Board Group data:</h1>
+                        <h1 class="modal-title bg-body-secondary border border-1 border-dark fs-5 px-1 font-monospace" id="exampleModalLabel">New Board Group data:</h1>
                         <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -84,7 +84,7 @@
                 <div class="modal-dialog" data-bs-theme="dark">
                     <div class="modal-content chan-admin-modal">
                         <div class="modal-header" style="border-color: #5e5e5e;">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Board Group data:</h1>
+                        <h1 class="modal-title bg-body-secondary border border-1 border-dark fs-5 px-1 font-monospace" id="exampleModalLabel">Delete Board Group data:</h1>
                         <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -120,7 +120,7 @@
                 <div class="modal-dialog" data-bs-theme="dark">
                     <div class="modal-content chan-admin-modal">
                         <div class="modal-header" style="border-color: #5e5e5e;">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">New Board data:</h1>
+                        <h1 class="modal-title bg-body-secondary border border-1 border-dark fs-5 px-1 font-monospace" id="exampleModalLabel">New Board data:</h1>
                         <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -168,7 +168,7 @@
                 <div class="modal-dialog" data-bs-theme="dark">
                     <div class="modal-content chan-admin-modal">
                         <div class="modal-header" style="border-color: #5e5e5e;">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Board data:</h1>
+                        <h1 class="modal-title bg-body-secondary border border-1 border-dark fs-5 px-1 font-monospace" id="exampleModalLabel">Delete Board data:</h1>
                         <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -194,7 +194,7 @@
                         </div>
                         <div class="modal-footer" style="border-color: #5e5e5e;">
                             <button type="button" class=" chan-admin-button w-100" style="max-width: 80px;" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class=" chan-admin-button w-100" style="max-width: 200px;" onclick="deleteBoard()">Create Board</button>
+                            <button type="button" class=" chan-admin-button w-100" style="max-width: 200px;" onclick="deleteBoard()">Delete Board</button>
                         </div>
                     </div>
                 </div>
@@ -203,7 +203,7 @@
 
         <h2 class="d-flex align-items-center fst-italic text-white w-100 m-0 mt-4" style="max-width: 800px; font-size: 15px; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Popular Threads:<hr class="border-white w-100 my-0 mx-1" style="height: fit-content; margin-bottom: 1px !important;"></h2>
         <section class="chan-index-section admin-button" id="popular-threads">
-            <div class="chan-threads-container">
+            <div class="chan-threads-container w-100">
                 {% for board in boards %}
                     
                     {% if loop.index <= 12 %}
@@ -238,7 +238,7 @@
         </section>
         
 
-        <h2 class="d-flex align-items-center text-white w-100 m-0 mt-4" style="max-width: 800px; font-size: 15px; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Statistics:<hr class="border-white w-100 my-0 mx-1" style="height: fit-content; margin-bottom: 1px !important;"></h2>
+        <h2 class="d-flex align-items-center text-white w-100 m-0 mt-4" style="max-width: 800px; font-size: 15px; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Metrics:<hr class="border-white w-100 my-0 mx-1" style="height: fit-content; margin-bottom: 1px !important;"></h2>
         <section class="chan-index-section flex-wrap align-items-center justify-content-around py-3" id="statistics">
             <div class="d-flex gap-1 text-white fw-bold px-1" style="background-color: rgba(0, 0, 0, 0.25);">Total Threads: <p class="fw-normal m-0">{{ threads|length }}</p></div>
             <div class="d-flex gap-1 text-white fw-bold px-1" style="background-color: rgba(0, 0, 0, 0.25);">Total Replies: <p class="fw-normal m-0">{{ replies|length }}</p></div>

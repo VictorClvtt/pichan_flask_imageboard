@@ -3,9 +3,15 @@
     font-size: 50px;
 }
 
-.chan-bg{
-    background-color: rgb(24 24 27);
+.chan-bg {
+    background: rgb(41,62,53);
+    background: linear-gradient(180deg, rgb(28, 44, 37) 0%, rgba(24,27,26) 9%);
+    background-repeat: no-repeat;
+    background-size: cover; /* Ensures the background fills the element */
+    
 }
+
+
 
 .chan-nav{
     height: 40px;
@@ -25,6 +31,12 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* Create 4 equal columns */
     gap: 20px; /* Space between items */
+}
+
+.text-ellipsis {
+    white-space: nowrap;        /* Prevents text from wrapping to a new line */
+    overflow: hidden;
+    text-overflow: ellipsis;    /* Adds an ellipsis (...) at the end of the truncated text */
 }
 
 .ellipsis-multiline {
