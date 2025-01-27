@@ -18,7 +18,7 @@
             {% endif %}    
         </div>
         
-        <h2 class="d-flex align-items-center fst-italic text-white w-100 m-0" style="max-width: 800px; font-size: 15px; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Boards:<hr class="border-white w-100 my-0 mx-1" style="height: fit-content; margin-bottom: 1px !important;"></h2>
+        <h2 class="d-flex chan-section-label align-items-center fst-italic text-white w-100 m-0" style="max-width: 800px; font-size: 15px; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Boards:<hr class="border-white w-100 my-0 mx-1" style="height: fit-content; margin-bottom: 1px !important;"></h2>
         <section class="chan-index-section chan-threads-container overflow-y-auto" style="max-height: 275px;" id="boards">
             {% for board_group in board_groups %}
                 <div class="d-flex flex-column" id="{{ board_group.id }}">
@@ -201,7 +201,7 @@
             </div>
         {% endif %}
 
-        <h2 class="d-flex align-items-center fst-italic text-white w-100 m-0 mt-4" style="max-width: 800px; font-size: 15px; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Popular Threads:<hr class="border-white w-100 my-0 mx-1" style="height: fit-content; margin-bottom: 1px !important;"></h2>
+        <h2 class="d-flex chan-section-label align-items-center fst-italic text-white w-100 m-0 mt-4" style="max-width: 800px; font-size: 15px; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Popular Threads:<hr class="border-white w-100 my-0 mx-1" style="height: fit-content; margin-bottom: 1px !important;"></h2>
         <section class="chan-index-section admin-button" id="popular-threads">
             <div class="chan-threads-container w-100">
                 {% for board in boards %}
@@ -238,29 +238,29 @@
         </section>
         
 
-        <h2 class="d-flex align-items-center text-white w-100 m-0 mt-4" style="max-width: 800px; font-size: 15px; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Metrics:<hr class="border-white w-100 my-0 mx-1" style="height: fit-content; margin-bottom: 1px !important;"></h2>
+        <h2 class="d-flex chan-section-label align-items-center text-white w-100 m-0 mt-4" style="max-width: 800px; font-size: 15px; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Metrics:<hr class="border-white w-100 my-0 mx-1" style="height: fit-content; margin-bottom: 1px !important;"></h2>
 
-        <section class="chan-index-section p-0" id="statistics">
+        <section class="chan-index-section p-0 overflow-x-auto" id="statistics">
             
                 
-                <div class="table-active w-100">
+                <div class="table-active w-100" style="min-width: 500px;">
                     <table class="table-striped w-100 border-0 text-center custom-table">
                         <thead>
-                            <tr style="background: rgba(255, 255, 255, 0.1);">
-                                <th class="border-top-0 border-start-0" style="font-size: 0.9rem;">Board</th>
-                                <th class="border-top-0" style="font-size: 0.9rem;">Total Threads</th>
-                                <th class="border-top-0" style="font-size: 0.9rem;">Total Replies</th>
-                                <th class="border-top-0" style="font-size: 0.9rem;" title="Posts Per Hour">PPH</th>
-                                <th class="border-top-0" style="font-size: 0.9rem;" title="Posts Per Day">PPD</th>
-                                <th class="border-top-0" style="font-size: 0.9rem;">Total Votes</th>
-                                <th class="border-top-0" style="font-size: 0.9rem;" title="Votes Per Hour">VPH</th>
-                                <th class="border-top-0" style="font-size: 0.9rem;" title="Votes Per Day">VPD</th>
-                                <th class="border-top-0 border-end-0" style="font-size: 0.9rem;">Image Size</th>
+                            <tr style="background: rgba(255, 255, 255, 0.05);">
+                                <th class="px-1 border-top-0 border-start-0" style="font-size: 0.9rem;">Board</th>
+                                <th class="px-1 border-top-0" style="font-size: 0.9rem;">Total Threads</th>
+                                <th class="px-1 border-top-0" style="font-size: 0.9rem;">Total Replies</th>
+                                <th class="px-1 border-top-0" style="font-size: 0.9rem;" title="Posts Per Hour">PPH</th>
+                                <th class="px-1 border-top-0" style="font-size: 0.9rem;" title="Posts Per Day">PPD</th>
+                                <th class="px-1 border-top-0" style="font-size: 0.9rem;">Total Votes</th>
+                                <th class="px-1 border-top-0" style="font-size: 0.9rem;" title="Votes Per Hour">VPH</th>
+                                <th class="px-1 border-top-0" style="font-size: 0.9rem;" title="Votes Per Day">VPD</th>
+                                <th class="px-1 border-top-0 border-end-0" style="font-size: 0.9rem;">Image Size</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for board in board_stats %}
-                                <tr style="{{ 'background: rgba(255, 255, 255, 0.1);' if loop.index % 2 == 0 }}">
+                                <tr style="{{ 'background: rgba(255, 255, 255, 0.05);' if loop.index % 2 == 0 }}">
                                     <td class="border-start-0" style="font-size: 0.9rem;">/{{ board.id }} - {{ board.name }}</td>
                                     <td style="font-size: 0.9rem;">{{ board.total_threads }}</td>
                                     <td style="font-size: 0.9rem;">{{ board.total_replies }}</td>
@@ -272,16 +272,16 @@
                                     <td class="border-end-0" style="font-size: 0.9rem;">{{ (board.total_image_size / 1024)|int }} KB</td>
                                 </tr>
                             {% endfor %}
-                            <tr style="background: rgba(20, 241, 175, 0.3);">
-                                <td class="fst-italic fw-bold border-bottom-0 border-start-0" style="font-size: 0.9rem;">Total</td>
-                                <td class="fst-italic fw-bold border-bottom-0" style="font-size: 0.9rem;">{{ threads|length }}</td>
-                                <td class="fst-italic fw-bold border-bottom-0" style="font-size: 0.9rem;">{{ replies|length }}</td>
-                                <td class="fst-italic fw-bold border-bottom-0" style="font-size: 0.9rem;">{{ board_stats | map(attribute='mean_posts_per_hour') | sum | round(1) }}</td>
-                                <td class="fst-italic fw-bold border-bottom-0" style="font-size: 0.9rem;">{{ board_stats | map(attribute='mean_posts_per_day') | sum | round(1) }}</td>
-                                <td class="fst-italic fw-bold border-bottom-0" style="font-size: 0.9rem;">{{ board_stats | map(attribute='total_votes') | sum }}</td>
-                                <td class="fst-italic fw-bold border-bottom-0" style="font-size: 0.9rem;">{{ board_stats | map(attribute='mean_votes_per_hour') | sum | round(1) }}</td>
-                                <td class="fst-italic fw-bold border-bottom-0" style="font-size: 0.9rem;">{{ board_stats | map(attribute='mean_votes_per_day') | sum | round(1) }}</td>
-                                <td class="fst-italic fw-bold border-bottom-0 border-end-0" style="font-size: 0.9rem;">{{ ((images | map(attribute='size') | sum) / 1024)|int }} KB</td>
+                            <tr style="background: rgba(20, 108, 241, 0.3);">
+                                <td class="fw-bold border-bottom-0 border-start-0" style="font-size: 0.9rem;">Total</td>
+                                <td class="fw-bold border-bottom-0" style="font-size: 0.9rem;">{{ threads|length }}</td>
+                                <td class="fw-bold border-bottom-0" style="font-size: 0.9rem;">{{ replies|length }}</td>
+                                <td class="fw-bold border-bottom-0" style="font-size: 0.9rem;">{{ board_stats | map(attribute='mean_posts_per_hour') | sum | round(1) }}</td>
+                                <td class="fw-bold border-bottom-0" style="font-size: 0.9rem;">{{ board_stats | map(attribute='mean_posts_per_day') | sum | round(1) }}</td>
+                                <td class="fw-bold border-bottom-0" style="font-size: 0.9rem;">{{ board_stats | map(attribute='total_votes') | sum }}</td>
+                                <td class="fw-bold border-bottom-0" style="font-size: 0.9rem;">{{ board_stats | map(attribute='mean_votes_per_hour') | sum | round(1) }}</td>
+                                <td class="fw-bold border-bottom-0" style="font-size: 0.9rem;">{{ board_stats | map(attribute='mean_votes_per_day') | sum | round(1) }}</td>
+                                <td class="fw-bold border-bottom-0 border-end-0" style="font-size: 0.9rem;">{{ ((images | map(attribute='size') | sum) / 1024)|int }} KB</td>
                             </tr>
                         </tbody>
                     </table>

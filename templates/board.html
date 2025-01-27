@@ -113,6 +113,22 @@
 
             {% endmacro %}
 
+            
+
+            {% set updated_threads = [] %}
+
+            {% for thread in normal_threads %}
+                {% set reply_count = count_replies(thread.replies) %}
+                {% set _ = updated_threads.append({'id': thread.id, 'reply_count': reply_count}) %}
+            {% endfor %}
+
+            {# Now `updated_threads` is a list that can be accessed outside the loop with the `reply_count` field. #}
+
+            {% for thread in updated_threads %}
+                <p>Thread ID: {{ thread.id }} has {{ thread.reply_count }} replies.</p>
+            {% endfor %}
+            
+
             {% macro render_replies(replies, level, thread, count=namespace(value=0), rendered=namespace(flag=False)) %}
 
                 {% for reply in replies %}

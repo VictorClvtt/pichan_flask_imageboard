@@ -7,6 +7,8 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from db import db
 from models.board import BoardModel
 from models.thread import ThreadModel
+from models.reply import ReplyModel
+from models.vote import VoteModel
 from marshmallow_schemas import PlainBoardSchema, BoardSchema
 
 blp = Blueprint('Boards', __name__, description='Operations on boards')
@@ -54,11 +56,26 @@ class Board(MethodView):
         boards = BoardModel.query.all()
 
         page = request.args.get('page', 1, type=int)
-        normal_threads = ThreadModel.query.filter_by(type=0, board_id=id).order_by(ThreadModel.id.desc()).paginate(page=page, per_page=20, error_out=False)
+        normal_threads = ThreadModel.query.filter_by(type=0, board_id=id) \
+            .order_by(ThreadModel.id.desc()) \
+            .paginate(page=page, per_page=20, error_out=False)
+
+        # To get the last 500 threads in total, you can manually limit the results:
+        normal_threads.items = normal_threads.items[:500]
 
         admin_threads = ThreadModel.query.filter_by(type=1, board_id=id).order_by(ThreadModel.id.desc())
 
-        return render_template('board.html', board=board, boards=boards, normal_threads=normal_threads, admin_threads=admin_threads, page=page)
+        return render_template(
+            'board.html',
+            board=board,
+            boards=boards,
+            normal_threads=normal_threads, 
+            admin_threads=admin_threads, 
+            page=page
+        )
+
+
+
 
     def delete(self, id):
 

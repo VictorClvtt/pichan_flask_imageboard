@@ -8,7 +8,7 @@
     background: linear-gradient(180deg, rgb(28, 44, 37) 0%, rgba(24,27,26) 9%);
     background-repeat: no-repeat;
     background-size: cover; /* Ensures the background fills the element */
-    
+    background-attachment: fixed;
 }
 
 .chan-nav{
@@ -90,4 +90,17 @@
 
 .custom-table th, .custom-table td {
     border-bottom:  1px solid rgba(255, 255, 255, 0);
+}
+
+.chan-section-label{
+    background: rgba(163, 255, 209, 0.9);
+    color: #1a1a1a !important;
+    padding: 0.1rem 0 0 0.3rem;
+    margin-bottom: 2px !important;
+    font-weight: 800;
+}
+
+
+.chan-section-label hr{
+    border-color: #000000 !important;
 }
