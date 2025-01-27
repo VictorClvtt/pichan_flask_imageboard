@@ -65,13 +65,18 @@ class Board(MethodView):
 
         admin_threads = ThreadModel.query.filter_by(type=1, board_id=id).order_by(ThreadModel.id.desc())
 
+        sort = request.args.get('sort')
+        order = request.args.get('order')
+
         return render_template(
             'board.html',
             board=board,
             boards=boards,
             normal_threads=normal_threads, 
             admin_threads=admin_threads, 
-            page=page
+            page=page,
+            sort=sort,
+            order=order
         )
 
 

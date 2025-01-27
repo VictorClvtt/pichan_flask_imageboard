@@ -414,4 +414,30 @@ function maxOrMin(id, post_type){
     
 }
 
+async function sortAndOrder() {
+    const sort_opt = document.getElementById('sort_id').value;
+    const order_opt = document.getElementById('order_id').value;
+
+    // Base URL
+    let url = "http://127.0.0.1:5000/board/h?";
+
+    // Add sort parameter if it's selected
+    if (sort_opt) {
+        url += `sort=${sort_opt}`;
+    }
+
+    // Add order parameter if it's selected
+    if (order_opt) {
+        if (sort_opt) {
+            url += `&order=${order_opt}`;
+        } else {
+            url += `order=${order_opt}`;
+        }
+    }
+
+    // Redirect to the constructed URL
+    window.location.href = url;
+}
+
+
 highlightVotes()
