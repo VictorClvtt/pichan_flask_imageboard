@@ -75,6 +75,13 @@ def format_text(content):
 
     return '<br>'.join(formatted_lines)
 
+def format_reply_content(reply):
+    """Recursively format reply content and its nested replies."""
+    reply.content = format_text(reply.content)
+    if hasattr(reply, 'reply_replies') and reply.reply_replies:
+        for nested_reply in reply.reply_replies:
+            format_reply_content(nested_reply)
+
 
 @blp.route('/board/<string:id>')
 class Board(MethodView):
@@ -99,14 +106,16 @@ class Board(MethodView):
         # Format content for normal threads
         for thread in normal_threads.items:
             thread.content = format_text(thread.content)  # Apply formatting to the thread's content
-            for reply in thread.replies:  # Apply formatting to each reply's content
-                reply.content = format_text(reply.content)
+            # Format replies content recursively
+            for reply in thread.replies:
+                format_reply_content(reply)
 
         # Format content for admin threads
         for thread in admin_threads:
             thread.content = format_text(thread.content)  # Apply formatting to the thread's content
-            for reply in thread.replies:  # Apply formatting to each reply's content
-                reply.content = format_text(reply.content)
+            # Format replies content recursively
+            for reply in thread.replies:
+                format_reply_content(reply)
 
         # Sorting and ordering parameters
         sort = request.args.get('sort')

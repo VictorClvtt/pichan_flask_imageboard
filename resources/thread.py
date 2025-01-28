@@ -74,6 +74,12 @@ def format_text(content):
 
     return '<br>'.join(formatted_lines)
 
+def format_reply_content(reply):
+    """Recursively format reply content and its nested replies."""
+    reply.content = format_text(reply.content)
+    if hasattr(reply, 'reply_replies') and reply.reply_replies:
+        for nested_reply in reply.reply_replies:
+            format_reply_content(nested_reply)
 
 
 @blp.route('/thread/<string:id>')
@@ -88,12 +94,14 @@ class Thread(MethodView):
         # Format thread content
         thread.content = format_text(thread.content)
 
-        # Format replies content
+        # Format replies content recursively
         for reply in thread.replies:
-            reply.content = format_text(reply.content)
+            format_reply_content(reply)
 
         # Return the rendered template with the formatted content
         return render_template('thread.html', thread=thread, boards=boards, image=image)
+
+
 
     def delete(self, id):
 

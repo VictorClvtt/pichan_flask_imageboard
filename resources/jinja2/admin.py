@@ -24,33 +24,6 @@ def validate_api_key():
     if api_key not in API_KEYS:
         abort(403, message="Invalid or missing API key.")
 
-import html
-import bleach
-from bleach.linkifier import Linker
-
-def format_text(content):
-    if not content:
-        return content
-    
-    content = html.escape(content)
-    content = bleach.clean(content, tags=['span', 'br', 'a'], attributes={'span': ['class'], 'a': ['href']}, strip=True)
-
-    linker = Linker()
-    content = linker.linkify(content)
-
-    # Format lines starting with '>' and '<'
-    formatted_lines = []
-    for line in content.split('\n'):
-        if line.startswith('&gt;'):  # Escaped '>'
-            formatted_lines.append(f'<span class="green-text">{line}</span>')
-        elif line.startswith('&lt;'):  # Escaped '<'
-            formatted_lines.append(f'<span class="red-text">{line}</span>')
-        else:
-            formatted_lines.append(line)
-
-    return '<br>'.join(formatted_lines)
-
-
 @blp.route('/')
 @blp.alt_response(403, description="Access denied")
 def home():
@@ -135,42 +108,38 @@ def home():
     # Render the template and pass the board_groups data
     return render_template('index.html', board_groups=board_groups, threads=threads, replies=replies, boards=boards, images=images, board_stats=board_stats, api_key=api_key)
 
-import bleach
-import re
 import html
+import bleach
+from bleach.linkifier import Linker
 
 def format_text(content):
-    """
-    Formats the content by wrapping lines starting with '>' in green text
-    and lines starting with '<' in red text. It also escapes dangerous characters
-    and converts URLs into clickable links.
-    """
     if not content:
         return content
-
-    # Escape '<' and '>' to prevent them from being interpreted as HTML tags
+    
     content = html.escape(content)
-
-    # Clean the content, allowing only specified tags and attributes
     content = bleach.clean(content, tags=['span', 'br', 'a'], attributes={'span': ['class'], 'a': ['href']}, strip=True)
 
-    # Convert links (URLs) into clickable <a> tags
-    content = re.sub(
-        r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+',  # URL regex pattern
-        r'<a href="\g<0>" target="_blank">\g<0></a>',  # Replace with anchor tag
-        content
-    )
+    linker = Linker()
+    content = linker.linkify(content)
 
+    # Format lines starting with '>' and '<'
     formatted_lines = []
     for line in content.split('\n'):
-        if line.startswith('&gt;'):  # Check for escaped '>' (i.e., '&gt;')
+        if line.startswith('&gt;'):  # Escaped '>'
             formatted_lines.append(f'<span class="green-text">{line}</span>')
-        elif line.startswith('&lt;'):  # Check for escaped '<' (i.e., '&lt;')
+        elif line.startswith('&lt;'):  # Escaped '<'
             formatted_lines.append(f'<span class="red-text">{line}</span>')
         else:
             formatted_lines.append(line)
 
     return '<br>'.join(formatted_lines)
+
+def format_reply_content(reply):
+    """Recursively format reply content and its nested replies."""
+    reply.content = format_text(reply.content)
+    if hasattr(reply, 'reply_replies') and reply.reply_replies:
+        for nested_reply in reply.reply_replies:
+            format_reply_content(nested_reply)
 
 @blp.route('/board/<string:id>')
 class Board(MethodView):
@@ -189,18 +158,24 @@ class Board(MethodView):
         # Format content for normal threads
         for thread in normal_threads.items:
             thread.content = format_text(thread.content)  # Apply formatting to the thread's content
-            for reply in thread.replies:  # Apply formatting to each reply's content
-                reply.content = format_text(reply.content)
+            # Format replies content recursively
+            for reply in thread.replies:
+                format_reply_content(reply)
 
         # Format content for admin threads
         for thread in admin_threads:
             thread.content = format_text(thread.content)  # Apply formatting to the thread's content
-            for reply in thread.replies:  # Apply formatting to each reply's content
-                reply.content = format_text(reply.content)
+            # Format replies content recursively
+            for reply in thread.replies:
+                format_reply_content(reply)
+
+        # Sorting and ordering parameters
+        sort = request.args.get('sort')
+        order = request.args.get('order')
 
         api_key = request.args.get('api_key', '')
 
-        return render_template('board.html', board=board, boards=boards, normal_threads=normal_threads, admin_threads=admin_threads, page=page, api_key=api_key)
+        return render_template('board.html', board=board, boards=boards, normal_threads=normal_threads, admin_threads=admin_threads, page=page, api_key=api_key, sort=sort, order=order)
     
 @blp.route('/thread/<string:id>')
 class Thread(MethodView):
@@ -215,9 +190,9 @@ class Thread(MethodView):
         # Format thread content
         thread.content = format_text(thread.content)
 
-        # Format replies content
+        # Format replies content recursively
         for reply in thread.replies:
-            reply.content = format_text(reply.content)
+            format_reply_content(reply)
 
         api_key = request.args.get('api_key', '')
         

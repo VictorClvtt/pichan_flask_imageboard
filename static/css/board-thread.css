@@ -57,7 +57,7 @@
     border-style: solid;
     border-width: 1px;
     border-color: var(--bs-info);
-    border-radius: 3px;
+    border-radius: 2px;
     height: fit-content;
     padding: 10px 15px;
 }
@@ -68,7 +68,7 @@
     border-style: solid;
     border-width: 1px;
     border-color: rgba(0, 83, 122, 0.8);
-    border-radius: 3px;
+    border-radius: 2px;
     height: fit-content;
     padding: 10px 15px;
 }
