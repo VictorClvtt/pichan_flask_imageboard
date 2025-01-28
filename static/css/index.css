@@ -5,7 +5,7 @@
 
 .chan-bg {
     background: rgb(41,62,53);
-    background: linear-gradient(180deg, rgb(28, 44, 37) 0%, rgba(24,27,26) 9%);
+    background: linear-gradient(180deg, rgb(28, 44, 37) 0%, rgb(21, 26, 24) 9%);
     background-repeat: no-repeat;
     background-size: cover; /* Ensures the background fills the element */
     background-attachment: fixed;

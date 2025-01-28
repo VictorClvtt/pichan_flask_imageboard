@@ -24,6 +24,39 @@ def validate_api_key():
     if api_key not in API_KEYS:
         abort(403, message="Invalid or missing API key.")
 
+import bleach
+import re
+import html
+
+def format_text(content):
+    """
+    Formats the content by wrapping lines starting with '>' in green text
+    and lines starting with '<' in red text. It also escapes dangerous characters
+    and converts URLs into clickable links.
+    """
+    if not content:
+        return content
+
+    # Escape '<' and '>' to prevent them from being interpreted as HTML tags
+    content = html.escape(content)
+
+    # Clean the content, allowing only specified tags and attributes
+    content = bleach.clean(content, tags=['span', 'br', 'a'], attributes={'span': ['class'], 'a': ['href']}, strip=True)
+
+    # Convert links (URLs) into clickable <a> tags
+    content = re.sub(r'(https?://[^\s]+)', r'<a href="\1" target="_blank">\1</a>', content)
+
+    formatted_lines = []
+    for line in content.split('\n'):
+        if line.startswith('&gt;'):  # Check for escaped '>' (i.e., '&gt;')
+            formatted_lines.append(f'<span class="green-text">{line}</span>')
+        elif line.startswith('&lt;'):  # Check for escaped '<' (i.e., '&lt;')
+            formatted_lines.append(f'<span class="red-text">{line}</span>')
+        else:
+            formatted_lines.append(line)
+
+    return '<br>'.join(formatted_lines)
+
 
 @blp.route('/')
 @blp.alt_response(403, description="Access denied")
@@ -123,6 +156,18 @@ class Board(MethodView):
         
         admin_threads = ThreadModel.query.filter_by(type=1, board_id=id).order_by(ThreadModel.id.desc())
 
+        # Format content for normal threads
+        for thread in normal_threads.items:
+            thread.content = format_text(thread.content)  # Apply formatting to the thread's content
+            for reply in thread.replies:  # Apply formatting to each reply's content
+                reply.content = format_text(reply.content)
+
+        # Format content for admin threads
+        for thread in admin_threads:
+            thread.content = format_text(thread.content)  # Apply formatting to the thread's content
+            for reply in thread.replies:  # Apply formatting to each reply's content
+                reply.content = format_text(reply.content)
+
         api_key = request.args.get('api_key', '')
 
         return render_template('board.html', board=board, boards=boards, normal_threads=normal_threads, admin_threads=admin_threads, page=page, api_key=api_key)
@@ -136,6 +181,13 @@ class Thread(MethodView):
         thread = ThreadModel.query.get_or_404(id)
         boards = BoardModel.query.all()
         image = ImageModel.query.filter_by(thread_id=id).first()
+
+        # Format thread content
+        thread.content = format_text(thread.content)
+
+        # Format replies content
+        for reply in thread.replies:
+            reply.content = format_text(reply.content)
 
         api_key = request.args.get('api_key', '')
         

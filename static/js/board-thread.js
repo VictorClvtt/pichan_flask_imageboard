@@ -418,25 +418,39 @@ async function sortAndOrder() {
     const sort_opt = document.getElementById('sort_id').value;
     const order_opt = document.getElementById('order_id').value;
 
-    // Base URL
-    let url = "http://127.0.0.1:5000/board/h?";
+    // Get the current URL and check if api_key is already present
+    const currentUrl = new URL(window.location.href);
+    
+    // Extract the board ID from the URL (adjust as needed based on your URL structure)
+    const boardId = currentUrl.pathname.split('board/')[1]
+    
+    // Create the base URL, defaulting to "admin/board/" or "board/" based on api_key
+    let url = new URL(currentUrl.origin + (currentUrl.searchParams.has('api_key') ? `/admin/board/${boardId}` : `/board/${boardId}`));
+    
+    // Get the current search parameters
+    const params = new URLSearchParams(currentUrl.search);
+
+    // Always preserve the page parameter
+    if (params.has('page')) {
+        url.searchParams.set('page', params.get('page'));
+    }
+    // If api_key exists in the current URL, add it to the new URL
+    if (params.has('api_key')) {
+        url.searchParams.set('api_key', params.get('api_key'));
+    }
 
     // Add sort parameter if it's selected
     if (sort_opt) {
-        url += `sort=${sort_opt}`;
+        url.searchParams.set('sort', sort_opt);
     }
 
     // Add order parameter if it's selected
     if (order_opt) {
-        if (sort_opt) {
-            url += `&order=${order_opt}`;
-        } else {
-            url += `order=${order_opt}`;
-        }
+        url.searchParams.set('order', order_opt);
     }
 
     // Redirect to the constructed URL
-    window.location.href = url;
+    window.location.href = url.toString();
 }
 
 

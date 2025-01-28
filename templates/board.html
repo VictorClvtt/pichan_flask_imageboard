@@ -167,7 +167,7 @@
                                     </a>
                                 </div>
 
-                                <p class="m-0" style="font-size: 13px; color: rgba(255, 255, 255, 0.900); min-height: {{'1.5rem' if reply.image else '2.5rem'}};">{{ reply.content }}</p>
+                                <p class="chan-text-content" style="min-height: {{'1.5rem' if reply.image else '2.5rem'}};">{{ reply.content|safe }}</p>
                                 {% if reply.image %}
                                     <div class="d-flex flex-column justify-content-center" style="width: 30%;" id="img-div-r{{ reply.id }}">
                                         <img class="rounded-1" style="width: 100%; height: auto; max-height: 400px;" src="{{ url_for('Images.Image', id=reply.image.id) }}" onclick="maxOrMin({{ reply.id }}, 'r')">
@@ -247,7 +247,7 @@
                             
                             <div id="t{{ thread.id }}" class="chan-admin-thread-info border-info-subtle" style="min-width: 350px; width: fit-content;">
                                 <div class="d-flex gap-2">
-                                    <a class="chan-thread-title text-ellipsis m-0 text-decoration-none fst-italic" href="{{ url_for('Admin.Thread' if api_key else 'Threads.Thread', id=thread.id, **({'api_key': api_key} if api_key else {})) }}" style="font-weight: 500; text;">{{ thread.title }}</a>
+                                    <a class="chan-thread-title text-ellipsis m-0 text-decoration-none fst-italic" href="{{ url_for('Admin.Thread' if api_key else 'Threads.Thread', id=thread.id, **({'api_key': api_key} if api_key else {})) }}" style="font-weight: 500;">{{ thread.title }}</a>
                                     <div class="d-flex flex-column justify-content-around">
                                         <div class="d-flex align-items-center gap-1">
                                             <p class="m-0" style="font-size: 0.7rem; color: rgba(0, 255, 136);">Admin:</p>
@@ -258,7 +258,7 @@
                                     </div>
                                 </div>
 
-                                <p class="chan-text-content">{{ thread.content }}</p>
+                                <p class="chan-text-content">{{ thread.content|safe }}</p>
 
                                 <div class="d-flex justify-content-between">
                                     <div class="d-flex gap-1">
@@ -333,7 +333,7 @@
                                             </div>
                                         </div>
 
-                                        <p class="chan-text-content">{{ thread.content }}</p>
+                                        <p class="chan-text-content">{{ thread.content|safe }}</p>
 
                                         <div class="d-flex justify-content-between">
                                             <div class="d-flex gap-1">
@@ -410,7 +410,7 @@
                                             </div>
                                         </div>
 
-                                        <p class="chan-text-content">{{ thread.content }}</p>
+                                        <p class="chan-text-content">{{ thread.content|safe }}</p>
 
                                         <div class="d-flex justify-content-between">
                                             <div class="d-flex gap-1">
@@ -479,7 +479,7 @@
                                             </div>
                                         </div>
 
-                                        <p class="chan-text-content">{{ thread.content }}</p>
+                                        <p class="chan-text-content">{{ thread.content|safe }}</p>
 
                                         <div class="d-flex justify-content-between">
                                             <div class="d-flex gap-1">

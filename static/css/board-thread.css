@@ -1,67 +1,69 @@
-.chan-button{
-    background-color: #00251391;
+/* Redefine Bootstrap Variables */
+:root {
+    --bs-primary: #00251391; /* Deep green background for primary elements */
+    --bs-secondary: #00ff80; /* Neon green for accents and borders */
+    --bs-success: rgba(0, 255, 149, 0.35); /* Success highlights */
+    --bs-info: #00623171; /* Hover background */
+    --bs-warning: #bdffde; /* Light green for warnings or soft alerts */
+    --bs-danger: #37433f91; /* Muted dark green for danger */
+    --bs-light: #222a2791; /* Dimmed light background */
+    --bs-dark: #000000; /* Black for text */
+    --bs-body-bg: rgb(24 24 27); /* Background color for main content */
+    --bs-body-color: #eefff6; /* Light text color for readability */
+}
+
+/* Custom Theme Styles */
+.chan-button {
+    background-color: var(--bs-primary);
     border-width: 1px;
-    border-color: #00ff80;
+    border-color: var(--bs-secondary);
     border-style: solid;
     border-radius: 5px;
-    color: #eefff6;
+    color: var(--bs-body-color);
     transition: all 0.3s ease;
 }
 
-.chan-button:hover{
-    background-color: #00623171;
-    border-width: 1px;
-    border-color: #00ff80;
-    border-style: solid;
+.chan-button:hover {
+    background-color: var(--bs-info);
     border-radius: 0px;
-    color: #eefff6;
     letter-spacing: 2px;
 }
 
-.chan-button:active{
-    background-color: #00623171 !important;
-    border-width: 1px;
-    border-color: #00ff80 !important;
-    border-style: solid;
+.chan-button:active {
+    background-color: var(--bs-info) !important;
     border-radius: 0px;
-    color: #eefff6;
     letter-spacing: 2px;
 }
 
-.chan-button-close{
-    background-color: #222a2791;
+.chan-button-close {
+    background-color: var(--bs-light);
     border-width: 1px;
-    border-color: #bdffde;
+    border-color: var(--bs-warning);
     border-style: solid;
     border-radius: 5px;
-    color: #eefff6;
+    color: var(--bs-body-color);
     transition: all 0.3s ease;
 }
 
-.chan-button-close:hover{
-    background-color: #37433f91;
-    border-width: 1px;
-    border-color: #bdffde;
-    border-style: solid;
+.chan-button-close:hover {
+    background-color: var(--bs-danger);
     border-radius: 0px;
-    color: #eefff6;
-    transition: all 0.3s ease;
     letter-spacing: 2px;
 }
 
-.chan-thread-info{
-    color: rgb(255, 255, 255);
-    background-color: #00ffd910;
+.chan-thread-info {
+    color: var(--bs-body-color);
+    background-color: rgba(0, 255, 217, 0.1);
     border-style: solid;
     border-width: 1px;
-    border-color: #006c5c;
+    border-color: var(--bs-info);
     border-radius: 3px;
     height: fit-content;
     padding: 10px 15px;
 }
 
-.chan-admin-thread-info{
-    color: rgb(255, 255, 255);
+.chan-admin-thread-info {
+    color: var(--bs-body-color);
     background-color: rgba(0, 83, 122, 0.1);
     border-style: solid;
     border-width: 1px;
@@ -71,17 +73,17 @@
     padding: 10px 15px;
 }
 
-.chan-thread-modal{
+.chan-thread-modal {
     border-style: solid;
     border-width: 1px;
     border-color: #5e5e5e;
     border-radius: 3px;
-    background-color: rgb(24 24 27);
-    color: white;
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
 }
 
-.chan-thread-title{
-    color: rgb(255, 255, 255);
+.chan-thread-title {
+    color: var(--bs-body-color);
     background-color: rgba(3, 14, 26, 0.3);
     padding: 0px 5px;
     font-size: 1.4rem;
@@ -89,15 +91,13 @@
     border: 1px rgba(0, 0, 0, 0.5) solid;
 }
 
-.chan-thread-title:hover{
+.chan-thread-title:hover {
     color: rgb(0, 19, 190);
     background-color: rgba(180, 255, 234, 0.87);
-    padding: 0px 5px;
-    font-size: 1.4rem;
 }
 
-.chan-thread-page-title{
-    color: rgb(255, 255, 255);
+.chan-thread-page-title {
+    color: var(--bs-body-color);
     background-color: rgba(3, 14, 26, 0.3);
     padding: 0px 5px;
     font-size: 1.4rem;
@@ -105,64 +105,69 @@
     border: 1px rgba(0, 0, 0, 0.5) solid;
 }
 
-.chan-text-content{
+.chan-text-content {
     font-size: 0.8rem;
     min-height: 3.125rem;
     margin: 0;
     padding: 0 0 0 2px;
+    line-height: 1.05rem;
 }
 
 .text-ellipsis {
-    white-space: nowrap;        /* Prevents text from wrapping to a new line */
+    white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;    /* Adds an ellipsis (...) at the end of the truncated text */
+    text-overflow: ellipsis;
 }
 
-.voted{
-    background-color: rgba(0, 255, 149, 0.35) !important;
-    box-shadow:inset 0px 0px 0px 1px rgba(0, 255, 149, 0.9);
+.voted {
+    background-color: var(--bs-success) !important;
+    box-shadow: inset 0px 0px 0px 1px var(--bs-secondary);
     border-radius: 2px !important;
 }
 
-.sort-by-form{
+.sort-by-form {
     display: flex;
     gap: 0.25rem;
     margin: 0.25rem 0;
 }
 
-.sort-by-form label{
+.sort-by-form label {
     font-size: 0.9rem;
 }
 
-.sort-by-form input{
+.sort-by-form input {
     font-weight: 700;
     font-size: 0.8rem;
     padding: 0 0.3rem;
-    color: white;
+    color: var(--bs-body-color);
     background-color: rgba(18, 219, 192, 0.3);
     border: 1px solid rgb(125, 125, 125);
     border-radius: 3px;
     transition: 0.3s;
 }
 
-.sort-by-form input:hover{
-    font-weight: 700;
-    font-size: 0.8rem;
-    padding: 0 0.3rem;
-    color: white;
+.sort-by-form input:hover {
     background-color: rgba(18, 219, 192, 0.6);
-    border: 1px solid rgb(125, 125, 125);
-    border-radius: 3px;
 }
 
-.sort-by-form select{
+.sort-by-form select {
     font-size: 0.8rem;
-    color: white;
+    color: var(--bs-body-color);
     background-color: #003b333a;
     border: 1px solid rgb(125, 125, 125);
     border-radius: 3px;
 }
 
-.sort-by-form select option{
-    background-color: #00623171;
+.sort-by-form select option {
+    background-color: var(--bs-info);
+}
+
+.green-text {
+    color: rgb(0, 255, 0);
+    font-style: italic;
+}
+
+.red-text {
+    color: rgb(255, 18, 18);
+    font-weight: bold;
 }

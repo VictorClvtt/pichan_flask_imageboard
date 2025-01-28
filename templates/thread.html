@@ -103,7 +103,7 @@
                             </a>
                         </div>
 
-                        <p class="m-0" style="font-size: 13px; color: rgba(255, 255, 255, 0.900); min-height: {{'1.5rem' if reply.image else '2.5rem'}};">{{ reply.content }}</p>
+                        <p class="chan-text-content" style="min-height: {{'1.5rem' if reply.image else '2.5rem'}};">{{ reply.content|safe }}</p>
                         {% if reply.image %}
                             <div class="d-flex flex-column justify-content-center" style="width: 30%;" id="img-div-r{{ reply.id }}">
                                 <img class="rounded-1" style="width: 100%; height: auto; max-height: 400px;" src="{{ url_for('Images.Image', id=reply.image.id) }}" onclick="maxOrMin({{ reply.id }}, 'r')">
@@ -186,7 +186,7 @@
                                 </div>
                             </div>
 
-                            <p class="chan-text-content">{{ thread.content }}</p>
+                            <p class="chan-text-content">{{ thread.content|safe }}</p>
 
                             <div class="d-flex justify-content-between">
                                 <div class="d-flex gap-1">
@@ -243,7 +243,7 @@
                                 </div>
                             </div>
 
-                            <p class="chan-text-content">{{ thread.content }}</p>
+                            <p class="chan-text-content">{{ thread.content|safe }}</p>
 
                             <div class="d-flex justify-content-between">
                                 <div class="d-flex gap-1">
