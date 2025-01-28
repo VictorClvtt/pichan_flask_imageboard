@@ -48,33 +48,26 @@ class ThreadList(MethodView):
 
         return new_thread, 201
 
-import bleach
-import re
 import html
+import bleach
+from bleach.linkifier import Linker
 
 def format_text(content):
-    """
-    Formats the content by wrapping lines starting with '>' in green text
-    and lines starting with '<' in red text. It also escapes dangerous characters
-    and converts URLs into clickable links.
-    """
     if not content:
         return content
-
-    # Escape '<' and '>' to prevent them from being interpreted as HTML tags
+    
     content = html.escape(content)
-
-    # Clean the content, allowing only specified tags and attributes
     content = bleach.clean(content, tags=['span', 'br', 'a'], attributes={'span': ['class'], 'a': ['href']}, strip=True)
 
-    # Convert links (URLs) into clickable <a> tags
-    content = re.sub(r'(https?://[^\s]+)', r'<a href="\1" target="_blank">\1</a>', content)
+    linker = Linker()
+    content = linker.linkify(content)
 
+    # Format lines starting with '>' and '<'
     formatted_lines = []
     for line in content.split('\n'):
-        if line.startswith('&gt;'):  # Check for escaped '>' (i.e., '&gt;')
+        if line.startswith('&gt;'):  # Escaped '>'
             formatted_lines.append(f'<span class="green-text">{line}</span>')
-        elif line.startswith('&lt;'):  # Check for escaped '<' (i.e., '&lt;')
+        elif line.startswith('&lt;'):  # Escaped '<'
             formatted_lines.append(f'<span class="red-text">{line}</span>')
         else:
             formatted_lines.append(line)

@@ -24,33 +24,26 @@ def validate_api_key():
     if api_key not in API_KEYS:
         abort(403, message="Invalid or missing API key.")
 
-import bleach
-import re
 import html
+import bleach
+from bleach.linkifier import Linker
 
 def format_text(content):
-    """
-    Formats the content by wrapping lines starting with '>' in green text
-    and lines starting with '<' in red text. It also escapes dangerous characters
-    and converts URLs into clickable links.
-    """
     if not content:
         return content
-
-    # Escape '<' and '>' to prevent them from being interpreted as HTML tags
+    
     content = html.escape(content)
-
-    # Clean the content, allowing only specified tags and attributes
     content = bleach.clean(content, tags=['span', 'br', 'a'], attributes={'span': ['class'], 'a': ['href']}, strip=True)
 
-    # Convert links (URLs) into clickable <a> tags
-    content = re.sub(r'(https?://[^\s]+)', r'<a href="\1" target="_blank">\1</a>', content)
+    linker = Linker()
+    content = linker.linkify(content)
 
+    # Format lines starting with '>' and '<'
     formatted_lines = []
     for line in content.split('\n'):
-        if line.startswith('&gt;'):  # Check for escaped '>' (i.e., '&gt;')
+        if line.startswith('&gt;'):  # Escaped '>'
             formatted_lines.append(f'<span class="green-text">{line}</span>')
-        elif line.startswith('&lt;'):  # Check for escaped '<' (i.e., '&lt;')
+        elif line.startswith('&lt;'):  # Escaped '<'
             formatted_lines.append(f'<span class="red-text">{line}</span>')
         else:
             formatted_lines.append(line)
@@ -141,6 +134,43 @@ def home():
     
     # Render the template and pass the board_groups data
     return render_template('index.html', board_groups=board_groups, threads=threads, replies=replies, boards=boards, images=images, board_stats=board_stats, api_key=api_key)
+
+import bleach
+import re
+import html
+
+def format_text(content):
+    """
+    Formats the content by wrapping lines starting with '>' in green text
+    and lines starting with '<' in red text. It also escapes dangerous characters
+    and converts URLs into clickable links.
+    """
+    if not content:
+        return content
+
+    # Escape '<' and '>' to prevent them from being interpreted as HTML tags
+    content = html.escape(content)
+
+    # Clean the content, allowing only specified tags and attributes
+    content = bleach.clean(content, tags=['span', 'br', 'a'], attributes={'span': ['class'], 'a': ['href']}, strip=True)
+
+    # Convert links (URLs) into clickable <a> tags
+    content = re.sub(
+        r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+',  # URL regex pattern
+        r'<a href="\g<0>" target="_blank">\g<0></a>',  # Replace with anchor tag
+        content
+    )
+
+    formatted_lines = []
+    for line in content.split('\n'):
+        if line.startswith('&gt;'):  # Check for escaped '>' (i.e., '&gt;')
+            formatted_lines.append(f'<span class="green-text">{line}</span>')
+        elif line.startswith('&lt;'):  # Check for escaped '<' (i.e., '&lt;')
+            formatted_lines.append(f'<span class="red-text">{line}</span>')
+        else:
+            formatted_lines.append(line)
+
+    return '<br>'.join(formatted_lines)
 
 @blp.route('/board/<string:id>')
 class Board(MethodView):
