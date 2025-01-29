@@ -20,12 +20,12 @@
         <a href="{{ url_for('Admin.home' if api_key else 'Index.home', **({'api_key': api_key} if api_key else {})) }}" class="px-2" style="font-size: 0.8rem; font-family: 'Courier New'; height: fit-content;">Home</a>
     </nav>
     <main class="d-flex w-100 flex-column align-items-center" style="height: fit-content;">
-        <div class="chan-title d-flex justify-content-between border-bottom border-black fw-bold align-items-center align-content-center gap-3 w-100 px-3 bg-dark" style="background: linear-gradient(to right, #1827209c, transparent); margin-bottom: 1rem;">
+        <div class="chan-title d-flex justify-content-between border-bottom border-black fw-bold align-items-center align-content-center gap-3 w-100 px-3 bg-dark" style="background: linear-gradient(to right, var(--bs-label-gradient-start), var(--bs-label-gradient-end)); margin-bottom: 1rem;">
             <div class="d-flex align-items-center align-content-center justify-content-start gap-3">
-                <p class="text-success m-0 text-ellipsis">/{{ thread.board.id }}</p>
+                <p class="m-0 text-ellipsis" style="color: var(--bs-primary);">/{{ thread.board.id }}</p>
                 <p class="m-0" style="height: fit-content; font-size: 2.5rem;">-</p>
                 <p class="m-0" style="height: fit-content; font-size: 2.5rem;">{{ thread.board.name }}: </p>
-                <p class="m-0 px-1 text-white text-ellipsis fw-light fst-italic font-monospace" style="height: fit-content; font-size: 1.2rem; background-color: rgba(0, 0, 0, 0.2); margin-top: 0.5rem !important;">Thread No.{{ thread.id }}</p>
+                <p class="m-0 px-1 text-white text-ellipsis fw-light fst-italic font-monospace" style="height: fit-content; font-size: 0.9rem; background-color: rgba(0, 0, 0, 0.2); margin-top: 0.6rem !important;">Thread No.{{ thread.id }}</p>
             </div>
             <p class="text-white-50 text-ellipsis m-0" style="font-size: 0.7rem;">{{ thread.board.description }}</p>
         </div>
@@ -65,6 +65,7 @@
             <div class="d-flex w-100 px-2 py-1 align-items-start">
                 <a href="{{ url_for('Admin.Board' if api_key else 'Boards.Board', id=thread.board.id, **({'api_key': api_key} if api_key else {})) }}" title="{{ thread.board.name }}" style="font-size: 0.8rem; font-family: 'Courier New'; height: fit-content;">Back to /{{ thread.board.id }}</a>
             </div>
+            <link id="theme-style" rel="stylesheet" href="{{ url_for('static', filename='css/board-thread.css') }}">
 
         <hr class="border-white w-100 my-0" style="margin-bottom: 1.1rem !important;">
   
@@ -98,7 +99,7 @@
                             <a
                                 onclick="highlightPost({{ 'r' ~ (reply.reply.id | string) if reply.reply else 't' ~ (reply.thread.id | string) }})"
                                 href="#{{ 'r' ~ (reply.reply.id | string) if reply.reply else 't' ~ (reply.thread.id | string) }}"
-                                class="m-0 text-ellipsis" style="font-size: 11px; color: rgba(0, 255, 166, 0.7);">
+                                class="m-0 text-ellipsis" style="font-size: 11px; color: var(--post-highlight);">
                                 Replying to: {{ 'r-' ~ (reply.reply.id | string) if reply.reply else 't-' ~ (reply.thread.id | string)}}
                             </a>
                         </div>
@@ -163,7 +164,7 @@
                 <div class="d-flex gap-1" id="img-div-t{{ thread.id }}">
                     {% if thread.image %}
                         <div class="d-flex flex-column justify-content-start" style="max-width: 235px; max-height: fit-content; min-width: 200px;">
-                            <img class="rounded-1 shadow img-fluid" src="{{ url_for('Images.Image', id=thread.image.id) }}" onclick="maxOrMin({{ thread.id }}, 't')">
+                            <img class="rounded-1 shadow" src="{{ url_for('Images.Image', id=thread.image.id) }}" onclick="maxOrMin({{ thread.id }}, 't')">
                             <div class="d-flex gap-1">
                                 <p style="font-size: 0.7rem; color: #696969;" class="m-0">File: </p>
                                 <a style="font-size: 0.7rem;" class="m-0 text-ellipsis" href="{{ url_for('Images.Image', id=thread.image.id) }}">{{ thread.image.name }}</a>
@@ -224,7 +225,7 @@
                 <div class="d-flex gap-1" id="img-div-t{{ thread.id }}">
                     {% if thread.image %}
                         <div class="d-flex flex-column justify-content-start" style="max-width: 235px; max-height: fit-content;">
-                            <img class="rounded-1 shadow img-fluid" src="{{ url_for('Images.Image', id=thread.image.id) }}" onclick="maxOrMin({{ thread.id }}, 't')">
+                            <img class="rounded-1 shadow" src="{{ url_for('Images.Image', id=thread.image.id) }}" onclick="maxOrMin({{ thread.id }}, 't')">
                             <div class="d-flex gap-1">
                                 <p style="font-size: 0.7rem; color: #696969;" class="m-0">File: </p>
                                 <a style="font-size: 0.7rem;" class="m-0 text-ellipsis" href="{{ url_for('Images.Image', id=thread.image.id) }}">{{ thread.image.name }}</a>
@@ -288,6 +289,31 @@
     <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="{{ url_for('static', filename='js/board-thread.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const themeLink = document.getElementById("theme-style");
+    
+            // Apply saved style across all pages
+            const savedStyle = localStorage.getItem("selectedStyle") || "board-thread";
+    
+            // Set the href dynamically using the rendered url_for value
+            themeLink.href = "{{ url_for('static', filename='css/') }}" + savedStyle + ".css";
+    
+            // Check if the select dropdown exists
+            const select = document.getElementById("style_id");
+            if (select) {
+                // Set dropdown to match saved style
+                select.value = savedStyle;
+    
+                // Change theme and save selection
+                select.addEventListener("change", function () {
+                    const newStyle = select.value;
+                    localStorage.setItem("selectedStyle", newStyle);
+                    themeLink.href = "{{ url_for('static', filename='css/') }}" + newStyle + ".css";
+                });
+            }
+        });
+    </script>
     {% if api_key %}
         <script>
             async function deletePost(id, post_type){

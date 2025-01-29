@@ -1,5 +1,13 @@
+:root {
+    --bs-bg-gradient-start: rgb(28, 44, 37);
+    --bs-bg-gradient-end: rgb(21, 26, 24);
+    --chan-color: #00ff80;
+    --bs-success: rgba(25,135,84,1);
+    --chan-label: rgba(163, 255, 201, 0.9);
+}
+
 .chan-title{
-    color: #00ff7f;
+    color: var(--chan-color);
     font-size: 50px;
 }
 
@@ -9,11 +17,6 @@
     background-repeat: no-repeat;
     background-size: cover; /* Ensures the background fills the element */
     background-attachment: fixed;
-}
-
-.chan-nav{
-    height: 40px;
-    background-color: rgb(39 39 42);
 }
 
 .chan-index-section{
@@ -26,9 +29,17 @@
 }
 
 .chan-threads-container {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* Create 4 equal columns */
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
     gap: 20px; /* Space between items */
+    justify-content: flex-start; /* Align items to the left */
+}
+
+.chan-thread {
+    flex: 1 1 calc(25% - 20px); /* 4 items per row, accounting for the gap */
+    max-width: calc(25% - 20px); /* Prevent items from growing too large */
+    box-sizing: border-box; /* Include padding and border in the width calculation */
+    margin: 0 auto;
 }
 
 .text-ellipsis {
@@ -93,7 +104,7 @@
 }
 
 .chan-section-label{
-    background: rgba(163, 255, 209, 0.9);
+    background: var(--chan-label);
     color: #1a1a1a !important;
     padding: 0.1rem 0 0 0.3rem;
     margin-bottom: 2px !important;

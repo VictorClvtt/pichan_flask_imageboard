@@ -9,10 +9,10 @@
     <title>πchan{{ ' - Admin' if api_key}}</title>
 </head>
 <body class="chan-bg d-flex flex-column align-items-center" style="min-height: 100vh;">
-    
+    <link id="theme-style" rel="stylesheet" href="../static/css/index.css">
     <main class="d-flex px-3 w-100 flex-column align-items-center py-3" style="height: fit-content;">
         <div class="d-flex flex-column align-content-center justify-content-center align-items-center" style="min-height: 100px; margin-bottom: 0.5rem;">
-            <h1 class="chan-title d-flex m-0"><p class="text-success fst-italic m-0">π</p>chan</h1>
+            <h1 class="chan-title d-flex m-0"><p class="text-success fst-italic m-0" style="color: var(--bs-success) !important;">π</p>chan</h1>
             {% if api_key %}
                 <p class="text-white font-monospace m-0" style="letter-spacing: 2px;">Administrator</p>
             {% endif %}    
@@ -46,6 +46,9 @@
             <div class="d-flex gap-1 w-100" style="max-width: 800px; margin-top: 0.3rem;">
                 <button class="w-100 chan-admin-button" type="button" data-bs-toggle="modal" data-bs-target="#deleteBoardGroup">- Delete Board Group</button>
                 <button class="w-100 chan-admin-button" type="button" data-bs-toggle="modal" data-bs-target="#deleteBoard">- Delete Board</button>
+            </div>
+            <div class="d-flex gap-1 w-100" style="max-width: 800px; margin-top: 0.3rem;">
+                <button class="w-100 chan-admin-button" type="button" data-bs-toggle="modal" data-bs-target="#manageBans">Manage banned fingerprints</button>
             </div>
 
             <!-- New Board Group Modal -->
@@ -177,7 +180,7 @@
                                 <div>
                                     <label class="d-flex gap-1 align-items-center fst-italic text-white m-0" style="max-width: 800px; font-size: 0.8rem; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Board:<hr class="border-white w-100 my-0" style="height: fit-content; margin-bottom: 1px !important;"></label>
                                     <select class="w-100" id="delete_board_id">
-                                            <option value="" hidden selected disabled>Board</option>
+                                            <option value="" hidden selected disabled>Select Board</option>
                                         {% for board in boards %}
                                             <option value="{{ board.id }}">{{ board.name }}</option>
                                         {% endfor %}
@@ -203,7 +206,7 @@
 
         <h2 class="d-flex chan-section-label align-items-center fst-italic text-white w-100 m-0 mt-4" style="max-width: 800px; font-size: 15px; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Popular Threads:<hr class="border-white w-100 my-0 mx-1" style="height: fit-content; margin-bottom: 1px !important;"></h2>
         <section class="chan-index-section admin-button" id="popular-threads">
-            <div class="chan-threads-container w-100">
+            <div class="chan-threads-container" style="width: fit-content;">
                 {% for board in boards %}
                     
                     {% if loop.index <= 12 %}
@@ -220,7 +223,7 @@
                         {% endfor %}
         
                         {% if ns.most_voted_thread %}
-                            <div class="d-flex flex-column align-items-center" style="max-width: 175px; max-height: 275px;">
+                            <div class="d-flex flex-column align-items-center chan-thread" style="max-width: 175px; max-height: 275px;">
                                 <a href="{{ url_for('Admin.Board' if api_key else 'Boards.Board', id=ns.most_voted_thread.board.id, **({'api_key': api_key} if api_key else {})) }}" class="chan-title text-decoration-underline fw-bold m-0 py-1" style="font-size: 0.9rem;">{{ board.name }}</a>
                                 <a href="{{ url_for('Admin.Thread' if api_key else 'Threads.Thread', id=ns.most_voted_thread.id, **({'api_key': api_key} if api_key else {})) }}" title="{{ ns.most_voted_thread.title }}">
                                     <img style="max-width: 150px; max-height: 150px; border: 1px solid rgb(66, 212, 144); background: rgba(0, 255, 234, 0.05);" src="{{ url_for('Images.Image', id=ns.most_voted_thread.image.id) }}" alt="">
@@ -239,7 +242,6 @@
         
 
         <h2 class="d-flex chan-section-label align-items-center text-white w-100 m-0 mt-4" style="max-width: 800px; font-size: 15px; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Metrics:<hr class="border-white w-100 my-0 mx-1" style="height: fit-content; margin-bottom: 1px !important;"></h2>
-
         <section class="chan-index-section p-0 overflow-x-auto" id="statistics">
             
                 
@@ -292,7 +294,26 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const themeLink = document.getElementById("theme-style");
+        
+            // Apply saved theme
+            const savedStyle = localStorage.getItem("selectedStyle") || "board-thread";
+            themeLink.href = `../static/css/${savedStyle}.css`;
+        
+            // Check if the select dropdown exists (on pages where it's available)
+            const select = document.getElementById("style_id");
+            if (select) {
+                select.value = savedStyle;
+                select.addEventListener("change", function () {
+                    const newStyle = select.value;
+                    localStorage.setItem("selectedStyle", newStyle);
+                    themeLink.href = `../static/css/${newStyle}.css`;
+                });
+            }
+        });
+        </script>
     {% if api_key %}
         <script>
 
@@ -424,6 +445,6 @@
             }
         </script>
     {% endif %}    
-
+    
 </body>
 </html>

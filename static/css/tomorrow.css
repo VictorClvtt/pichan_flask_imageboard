@@ -1,0 +1,208 @@
+/* Redefine Bootstrap Variables */
+:root {
+    --bs-nav-bg: #27272a; /* Navigation background */
+    --bs-bg-gradient-start: #20262c; /* Start of gradient */
+    --bs-bg-gradient-end: #1d1f21; /* End of gradient */
+    --bs-label-gradient-start: #181b2763; /* Start of gradient */
+    --bs-label-gradient-end: rgba(0, 0, 0, 0); /* End of gradient */
+    --bs-primary: #626e83ab; /* Deep green background for primary elements */
+    --bs-secondary: #99afc4; /* Neon green for accents and borders */
+    --bs-success-rgb: #3b00003a;
+    --bs-success: #1979a5; /* Success highlights */
+    --bs-info: #23272e; /* Hover background */
+    --bs-warning: #bdffde; /* Light green for warnings or soft alerts */
+    --bs-danger: #37433f91; /* Muted dark green for danger */
+    --bs-light: #222a2791; /* Dimmed light background */
+    --bs-dark: #000000; /* Black for text */
+    --bs-body-bg: rgb(24, 24, 27); /* Background color for main content */
+    --bs-body-color: #eefff6; /* Light text color for readability */
+    --bs-hover-light: rgba(180, 255, 234, 0.87);
+    --bs-green-accent: #242830; /* Green accent for thread info */
+    --bs-green-muted: rgba(0, 33, 122, 0.1); /* Muted green for admin thread info */
+    --bs-green-muted-border: rgba(0, 83, 122, 0.1); /* Border for admin thread info */
+    --bs-border-gray: #5e5e5e; /* Gray border color */
+    --bs-thread-title-bg: rgba(3, 14, 26, 0.3); /* Thread title background */
+    --bs-thread-title-border: rgba(0, 0, 0, 0.5); /* Thread title border */
+    --bs-form-bg: rgba(18, 122, 219, 0.3); /* Form background */
+    --bs-form-hover-bg: rgba(18, 129, 219, 0.6); /* Form hover background */
+    --bs-select-bg: #00203b3a; /* Select background */
+    --post-highlight: rgba(0, 119, 255, 0.7);
+    --chan-label: rgba(163, 234, 255, 0.9);
+    --bs-green-text: #00ff55; /* Green text */
+    --bs-red-text: rgb(255, 18, 58); /* Red text */
+}
+
+.chan-title{
+    color: var(--bs-secondary);
+    font-size: 50px;
+}
+
+/* Custom Theme Styles */
+.chan-bg {
+    background: var(--bs-bg-gradient-start);
+    background: linear-gradient(180deg, var(--bs-bg-gradient-start) 0%, var(--bs-bg-gradient-end) 9%);
+    background-repeat: no-repeat;
+    background-size: cover; /* Ensures the background fills the element */
+    background-attachment: fixed;
+}
+
+.chan-nav{
+    height: 40px;
+    background-color: var(--bs-nav-bg);
+}
+
+
+/* Custom Theme Styles */
+.chan-button {
+    background-color: var(--bs-primary);
+    border-width: 1px;
+    border-color: var(--bs-secondary);
+    border-style: solid;
+    border-radius: 5px;
+    color: var(--bs-body-color);
+    transition: all 0.3s ease;
+}
+
+.chan-button:hover {
+    background-color: var(--bs-info);
+    border-color: var(--bs-secondary);
+    border-radius: 0px;
+    letter-spacing: 2px;
+}
+
+.chan-button-close {
+    background-color: var(--bs-light);
+    border-width: 1px;
+    border-color: var(--bs-warning);
+    border-style: solid;
+    border-radius: 5px;
+    color: var(--bs-body-color);
+    transition: all 0.3s ease;
+}
+
+.chan-button-close:hover {
+    background-color: var(--bs-danger);
+    border-radius: 0px;
+    letter-spacing: 2px;
+}
+
+.chan-thread-info {
+    color: var(--bs-body-color);
+    background-color: var(--bs-green-accent);
+    border-style: solid;
+    border-width: 1px;
+    border-color: var(--bs-info);
+    border-radius: 2px;
+    height: fit-content;
+    padding: 10px 15px;
+}
+
+.chan-admin-thread-info {
+    color: var(--bs-body-color);
+    background-color: var(--bs-green-muted);
+    border-style: solid;
+    border-width: 1px;
+    border-color: var(--bs-green-muted-border);
+    border-radius: 2px;
+    height: fit-content;
+    padding: 10px 15px;
+}
+
+.chan-thread-modal {
+    border-style: solid;
+    border-width: 1px;
+    border-color: var(--bs-border-gray);
+    border-radius: 3px;
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
+}
+
+.chan-thread-title {
+    color: var(--bs-body-color);
+    background-color: var(--bs-thread-title-bg);
+    padding: 0px 5px;
+    font-size: 1.4rem;
+    border-radius: 3px;
+    border: 1px var(--bs-thread-title-border) solid;
+}
+
+.chan-thread-title:hover {
+    color: var(--bs-dark);
+    background-color: var(--bs-hover-light);
+}
+
+.chan-thread-page-title {
+    color: var(--bs-body-color);
+    background-color: var(--bs-thread-title-bg);
+    padding: 0px 5px;
+    font-size: 1.4rem;
+    border-radius: 3px;
+    border: 1px var(--bs-thread-title-border) solid;
+}
+
+.chan-text-content {
+    font-size: 0.8rem;
+    min-height: 3.125rem;
+    margin: 0;
+    padding: 0.1rem 0 0.2rem 0;
+    line-height: 1.05rem;
+}
+
+.text-ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.voted {
+    background-color: var(--bs-success) !important;
+    box-shadow: inset 0px 0px 0px 1px var(--bs-secondary);
+    border-radius: 2px !important;
+}
+
+.sort-by-form {
+    display: flex;
+    gap: 0.25rem;
+    margin: 0.25rem 0;
+}
+
+.sort-by-form label {
+    font-size: 0.9rem;
+}
+
+.sort-by-form input {
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: 0 0.3rem;
+    color: var(--bs-body-color);
+    background-color: var(--bs-form-bg);
+    border: 1px solid var(--bs-border-gray);
+    border-radius: 3px;
+    transition: 0.3s;
+}
+
+.sort-by-form input:hover {
+    background-color: var(--bs-form-hover-bg);
+}
+
+.sort-by-form select {
+    font-size: 0.8rem;
+    color: var(--bs-body-color);
+    background-color: var(--bs-select-bg);
+    border: 1px solid var(--bs-border-gray);
+    border-radius: 3px;
+}
+
+.sort-by-form select option {
+    background-color: var(--bs-info);
+}
+
+.green-text {
+    color: var(--bs-green-text);
+    font-style: italic;
+}
+
+.red-text {
+    color: var(--bs-red-text);
+    font-weight: bold;
+}
