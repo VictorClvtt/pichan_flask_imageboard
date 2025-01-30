@@ -5,6 +5,7 @@ from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
 from db import db
+from models.board_group import BoardGroupModel
 from models.board import BoardModel
 from models.thread import ThreadModel
 from models.reply import ReplyModel
@@ -87,6 +88,8 @@ def format_reply_content(reply):
 class Board(MethodView):
 
     def get(self, id):
+
+        board_groups = BoardGroupModel.query.all()
         # Get the board and all boards for navigation
         board = BoardModel.query.get_or_404(id)
         boards = BoardModel.query.all()
@@ -124,6 +127,7 @@ class Board(MethodView):
         # Render the board page with formatted threads
         return render_template(
             'board.html',
+            board_groups=board_groups,
             board=board,
             boards=boards,
             normal_threads=normal_threads, 

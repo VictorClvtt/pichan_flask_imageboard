@@ -20,14 +20,13 @@
         <a href="{{ url_for('Admin.home' if api_key else 'Index.home', **({'api_key': api_key} if api_key else {})) }}" class="px-2" style="font-size: 0.8rem; font-family: 'Courier New'; height: fit-content;">Home</a>
     </nav>
     <main class="d-flex w-100 flex-column align-items-center" style="height: fit-content;">
-        <div class="chan-title d-flex justify-content-between border-bottom border-black fw-bold align-items-center align-content-center gap-3 w-100 px-3 bg-dark" style="background: linear-gradient(to right, var(--bs-label-gradient-start), var(--bs-label-gradient-end)); margin-bottom: 1rem;">
-            <div class="d-flex align-items-center align-content-center justify-content-start gap-3">
-                <p class="m-0 text-ellipsis" style="color: var(--bs-primary);">/{{ thread.board.id }}</p>
-                <p class="m-0" style="height: fit-content; font-size: 2.5rem;">-</p>
-                <p class="m-0" style="height: fit-content; font-size: 2.5rem;">{{ thread.board.name }}: </p>
-                <p class="m-0 px-1 text-white text-ellipsis fw-light fst-italic font-monospace" style="height: fit-content; font-size: 0.9rem; background-color: rgba(0, 0, 0, 0.2); margin-top: 0.6rem !important;">Thread No.{{ thread.id }}</p>
+        <div class="chan-title d-flex flex-column border-bottom border-black fw-bold align-items-center align-content-center w-100 p-3 bg-dark gap-2" style="background: linear-gradient(to right, var(--bs-label-gradient-start), var(--bs-label-gradient-end));">
+            <div class="d-flex align-items-center align-content-center justify-content-start gap-2">
+                <p class="text-ellipsis m-0" style="color: var(--bs-primary); height: fit-content; font-size: 2.5rem; line-height: 1;">/{{ thread.board.id }}</p>
+                <p class="m-0" style="height: fit-content; font-size: 2.5rem; line-height: 1;">-</p>
+                <p class="m-0" style="height: fit-content; font-size: 2.5rem; line-height: 1;">{{ thread.board.name }}</p>    
             </div>
-            <p class="text-white-50 text-ellipsis m-0" style="font-size: 0.7rem;">{{ thread.board.description }}</p>
+            <p class="text-white-50 text-ellipsis m-0 bg-black bg-opacity-25 px-1" style="font-size: 0.7rem;">Thread No. {{ thread.id }}</p>
         </div>
 
         <!-- New reply modal -->
@@ -60,7 +59,7 @@
             </div>
         </div>
   
-        <hr class="border-white w-100 my-0">
+        <hr class="border-white w-100 my-0" style="margin-top: 1rem !important;">
             
             <div class="d-flex w-100 px-2 py-1 align-items-start">
                 <a href="{{ url_for('Admin.Board' if api_key else 'Boards.Board', id=thread.board.id, **({'api_key': api_key} if api_key else {})) }}" title="{{ thread.board.name }}" style="font-size: 0.8rem; font-family: 'Courier New'; height: fit-content;">Back to /{{ thread.board.id }}</a>

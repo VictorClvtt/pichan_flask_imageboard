@@ -5,7 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
 from db import db
 from models.board_group import BoardGroupModel
-from marshmallow_schemas import PlainBoardGroupSchema, BoardGroupSchema
+from marshmallow_schemas import BoardGroupSchema
 
 blp = Blueprint('Board Groups', __name__, description='Operations on board groups')
 

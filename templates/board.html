@@ -11,20 +11,34 @@
 </head>
 <body class="chan-bg vh-100 d-flex flex-column align-items-center">
     
-    <nav class="chan-nav d-flex w-100 border-bottom py-1" style="height: fit-content;">
-        <ul class="d-flex gap-2 w-100 px-2 list-unstyled m-0" style="height: fit-content; width: max-content;">
-            {% for board in boards %}
-                <a href="{{ url_for('Admin.Board' if api_key else 'Boards.Board', id=board.id, page=1, **({'api_key': api_key} if api_key else {})) }}" title="{{ board.name }}" style="font-size: 0.8rem; font-family: 'Courier New'; height: fit-content;">/{{ board.id }}</a>
+    <nav class="chan-nav d-flex w-100 border-bottom" style="height: fit-content; padding: 0.15rem 0.25rem;">
+        <ul class="d-flex gap-2 justify-content-between w-100 list-unstyled m-0" style="height: fit-content; width: max-content;">
+            {% for board_group in board_groups %}
+                {% if board_group.boards.count() > 0 %}
+                    <div class="d-flex align-items-center align-content-center justify-content-center">
+                        <p class="m-0 text-black-50" style="font-size: 0.9rem; margin-right: 0.2rem !important;">[</p>
+                        <ul class="d-flex gap-2 p-0 m-0" style="height: fit-content;">
+                            {% for board in board_group.boards %}
+                                <a href="{{ url_for('Admin.Board' if api_key else 'Boards.Board', id=board.id, page=1, **({'api_key': api_key} if api_key else {})) }}" title="{{ board.name }}" style="font-size: 0.9rem;" class="text-decoration-none">/{{ board.id }}</a>
+                            {% endfor %}
+                        </ul>
+                        <p class="m-0 text-black-50" style="font-size: 0.9rem; margin-left: 0.2rem !important;">]</p>    
+                    </div>
+                {% endif %}
             {% endfor %}
+            <div class="d-flex align-items-center align-content-center justify-content-center">
+                <p class="m-0 text-black-50" style="font-size: 0.9rem; margin-right: 0.2rem !important;">[</p>
+                <a href="{{ url_for('Admin.home' if api_key else 'Index.home', **({'api_key': api_key} if api_key else {})) }}" style="font-size: 0.9rem;" class="text-decoration-none">Home</a>
+                <p class="m-0 text-black-50" style="font-size: 0.9rem; margin-left: 0.2rem !important;">]</p>
+            </div>
         </ul>
-        <a href="{{ url_for('Admin.home' if api_key else 'Index.home', **({'api_key': api_key} if api_key else {})) }}" class="px-2" style="font-size: 0.8rem; font-family: 'Courier New'; height: fit-content;">Home</a>
     </nav>
     <main class="d-flex w-100 flex-column align-items-center" style="height: fit-content;">
-        <div class="chan-title d-flex justify-content-between border-bottom border-black fw-bold align-items-center align-content-center gap-3 w-100 px-3 bg-dark" style="background: linear-gradient(to right, var(--bs-label-gradient-start), var(--bs-label-gradient-end));">
-            <div class="d-flex align-items-center align-content-center justify-content-start gap-3">
-                <p class="text-ellipsis m-0" style="color: var(--bs-primary);">/{{ board.id }}</p>
-                <p class="m-0" style="height: fit-content; font-size: 2.5rem;">-</p>
-                <p class="m-0" style="height: fit-content; font-size: 2.5rem;">{{ board.name }}</p>    
+        <div class="chan-title d-flex flex-column border-bottom border-black fw-bold align-items-center align-content-center w-100 p-3 bg-dark gap-2" style="background: linear-gradient(to right, var(--bs-label-gradient-start), var(--bs-label-gradient-end));">
+            <div class="d-flex align-items-center align-content-center justify-content-start gap-2">
+                <p class="text-ellipsis m-0" style="color: var(--bs-primary); height: fit-content; font-size: 2.5rem; line-height: 1;">/{{ board.id }}</p>
+                <p class="m-0" style="height: fit-content; font-size: 2.5rem; line-height: 1;">-</p>
+                <p class="m-0" style="height: fit-content; font-size: 2.5rem; line-height: 1;">{{ board.name }}</p>    
             </div>
             <p class="text-white-50 text-ellipsis m-0" style="font-size: 0.7rem;">{{ board.description }}</p>
         </div>
@@ -533,7 +547,7 @@
     </main>
     {% if board.threads.count() %}
         <nav class="d-flex">
-            <ul class="d-flex align-items-center p-0" style="height: 1.75rem; gap: 2px">
+            <ul class="d-flex align-items-center p-0" style="height: 1.75rem; gap: 2px;">
                 <!-- Previous Button -->
                 <li class="list-unstyled h-100 d-flex align-items-center" 
                     style="color: rgb(0, 255, 170); background: rgba(0, 0, 0, 0.5);" >
@@ -571,6 +585,27 @@
             </ul>
         </nav>
     {% endif %}
+    
+    <ul class="d-flex gap-2 justify-content-center w-100 px-2 list-unstyled m-0" style="height: fit-content; width: max-content; padding-bottom: 1rem;">
+        {% for board_group in board_groups %}
+            {% if board_group.boards.count() > 0 %}
+                <div class="d-flex align-items-center align-content-center justify-content-center">
+                    <p class="m-0 text-black-50" style="font-size: 0.9rem; margin-right: 0.2rem !important;">[</p>
+                    <ul class="d-flex gap-2 p-0 m-0" style="height: fit-content;">
+                        {% for board in board_group.boards %}
+                            <a href="{{ url_for('Admin.Board' if api_key else 'Boards.Board', id=board.id, page=1, **({'api_key': api_key} if api_key else {})) }}" title="{{ board.name }}" style="font-size: 0.9rem;" class="text-decoration-none">/{{ board.id }}</a>
+                        {% endfor %}
+                    </ul>
+                    <p class="m-0 text-black-50" style="font-size: 0.9rem; margin-left: 0.2rem !important;">]</p>    
+                </div>
+            {% endif %}
+        {% endfor %}
+        <div class="d-flex align-items-center align-content-center justify-content-center">
+            <p class="m-0 text-black-50" style="font-size: 0.9rem; margin-right: 0.2rem !important;">[</p>
+            <a href="{{ url_for('Admin.home' if api_key else 'Index.home', **({'api_key': api_key} if api_key else {})) }}" style="font-size: 0.9rem;" class="text-decoration-none">Home</a>
+            <p class="m-0 text-black-50" style="font-size: 0.9rem; margin-left: 0.2rem !important;">]</p>
+        </div>
+    </ul>
     
 
     <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>

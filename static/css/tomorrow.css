@@ -18,7 +18,7 @@
     --bs-body-color: #eefff6; /* Light text color for readability */
     --bs-hover-light: rgba(180, 255, 234, 0.87);
     --bs-green-accent: #242830; /* Green accent for thread info */
-    --bs-green-muted: rgba(0, 33, 122, 0.1); /* Muted green for admin thread info */
+    --bs-green-muted: rgba(15, 109, 153, 0.25); /* Muted green for admin thread info */
     --bs-green-muted-border: rgba(0, 83, 122, 0.1); /* Border for admin thread info */
     --bs-border-gray: #5e5e5e; /* Gray border color */
     --bs-thread-title-bg: rgba(3, 14, 26, 0.3); /* Thread title background */
@@ -27,6 +27,7 @@
     --bs-form-hover-bg: rgba(18, 129, 219, 0.6); /* Form hover background */
     --bs-select-bg: #00203b3a; /* Select background */
     --post-highlight: rgba(0, 119, 255, 0.7);
+    --chan-color: #0099ff;
     --chan-label: rgba(163, 234, 255, 0.9);
     --bs-green-text: #00ff55; /* Green text */
     --bs-red-text: rgb(255, 18, 58); /* Red text */
