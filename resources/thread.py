@@ -6,7 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
 from db import db
 from models.thread import ThreadModel
-from models.board import BoardModel
+from models.board_group import BoardGroupModel
 from models.image import ImageModel
 from marshmallow_schemas import ThreadSchema
 
@@ -86,9 +86,11 @@ def format_reply_content(reply):
 class Thread(MethodView):
 
     def get(self, id):
+
+        board_groups = BoardGroupModel.query.all()
         # Get the thread, board, and image data
         thread = ThreadModel.query.get_or_404(id)
-        boards = BoardModel.query.all()
+
         image = ImageModel.query.filter_by(thread_id=id).first()
 
         # Format thread content
@@ -99,7 +101,7 @@ class Thread(MethodView):
             format_reply_content(reply)
 
         # Return the rendered template with the formatted content
-        return render_template('thread.html', thread=thread, boards=boards, image=image)
+        return render_template('thread.html', thread=thread, board_groups=board_groups, image=image)
 
 
 

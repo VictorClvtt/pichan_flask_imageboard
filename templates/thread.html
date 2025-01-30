@@ -11,18 +11,32 @@
     <title>πchan - /{{ thread.board.id }}</title>
 </head>
 <body class="chan-bg vh-100 d-flex flex-column align-items-center">
-    <nav class="chan-nav d-flex w-100 border-bottom py-1" style="height: fit-content;">
-        <ul class="d-flex gap-2 w-100 px-2 list-unstyled m-0" style="height: fit-content; width: max-content;">
-            {% for board in boards %}
-                <a href="{{ url_for('Admin.Board' if api_key else 'Boards.Board', id=board.id, **({'api_key': api_key} if api_key else {})) }}" title="{{ board.name }}" style="font-size: 0.8rem; font-family: 'Courier New'; height: fit-content;">/{{ board.id }}</a>
+    <nav class="chan-nav d-flex w-100 border-bottom" style="height: fit-content; padding: 0.3rem 0.25rem;">
+        <ul class="d-flex gap-2 justify-content-between w-100 list-unstyled m-0" style="height: fit-content; width: max-content; margin-bottom: 1px !important;">
+            {% for board_group in board_groups %}
+                {% if board_group.boards.count() > 0 %}
+                    <div class="d-flex align-items-center align-content-center justify-content-center">
+                        <p class="m-0 text-white-50" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; margin-right: 0.2rem !important; line-height: normal;">[</p>
+                        <ul class="d-flex gap-2 p-0 m-0" style="height: fit-content;">
+                            {% for board in board_group.boards %}
+                            <a href="{{ url_for('Admin.Board' if api_key else 'Boards.Board', id=board.id, **({'api_key': api_key} if api_key else {})) }}" title="{{ board.name }}" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; line-height: normal;">/{{ board.id }}</a>
+                            {% endfor %}
+                        </ul>
+                        <p class="m-0 text-white-50" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; margin-left: 0.2rem !important; line-height: normal;">]</p>    
+                    </div>
+                {% endif %}
             {% endfor %}
+            <div class="d-flex align-items-center align-content-center justify-content-center">
+                <p class="m-0 text-white-50" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; margin-right: 0.2rem !important; line-height: normal;">[</p>
+                <a href="{{ url_for('Admin.home' if api_key else 'Index.home', **({'api_key': api_key} if api_key else {})) }}" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; line-height: normal;">Home</a>
+                <p class="m-0 text-white-50" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; margin-left: 0.2rem !important; line-height: normal;">]</p>
+            </div>
         </ul>
-        <a href="{{ url_for('Admin.home' if api_key else 'Index.home', **({'api_key': api_key} if api_key else {})) }}" class="px-2" style="font-size: 0.8rem; font-family: 'Courier New'; height: fit-content;">Home</a>
     </nav>
     <main class="d-flex w-100 flex-column align-items-center" style="height: fit-content;">
         <div class="chan-title d-flex flex-column border-bottom border-black fw-bold align-items-center align-content-center w-100 p-3 bg-dark gap-2" style="background: linear-gradient(to right, var(--bs-label-gradient-start), var(--bs-label-gradient-end));">
             <div class="d-flex align-items-center align-content-center justify-content-start gap-2">
-                <p class="text-ellipsis m-0" style="color: var(--bs-primary); height: fit-content; font-size: 2.5rem; line-height: 1;">/{{ thread.board.id }}</p>
+                <p class="m-0" style="color: var(--bs-primary); height: fit-content; font-size: 2.5rem; line-height: 1;">/{{ thread.board.id }}</p>
                 <p class="m-0" style="height: fit-content; font-size: 2.5rem; line-height: 1;">-</p>
                 <p class="m-0" style="height: fit-content; font-size: 2.5rem; line-height: 1;">{{ thread.board.name }}</p>    
             </div>
@@ -51,7 +65,7 @@
                             <input type="hidden" id="thread_or_reply_id" value="">
                         </form>
                     </div>
-                    <div class="modal-footer" style="border-color: #5e5e5e;">
+                    <div class="d-flex justify-content-between modal-footer" style="border-color: #5e5e5e;">
                     <button type="button" class="btn btn-secondary chan-button-close w-100" style="max-width: 80px;" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary chan-button w-100" style="max-width: 150px;" onclick="postReply()">Post reply</button>
                     </div>
@@ -280,8 +294,29 @@
             {% endif %}
             
 
-
+        <hr class="border-white w-100 m-0">
+        <ul class="d-flex gap-2 justify-content-center w-100 list-unstyled m-0" style="height: fit-content; width: max-content;">
+            {% for board_group in board_groups %}
+                {% if board_group.boards.count() > 0 %}
+                    <div class="d-flex align-items-center align-content-center justify-content-center">
+                        <p class="m-0 text-black-50" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; margin-right: 0.2rem !important; line-height: normal;">[</p>
+                        <ul class="d-flex gap-2 p-0 m-0" style="height: fit-content;">
+                            {% for board in board_group.boards %}
+                            <a href="{{ url_for('Admin.Board' if api_key else 'Boards.Board', id=board.id, **({'api_key': api_key} if api_key else {})) }}" title="{{ board.name }}" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; line-height: normal;">/{{ board.id }}</a>
+                            {% endfor %}
+                        </ul>
+                        <p class="m-0 text-black-50" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; margin-left: 0.2rem !important; line-height: normal;">]</p>    
+                    </div>
+                {% endif %}
+            {% endfor %}
+            <div class="d-flex align-items-center align-content-center justify-content-center">
+                <p class="m-0 text-black-50" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; margin-right: 0.2rem !important; line-height: normal;">[</p>
+                <a href="{{ url_for('Admin.home' if api_key else 'Index.home', **({'api_key': api_key} if api_key else {})) }}" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; line-height: normal;">Home</a>
+                <p class="m-0 text-black-50" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; margin-left: 0.2rem !important; line-height: normal;">]</p>
+            </div>
+        </ul>
         </section>
+        
 
     </main>
 
