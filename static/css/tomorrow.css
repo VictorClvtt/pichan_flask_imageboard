@@ -6,7 +6,7 @@
     --bs-label-gradient-start: #181b2763; /* Start of gradient */
     --bs-label-gradient-end: rgba(0, 0, 0, 0); /* End of gradient */
     --bs-primary: #626e83ab; /* Deep green background for primary elements */
-    --bs-secondary: #99afc4; /* Neon green for accents and borders */
+    --bs-secondary: #78a4cc; /* Neon green for accents and borders */
     --bs-success-rgb: #3b00003a;
     --bs-success: #1979a5; /* Success highlights */
     --bs-info: #23272e; /* Hover background */
@@ -31,6 +31,14 @@
     --chan-label: rgba(163, 234, 255, 0.9);
     --bs-green-text: #00ff55; /* Green text */
     --bs-red-text: rgb(255, 18, 58); /* Red text */
+}
+
+
+
+a.chan-thread-title{
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+    border: none;
 }
 
 .chan-title{

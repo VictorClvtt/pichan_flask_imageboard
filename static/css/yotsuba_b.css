@@ -1,39 +1,56 @@
 /* Redefine Bootstrap Variables */
 :root {
     --bs-nav-bg: #27272a; /* Navigation background */
-    --bs-bg-gradient-start: rgb(28, 44, 37); /* Start of gradient */
-    --bs-bg-gradient-end: rgb(21, 26, 24); /* End of gradient */
-    --bs-label-gradient-start: #1827209c; /* Start of gradient */
-    --bs-label-gradient-end: rgba(0, 0, 0, 0); /* End of gradient */
-    --bs-primary: #00a05391; /* Deep green background for primary elements */
-    --bs-secondary: #00ff80; /* Neon green for accents and borders */
-    --bs-success: rgba(0, 255, 149, 0.35); /* Success highlights */
-    --bs-info: #3fd48a71; /* Hover background */
+    --bs-bg-gradient-start: #D6DAF0; /* Start of gradient */
+    --bs-bg-gradient-end: #e0e5f3; /* End of gradient */
+    --bs-label-gradient-start: #D6DAF0; /* Start of gradient */
+    --bs-label-gradient-end: #e0e5f3; /* End of gradient */
+    --bs-primary: #AF0A0F; /* Deep green background for primary elements */
+    --bs-secondary: #af0a0f; /* Neon green for accents and borders */
+    --bs-success-rgb: #3b00003a;
+    --bs-success: #e9141b; /* Success highlights */
+    --bs-info: #c7cbe4; /* Hover background */
     --bs-warning: #bdffde; /* Light green for warnings or soft alerts */
     --bs-danger: #37433f91; /* Muted dark green for danger */
     --bs-light: #222a2791; /* Dimmed light background */
     --bs-dark: #000000; /* Black for text */
     --bs-body-bg: rgb(24, 24, 27); /* Background color for main content */
-    --bs-body-color: #eefff6; /* Light text color for readability */
+    --bs-body-color: #000000; /* Light text color for readability */
     --bs-hover-light: rgba(180, 255, 234, 0.87);
-    --bs-green-accent: rgba(0, 255, 217, 0.1); /* Green accent for thread info */
-    --bs-green-muted: rgba(0, 83, 122, 0.1); /* Muted green for admin thread info */
-    --bs-green-muted-border: rgba(0, 83, 122, 0.8); /* Border for admin thread info */
+    --bs-green-accent: #c3c9e9; /* Green accent for thread info */
+    --bs-green-muted: rgba(15, 109, 153, 0.25); /* Muted green for admin thread info */
+    --bs-green-muted-border: rgba(0, 83, 122, 0.1); /* Border for admin thread info */
     --bs-border-gray: #5e5e5e; /* Gray border color */
     --bs-thread-title-bg: rgba(3, 14, 26, 0.3); /* Thread title background */
     --bs-thread-title-border: rgba(0, 0, 0, 0.5); /* Thread title border */
-    --bs-form-bg: rgba(18, 219, 192, 0.3); /* Form background */
-    --bs-form-hover-bg: rgba(18, 219, 192, 0.6); /* Form hover background */
-    --bs-select-bg: #003b333a; /* Select background */
-    --post-highlight: rgba(0, 255, 166, 0.7);
-    --bs-green-text: #00ff55; /* Green text */
+    --bs-form-bg: rgba(18, 122, 219, 0.3); /* Form background */
+    --bs-form-hover-bg: rgba(18, 129, 219, 0.6); /* Form hover background */
+    --bs-select-bg: #00203b3a; /* Select background */
+    --post-highlight: rgba(0, 119, 255, 0.7);
+    --chan-color: #0099ff;
+    --chan-label: rgba(163, 234, 255, 0.9);
+    --bs-green-text: #789922; /* Green text */
     --bs-red-text: rgb(255, 18, 58); /* Red text */
 }
 
-a.chan-thread-title{
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 2px;
-    border: none;
+html body.chan-bg.vh-100.d-flex.flex-column.align-items-center main.d-flex.w-100.flex-column.align-items-center div.chan-title.d-flex.flex-column.border-bottom.border-black.fw-bold.align-items-center.align-content-center.w-100.p-3.bg-dark.gap-2 p.text-white-50.text-ellipsis.m-0{
+    color: #000000b4 !important;
+}
+
+form select{
+    color: #000000 !important;
+}
+
+label.text-white{
+    color: #000000 !important;
+}
+
+body main .border-white{
+    border-color: #000000 !important;
+}
+
+button i{
+    color: #000000;
 }
 
 .chan-title{
@@ -58,7 +75,7 @@ a.chan-thread-title{
 
 /* Custom Theme Styles */
 .chan-button {
-    background-color: var(--bs-select-bg);
+    background-color: var(--bs-primary);
     border-width: 1px;
     border-color: var(--bs-secondary);
     border-style: solid;
@@ -91,7 +108,7 @@ a.chan-thread-title{
 }
 
 .chan-thread-info {
-    color: var(--bs-body-color);
+    color: var(--bs-dark) !important;
     background-color: var(--bs-green-accent);
     border-style: solid;
     border-width: 1px;
@@ -99,6 +116,18 @@ a.chan-thread-title{
     border-radius: 2px;
     height: fit-content;
     padding: 10px 15px;
+}
+
+.chan-thread-info div div p{
+    color: rgba(0, 0, 0, 0.9) !important;    
+}
+
+.chan-thread-info div p{
+    color: rgba(0, 0, 0, 0.9) !important;    
+}
+
+.chan-thread-info div div span{
+    color: rgba(0, 0, 0, 0.9) !important;    
 }
 
 .chan-admin-thread-info {
@@ -110,6 +139,18 @@ a.chan-thread-title{
     border-radius: 2px;
     height: fit-content;
     padding: 10px 15px;
+}
+
+.chan-admin-thread-info div div p{
+    color: rgba(0, 0, 0, 0.9) !important;    
+}
+
+.chan-admin-thread-info div p{
+    color: rgba(0, 0, 0, 0.9) !important;    
+}
+
+.chan-admin-thread-info div div span{
+    color: rgba(0, 0, 0, 0.9) !important;    
 }
 
 .chan-thread-modal {
@@ -128,6 +169,12 @@ a.chan-thread-title{
     font-size: 1.4rem;
     border-radius: 3px;
     border: 1px var(--bs-thread-title-border) solid;
+}
+
+a.chan-thread-title{
+    color: var(--bs-primary) !important;
+    background-color: #68686841;
+    border: none;
 }
 
 .chan-thread-title:hover {
