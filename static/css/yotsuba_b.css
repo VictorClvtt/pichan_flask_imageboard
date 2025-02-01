@@ -1,8 +1,8 @@
 /* Redefine Bootstrap Variables */
 :root {
     --bs-nav-bg: #27272a; /* Navigation background */
-    --bs-bg-gradient-start: #D6DAF0; /* Start of gradient */
-    --bs-bg-gradient-end: #e0e5f3; /* End of gradient */
+    --bs-bg-gradient-start: #bbc2ec; /* Start of gradient */
+    --bs-bg-gradient-end: #d9ddeb; /* End of gradient */
     --bs-label-gradient-start: #D6DAF0; /* Start of gradient */
     --bs-label-gradient-end: #e0e5f3; /* End of gradient */
     --bs-primary: #AF0A0F; /* Deep green background for primary elements */
@@ -31,6 +31,7 @@
     --chan-label: rgba(163, 234, 255, 0.9);
     --bs-green-text: #789922; /* Green text */
     --bs-red-text: rgb(255, 18, 58); /* Red text */
+    --bs-white-rgb: #000000;
 }
 
 html body.chan-bg.vh-100.d-flex.flex-column.align-items-center main.d-flex.w-100.flex-column.align-items-center div.chan-title.d-flex.flex-column.border-bottom.border-black.fw-bold.align-items-center.align-content-center.w-100.p-3.bg-dark.gap-2 p.text-white-50.text-ellipsis.m-0{
@@ -256,4 +257,22 @@ a.chan-thread-title{
 .red-text {
     color: var(--bs-red-text);
     font-weight: bold;
+}
+
+.custom-table {
+    color: #000000; /* Light gray text */
+    border-color: #000000; /* Border color */
+}
+
+.custom-table th{
+    padding: 0.75rem 0;
+    
+}
+
+.custom-table td{
+    padding: 0.1rem 0;
+}
+
+.custom-table th, .custom-table td {
+    border-bottom:  1px solid rgba(255, 255, 255, 0);
 }

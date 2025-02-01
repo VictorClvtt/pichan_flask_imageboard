@@ -13,26 +13,29 @@
 <body class="chan-bg vh-100 d-flex flex-column align-items-center">
     <nav class="chan-nav d-flex w-100 border-bottom" style="height: fit-content; padding: 0.3rem 0.25rem;">
         <ul class="d-flex gap-2 justify-content-between w-100 list-unstyled m-0" style="height: fit-content; width: max-content; margin-bottom: 1px !important;">
-            {% for board_group in board_groups %}
-                {% if board_group.boards.count() > 0 %}
-                    <div class="d-flex align-items-center align-content-center justify-content-center">
-                        <p class="m-0 text-white-50" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; margin-right: 0.2rem !important; line-height: normal;">[</p>
-                        <ul class="d-flex gap-2 p-0 m-0" style="height: fit-content;">
-                            {% for board in board_group.boards %}
-                            <a href="{{ url_for('Admin.Board' if api_key else 'Boards.Board', id=board.id, **({'api_key': api_key} if api_key else {})) }}" title="{{ board.name }}" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; line-height: normal;">/{{ board.id }}</a>
-                            {% endfor %}
-                        </ul>
-                        <p class="m-0 text-white-50" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; margin-left: 0.2rem !important; line-height: normal;">]</p>    
-                    </div>
-                {% endif %}
-            {% endfor %}
+            <div class="d-flex gap-1">
+                {% for board_group in board_groups %}
+                    {% if board_group.boards.count() > 0 %}
+                        <div class="d-flex align-items-center align-content-center justify-content-center">
+                            <p class="m-0 text-white-50" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; margin-right: 0.2rem !important; line-height: normal;">[</p>
+                            <ul class="d-flex gap-2 p-0 m-0" style="height: fit-content;">
+                                {% for board in board_group.boards %}
+                                <a href="{{ url_for('Admin.Board' if api_key else 'Boards.Board', id=board.id, **({'api_key': api_key} if api_key else {})) }}" title="{{ board.name }}" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; line-height: normal;">/{{ board.id }}</a>
+                                {% endfor %}
+                            </ul>
+                            <p class="m-0 text-white-50" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; margin-left: 0.2rem !important; line-height: normal;">]</p>    
+                        </div>
+                    {% endif %}
+                {% endfor %}    
+            </div>
+            
             <div class="d-flex align-items-center align-content-center justify-content-center">
                 <p class="m-0 text-white-50" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; margin-right: 0.2rem !important; line-height: normal;">[</p>
                 <a href="{{ url_for('Admin.home' if api_key else 'Index.home', **({'api_key': api_key} if api_key else {})) }}" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; line-height: normal;">Home</a>
                 <p class="m-0 text-white-50" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; margin-left: 0.2rem !important; line-height: normal;">]</p>
             </div>
         </ul>
-    </nav>
+    </nav> 
     <main class="d-flex w-100 flex-column align-items-center" style="height: fit-content;">
         <div class="chan-title d-flex flex-column border-bottom border-black fw-bold align-items-center align-content-center w-100 p-3 bg-dark gap-2" style="background: linear-gradient(to right, var(--bs-label-gradient-start), var(--bs-label-gradient-end));">
             <div class="d-flex align-items-center align-content-center justify-content-start gap-2">
@@ -299,20 +302,20 @@
             {% for board_group in board_groups %}
                 {% if board_group.boards.count() > 0 %}
                     <div class="d-flex align-items-center align-content-center justify-content-center">
-                        <p class="m-0 text-black-50" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; margin-right: 0.2rem !important; line-height: normal;">[</p>
+                        <p class="m-0 text-white-50" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; margin-right: 0.2rem !important; line-height: normal;">[</p>
                         <ul class="d-flex gap-2 p-0 m-0" style="height: fit-content;">
                             {% for board in board_group.boards %}
                             <a href="{{ url_for('Admin.Board' if api_key else 'Boards.Board', id=board.id, **({'api_key': api_key} if api_key else {})) }}" title="{{ board.name }}" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; line-height: normal;">/{{ board.id }}</a>
                             {% endfor %}
                         </ul>
-                        <p class="m-0 text-black-50" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; margin-left: 0.2rem !important; line-height: normal;">]</p>    
+                        <p class="m-0 text-white-50" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; margin-left: 0.2rem !important; line-height: normal;">]</p>    
                     </div>
                 {% endif %}
             {% endfor %}
             <div class="d-flex align-items-center align-content-center justify-content-center">
-                <p class="m-0 text-black-50" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; margin-right: 0.2rem !important; line-height: normal;">[</p>
+                <p class="m-0 text-white-50" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; margin-right: 0.2rem !important; line-height: normal;">[</p>
                 <a href="{{ url_for('Admin.home' if api_key else 'Index.home', **({'api_key': api_key} if api_key else {})) }}" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; line-height: normal;">Home</a>
-                <p class="m-0 text-black-50" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; margin-left: 0.2rem !important; line-height: normal;">]</p>
+                <p class="m-0 text-white-50" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif; margin-left: 0.2rem !important; line-height: normal;">]</p>
             </div>
         </ul>
         </section>

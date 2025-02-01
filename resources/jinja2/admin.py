@@ -35,7 +35,20 @@ def home():
     replies = ReplyModel.query.all()
 
     boards = BoardModel.query.all()
-    
+
+    import random
+    popular_threads = []
+    for board in boards:
+        max_votes = -1
+        most_voted_thread = None
+        for thread in board.threads:
+            # Calculate vote count for the current thread
+            vote_count = thread.votes.count()
+            if vote_count > max_votes or (vote_count == max_votes and thread.id < most_voted_thread.id):
+                max_votes = vote_count
+                most_voted_thread = thread
+        popular_threads.append([board, most_voted_thread])
+    random.shuffle(popular_threads)
 
     images = ImageModel.query.all()
     images = [
@@ -106,7 +119,7 @@ def home():
         })
     
     # Render the template and pass the board_groups data
-    return render_template('index.html', board_groups=board_groups, threads=threads, replies=replies, boards=boards, images=images, board_stats=board_stats, api_key=api_key)
+    return render_template('index.html', board_groups=board_groups, threads=threads, replies=replies, boards=boards, images=images, board_stats=board_stats, popular_threads=popular_threads, api_key=api_key)
 
 import html
 import bleach
@@ -147,8 +160,8 @@ class Board(MethodView):
 
         validate_api_key()
 
+        board_groups = BoardGroupModel.query.all()
         board = BoardModel.query.get_or_404(id)
-        boards = BoardModel.query.all()
 
         page = request.args.get('page', 1, type=int)
         normal_threads = ThreadModel.query.filter_by(type=0, board_id=id).order_by(ThreadModel.id.desc()).paginate(page=page, per_page=20, error_out=False)
@@ -175,7 +188,7 @@ class Board(MethodView):
 
         api_key = request.args.get('api_key', '')
 
-        return render_template('board.html', board=board, boards=boards, normal_threads=normal_threads, admin_threads=admin_threads, page=page, api_key=api_key, sort=sort, order=order)
+        return render_template('board.html', board=board, board_groups=board_groups, normal_threads=normal_threads, admin_threads=admin_threads, page=page, api_key=api_key, sort=sort, order=order)
     
 @blp.route('/thread/<string:id>')
 class Thread(MethodView):

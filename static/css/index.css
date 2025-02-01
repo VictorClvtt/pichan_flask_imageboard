@@ -28,19 +28,27 @@
     border: 1px solid;
 }
 
+.chan-boards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; /* Aligns incomplete rows to the left */
+    margin: 0 auto;
+    max-width: 800px; /* Adjust as needed */
+}
+
 .chan-threads-container {
     display: flex;
-    flex-wrap: wrap; /* Allow items to wrap to the next line */
-    gap: 20px; /* Space between items */
-    justify-content: flex-start; /* Align items to the left */
+    flex-wrap: wrap;
+    justify-content: space-around; /* Aligns incomplete rows to the left */
+    margin: 0 auto;
+    gap: 20px;
+    max-width: 800px; /* Adjust as needed */
 }
 
 .chan-thread {
-    flex: 1 1 calc(25% - 20px); /* 4 items per row, accounting for the gap */
-    max-width: calc(25% - 20px); /* Prevent items from growing too large */
-    box-sizing: border-box; /* Include padding and border in the width calculation */
-    margin: 0 auto;
+    width: 100%;
 }
+
 
 .text-ellipsis {
     white-space: nowrap;        /* Prevents text from wrapping to a new line */

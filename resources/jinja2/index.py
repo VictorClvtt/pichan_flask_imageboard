@@ -21,6 +21,20 @@ def home():
     replies = ReplyModel.query.all()
     boards = BoardModel.query.all()
 
+    import random
+    popular_threads = []
+    for board in boards:
+        max_votes = -1
+        most_voted_thread = None
+        for thread in board.threads:
+            # Calculate vote count for the current thread
+            vote_count = thread.votes.count()
+            if vote_count > max_votes or (vote_count == max_votes and thread.id < most_voted_thread.id):
+                max_votes = vote_count
+                most_voted_thread = thread
+        popular_threads.append([board, most_voted_thread])
+    random.shuffle(popular_threads)
+
     images = ImageModel.query.all()
     images = [
         {
@@ -97,5 +111,6 @@ def home():
         replies=replies,
         boards=boards,
         images=images,
+        popular_threads=popular_threads,
         board_stats=board_stats
     )

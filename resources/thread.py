@@ -6,6 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
 from db import db
 from models.thread import ThreadModel
+from models.board import BoardModel
 from models.board_group import BoardGroupModel
 from models.image import ImageModel
 from marshmallow_schemas import ThreadSchema

@@ -19,23 +19,26 @@
         </div>
         
         <h2 class="d-flex chan-section-label align-items-center fst-italic text-white w-100 m-0" style="max-width: 800px; font-size: 15px; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Boards:<hr class="border-white w-100 my-0 mx-1" style="height: fit-content; margin-bottom: 1px !important;"></h2>
-        <section class="chan-index-section chan-threads-container overflow-y-auto" style="max-height: 275px; border-color: var(--section-border);" id="boards">
-            {% for board_group in board_groups %}
-                <div class="d-flex flex-column" id="{{ board_group.id }}">
-                    <h3 class="chan-title text-decoration-underline fst-italic m-0 px-1" style="font-size: 1.1rem; width: fit-content; background-color: rgba(0, 0, 0, 0.25);">{{ board_group.name }}:</h3>
-                    
-                    {% for board in board_group.boards %}
-                        <a 
-                            style="font-size: 0.9rem; width: fit-content; margin: 2px 0 0 0.6rem; background-color: rgba(0, 0, 0, 0.25);" 
-                            class="px-1 text-ellipsis" 
-                            href="{{ url_for('Admin.Board' if api_key else 'Boards.Board', id=board.id, page=1, **({'api_key': api_key} if api_key else {})) }}">
-                            /{{ board.id + ' - ' + board.name }}
-                        </a>
-                    {% endfor %}
+        <section class="chan-index-section" style="border-color: var(--section-border);" id="boards">
+            <div class="chan-boards-container w-100">
+                {% for board_group in board_groups %}
+                    <div class="d-flex flex-column" id="{{ board_group.id }}">
+                        <h3 class="chan-title text-decoration-underline fst-italic text-ellipsis m-0 px-1" style="font-size: 1rem; width: fit-content; background-color: rgba(0, 0, 0, 0.25); font-family: Arial, Helvetica, sans-serif;">{{ board_group.name }}:</h3>
+                        
+                        {% for board in board_group.boards %}
+                            <a 
+                                style="font-size: 0.9rem; width: fit-content; margin: 2px 0 0 0.6rem; background-color: rgba(0, 0, 0, 0.25);" 
+                                class="px-1 text-ellipsis" 
+                                href="{{ url_for('Admin.Board' if api_key else 'Boards.Board', id=board.id, page=1, **({'api_key': api_key} if api_key else {})) }}">
+                                /{{ board.id + ' - ' + board.name }}
+                            </a>
+                        {% endfor %}
 
-                    
-                </div>
-            {% endfor %}
+                        
+                    </div>
+                {% endfor %}
+            </div>
+            
         </section>
 
         {% if api_key %}
@@ -202,34 +205,23 @@
         {% endif %}
 
         <h2 class="d-flex chan-section-label align-items-center fst-italic text-white w-100 m-0 mt-4" style="max-width: 800px; font-size: 15px; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Popular Threads:<hr class="border-white w-100 my-0 mx-1" style="height: fit-content; margin-bottom: 1px !important;"></h2>
-        <section class="chan-index-section admin-button" style="border-color: var(--section-border);" id="popular-threads">
-            <div class="chan-threads-container" style="width: fit-content;">
-                {% for board in boards %}
+        <section class="chan-index-section" style="border-color: var(--section-border);" id="popular-threads">
+            <div class="chan-threads-container w-100">
+                {% for board, popular_thread in popular_threads %}
                     
                     {% if loop.index <= 12 %}
         
-                        {% set ns = namespace(most_voted_thread = None, max_votes = 0) %}
-        
-                        {% for thread in board.threads %}
-                            {% set total_votes = thread.votes.all() | length %}
-                            
-                            {% if total_votes > ns.max_votes %}
-                                {% set ns.most_voted_thread = thread %}
-                                {% set ns.max_votes = total_votes %}
+                            {% if popular_thread %}
+                                <div class="d-flex flex-column align-items-center chan-thread" style="max-width: 175px; max-height: 275px;">
+                                    <a href="{{ url_for('Admin.Board' if api_key else 'Boards.Board', id=board.id, **({'api_key': api_key} if api_key else {})) }}" class="chan-title text-decoration-underline fw-bold m-0 py-1" style="font-size: 0.9rem;">{{ board.name }}</a>
+                                    <a href="{{ url_for('Admin.Thread' if api_key else 'Threads.Thread', id=popular_thread.id, **({'api_key': api_key} if api_key else {})) }}" title="{{ popular_thread.title }}">
+                                        <img style="max-width: 150px; max-height: 150px; border: 1px solid var(--chan-color); background: rgba(0, 255, 234, 0.05);" src="{{ url_for('Images.Image', id=popular_thread.image.id) }}" alt="">
+                                    </a>
+                                    <p class="ellipsis-multiline text-white">
+                                        {{ popular_thread.content }}
+                                    </p>
+                                </div>
                             {% endif %}
-                        {% endfor %}
-        
-                        {% if ns.most_voted_thread %}
-                            <div class="d-flex flex-column align-items-center chan-thread" style="max-width: 175px; max-height: 275px;">
-                                <a href="{{ url_for('Admin.Board' if api_key else 'Boards.Board', id=ns.most_voted_thread.board.id, **({'api_key': api_key} if api_key else {})) }}" class="chan-title text-decoration-underline fw-bold m-0 py-1" style="font-size: 0.9rem;">{{ board.name }}</a>
-                                <a href="{{ url_for('Admin.Thread' if api_key else 'Threads.Thread', id=ns.most_voted_thread.id, **({'api_key': api_key} if api_key else {})) }}" title="{{ ns.most_voted_thread.title }}">
-                                    <img style="max-width: 150px; max-height: 150px; border: 1px solid var(--chan-color); background: rgba(0, 255, 234, 0.05);" src="{{ url_for('Images.Image', id=ns.most_voted_thread.image.id) }}" alt="">
-                                </a>
-                                <p class="ellipsis-multiline text-white">
-                                    {{ ns.most_voted_thread.content }}
-                                </p>
-                            </div>
-                        {% endif %}
 
                     {% endif %}    
                     
