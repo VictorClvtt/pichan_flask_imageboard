@@ -51,12 +51,13 @@ class ThreadList(MethodView):
 
 import html
 import bleach
+import re
 from bleach.linkifier import Linker
 
 def format_text(content):
     if not content:
         return content
-    
+
     content = html.escape(content)
     content = bleach.clean(content, tags=['span', 'br', 'a'], attributes={'span': ['class'], 'a': ['href']}, strip=True)
 
@@ -73,7 +74,12 @@ def format_text(content):
         else:
             formatted_lines.append(line)
 
-    return '<br>'.join(formatted_lines)
+    formatted_content = '<br>'.join(formatted_lines)
+
+    # Handle spoilers (text wrapped in ::spoiler::)
+    formatted_content = re.sub(r'::(.*?)::', r'<span class="spoiler">\1</span>', formatted_content)
+
+    return formatted_content
 
 def format_reply_content(reply):
     """Recursively format reply content and its nested replies."""

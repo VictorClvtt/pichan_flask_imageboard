@@ -130,7 +130,9 @@ a.chan-thread-title{
     color: var(--bs-body-color);
     background-color: var(--bs-thread-title-bg);
     padding: 0px 5px;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
     border-radius: 3px;
     border: 1px var(--bs-thread-title-border) solid;
 }
@@ -214,4 +216,17 @@ a.chan-thread-title{
 .red-text {
     color: var(--bs-red-text);
     font-weight: bold;
+}
+
+.spoiler {
+    background-color: black;
+    color: black;
+    border-radius: 2px;
+    padding: 0 2px;
+    font-weight: normal;
+    transition: all 0.1s;
+}
+
+.spoiler:hover {
+    color: rgb(255, 255, 255);
 }

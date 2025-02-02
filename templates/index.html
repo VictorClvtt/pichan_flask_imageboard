@@ -18,7 +18,7 @@
             {% endif %}    
         </div>
         
-        <h2 class="d-flex chan-section-label align-items-center fst-italic text-white w-100 m-0" style="max-width: 800px; font-size: 15px; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Boards:<hr class="border-white w-100 my-0 mx-1" style="height: fit-content; margin-bottom: 1px !important;"></h2>
+        <h2 class="d-flex chan-section-label align-items-center text-white w-100 m-0" style="max-width: 800px; font-size: 15px; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Boards:<hr class="border-white w-100 my-0 mx-1" style="height: fit-content; margin-bottom: 1px !important;"></h2>
         <section class="chan-index-section" style="border-color: var(--section-border);" id="boards">
             <div class="chan-boards-container w-100">
                 {% for board_group in board_groups %}
@@ -204,12 +204,12 @@
             </div>
         {% endif %}
 
-        <h2 class="d-flex chan-section-label align-items-center fst-italic text-white w-100 m-0 mt-4" style="max-width: 800px; font-size: 15px; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Popular Threads:<hr class="border-white w-100 my-0 mx-1" style="height: fit-content; margin-bottom: 1px !important;"></h2>
+        <h2 class="d-flex chan-section-label align-items-center text-white w-100 m-0 mt-4" style="max-width: 800px; font-size: 15px; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Popular Threads:<hr class="border-white w-100 my-0 mx-1" style="height: fit-content; margin-bottom: 1px !important;"></h2>
         <section class="chan-index-section" style="border-color: var(--section-border);" id="popular-threads">
             <div class="chan-threads-container w-100">
                 {% for board, popular_thread in popular_threads %}
                     
-                    {% if loop.index <= 12 %}
+                    {% if loop.index <= 4 %}
         
                             {% if popular_thread %}
                                 <div class="d-flex flex-column align-items-center chan-thread" style="max-width: 175px; max-height: 275px;">

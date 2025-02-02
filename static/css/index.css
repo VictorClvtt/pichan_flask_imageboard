@@ -63,9 +63,10 @@
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 4;  /* Change the number for more/fewer lines */
+    line-clamp: 4;
     -webkit-box-orient: vertical;
     text-align: center;
-    margin: 4px 0 0 0;
+    margin: 5px 0 0 0;
 }
 
 .chan-admin-button{
@@ -114,7 +115,7 @@
 .chan-section-label{
     background: var(--chan-label);
     color: #1a1a1a !important;
-    padding: 0.1rem 0 0 0.3rem;
+    padding: 3px 0 0 0.3rem;
     margin-bottom: 2px !important;
     font-weight: 800;
 }
