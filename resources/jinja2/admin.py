@@ -47,7 +47,8 @@ def home():
             if vote_count > max_votes or (vote_count == max_votes and thread.id < most_voted_thread.id):
                 max_votes = vote_count
                 most_voted_thread = thread
-        popular_threads.append([board, most_voted_thread])
+        if most_voted_thread:
+            popular_threads.append([board, most_voted_thread])
     random.shuffle(popular_threads)
 
     images = ImageModel.query.all()

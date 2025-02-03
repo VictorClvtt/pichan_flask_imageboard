@@ -9,7 +9,8 @@
     --bs-secondary: #af0a0f; /* Neon green for accents and borders */
     --bs-success-rgb: #3b00003a;
     --bs-success: #e9141b; /* Success highlights */
-    --bs-info: #c7cbe4; /* Hover background */
+    --bs-info: #848ab10e; /* Hover background */
+    --bs-info-border-subtle: #666d9e;
     --bs-warning: #bdffde; /* Light green for warnings or soft alerts */
     --bs-danger: #37433f91; /* Muted dark green for danger */
     --bs-light: #222a2791; /* Dimmed light background */
@@ -27,11 +28,45 @@
     --bs-form-hover-bg: rgba(18, 129, 219, 0.6); /* Form hover background */
     --bs-select-bg: #00203b3a; /* Select background */
     --post-highlight: rgba(0, 119, 255, 0.7);
-    --chan-color: #0099ff;
-    --chan-label: rgba(163, 234, 255, 0.9);
+    --chan-color: #ff004c;
+    --chan-label: rgba(255, 163, 168, 0.9);
     --bs-green-text: #789922; /* Green text */
     --bs-red-text: rgb(255, 18, 58); /* Red text */
     --bs-white-rgb: #000000;
+}
+
+.chan-boards-container h3{
+    background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.chan-boards-container a{
+    background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+ul.align-items-center li{
+    background-color: rgba(0, 44, 139, 0.25) !important;
+    color: var(--bs-primary) !important;
+}
+
+li.list-unstyled:nth-child(1) a{
+    color: var(--bs-primary) !important;
+}
+
+li.list-unstyled:nth-child(3) a{
+    color: var(--bs-primary) !important;
+}
+
+div:nth-child(3) > div:nth-child(2) button{
+    background-color: rgba(51, 51, 51, 0.2) !important;
+    border-radius: 2px;
+}
+
+ul.d-flex:nth-child(4) p{
+    color: rgba(0, 0, 0) !important;
+}
+
+ul.d-flex:nth-child(3) p{
+    color: rgba(0, 0, 0) !important;
 }
 
 html body.chan-bg.vh-100.d-flex.flex-column.align-items-center main.d-flex.w-100.flex-column.align-items-center div.chan-title.d-flex.flex-column.border-bottom.border-black.fw-bold.align-items-center.align-content-center.w-100.p-3.bg-dark.gap-2 p.text-white-50.text-ellipsis.m-0{
@@ -81,12 +116,12 @@ button i{
     border-color: var(--bs-secondary);
     border-style: solid;
     border-radius: 5px;
-    color: var(--bs-body-color);
+    color: #ffffff;
     transition: all 0.3s ease;
 }
 
 .chan-button:hover {
-    background-color: var(--bs-info);
+    background-color: var(--bs-primary);
     border-color: var(--bs-secondary);
     border-radius: 0px;
     letter-spacing: 2px;
