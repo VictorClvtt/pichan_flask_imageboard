@@ -1,23 +1,40 @@
 const getFingerprint = async () => {
-    const storedFingerprint = localStorage.getItem('fingerprint');
-    if (storedFingerprint) {
-        return storedFingerprint; // Reuse the stored fingerprint
-    }
-
     try {
-        const fp = await FingerprintJS.load();
-        const result = await fp.get();
-        console.log('Generated fingerprint:', result.visitorId);
+        let sessionId = localStorage.getItem("session_id");
 
-        // Save fingerprint to localStorage for reuse
-        localStorage.setItem('fingerprint', result.visitorId);
+        if (sessionId) {
+            console.log("Using stored session ID:", sessionId);
+            return sessionId;
+        }
 
-        return result.visitorId;
+        // Request a new fingerprint session
+        const response = await fetch('/fingerprint', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to obtain fingerprint session");
+        }
+
+        const data = await response.json();
+        sessionId = data.session_id;
+        localStorage.setItem("session_id", sessionId);
+        
+        console.log("New session ID:", sessionId);
+        return sessionId;
     } catch (error) {
-        console.error('Error generating fingerprint:', error);
+        console.error("Error getting fingerprint:", error);
         throw error;
     }
 };
+
+
+
+
+
 
 async function postThread() {
     try {

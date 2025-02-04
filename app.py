@@ -18,6 +18,8 @@ from resources.jinja2.index import blp as IndexBlueprint
 
 from resources.jinja2.admin import blp as AdminBlueprint
 
+from resources.fingerprint import blp as FingerprintBlueprint
+
 def create_app(db_url=None):
 
     app = Flask(__name__)
@@ -53,5 +55,7 @@ def create_app(db_url=None):
     api.register_blueprint(IndexBlueprint)
 
     api.register_blueprint(AdminBlueprint)
+
+    api.register_blueprint(FingerprintBlueprint)
 
     return app

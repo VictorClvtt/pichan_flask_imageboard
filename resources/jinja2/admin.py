@@ -203,6 +203,7 @@ class Thread(MethodView):
 
         validate_api_key()
 
+        board_groups = BoardGroupModel.query.all()
         thread = ThreadModel.query.get_or_404(id)
         boards = BoardModel.query.all()
         image = ImageModel.query.filter_by(thread_id=id).first()
@@ -216,4 +217,4 @@ class Thread(MethodView):
 
         api_key = request.args.get('api_key', '')
         
-        return render_template('thread.html', thread=thread, boards=boards, image=image, api_key=api_key)
+        return render_template('thread.html', thread=thread, boards=boards, board_groups=board_groups, image=image, api_key=api_key)

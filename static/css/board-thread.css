@@ -8,7 +8,7 @@
     --bs-primary: #00a05391; /* Deep green background for primary elements */
     --bs-secondary: #00ff80; /* Neon green for accents and borders */
     --bs-success: rgba(0, 255, 149, 0.35); /* Success highlights */
-    --bs-info: #3fd48a71; /* Hover background */
+    --bs-info: rgba(63, 212, 137, 0); /* Hover background */
     --bs-warning: #bdffde; /* Light green for warnings or soft alerts */
     --bs-danger: #37433f91; /* Muted dark green for danger */
     --bs-light: #222a2791; /* Dimmed light background */
@@ -125,7 +125,7 @@ a.chan-thread-title{
     color: var(--bs-body-color);
     background-color: var(--bs-thread-title-bg);
     padding: 0px 5px;
-    font-size: 1.2rem;
+    font-size: 1.135rem;
     display: flex;
     align-items: center;
     border-radius: 3px;
@@ -150,7 +150,7 @@ a.chan-thread-title{
     font-size: 0.8rem;
     min-height: 3.125rem;
     margin: 0;
-    padding: 0.1rem 0 0.2rem 0;
+    padding: 0.2rem 0;
     line-height: 1.05rem;
 }
 

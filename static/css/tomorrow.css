@@ -130,7 +130,7 @@ a.chan-thread-title{
     color: var(--bs-body-color);
     background-color: var(--bs-thread-title-bg);
     padding: 0px 5px;
-    font-size: 1.2rem;
+    font-size: 1.135rem;
     display: flex;
     align-items: center;
     border-radius: 3px;
@@ -155,7 +155,7 @@ a.chan-thread-title{
     font-size: 0.8rem;
     min-height: 3.125rem;
     margin: 0;
-    padding: 0.1rem 0 0.2rem 0;
+    padding: 0.2rem 0;
     line-height: 1.05rem;
 }
 

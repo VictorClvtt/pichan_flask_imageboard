@@ -10,7 +10,7 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <title>πchan - /{{ thread.board.id }}</title>
 </head>
-<body class="chan-bg vh-100 d-flex flex-column align-items-center">
+<body class="chan-bg vh-100 overflow-x-hidden d-flex flex-column align-items-center">
     <nav class="chan-nav d-flex w-100 border-bottom" style="height: fit-content; padding: 0.3rem 0.25rem;">
         <ul class="d-flex gap-2 justify-content-between w-100 list-unstyled m-0" style="height: fit-content; width: max-content; margin-bottom: 1px !important;">
             <div class="d-flex gap-1">
@@ -86,7 +86,7 @@
         <hr class="border-white w-100 my-0" style="margin-bottom: 1.1rem !important;">
   
         <!-- Rendering Threads and Replies -->
-        <section class="d-flex flex-column overflow-x-auto align-items-start w-100 px-3 gap-3" style="padding-bottom: 1rem; height: fit-content;" id="threads">
+        <section class="d-flex flex-column align-items-start w-100 px-3 gap-3" style="padding-bottom: 1rem; height: fit-content;" id="threads">
             
             {% macro render_replies(replies, level, thread) %}
 
@@ -95,8 +95,8 @@
                     <div id="r{{ reply.id }}" class="chan-{{ 'admin-' if reply.type == 1 }}thread-info d-flex flex-column" style="min-width: 300px; margin-left: {{ 20 * level }}px; width: fit-content;">
                         <div class="d-flex justify-content-start align-content-start gap-1">
                             <div class="d-flex gap-1 align-items-center justify-content-start m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">
-                                <span class="m-0" style="font-size: 0.7rem; {{ 'color: rgba(255, 255, 255, 0.700);' if reply.type == 0 else 'color: rgba(0, 255, 136);' }}">
-                                    {{ 'Admin:' if reply.type == 1 else 'User:' }}
+                                <span class="m-0 fw-bold" style="font-size: 0.7rem; {{ 'color: rgba(255, 255, 255, 0.700);' if reply.type == 0 else 'color: rgba(0, 255, 136);' }}">
+                                    {{ 'Admin:' if reply.type == 1 else 'Anon:' }}
                                 </span>
                                 <span class="m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">
                                     {{ reply.user_token }}
@@ -177,7 +177,7 @@
 
 
             {% if thread.type == 1 %}
-                <div class="d-flex gap-1" id="img-div-t{{ thread.id }}">
+                <div class="d-flex gap-1 overflow-x-auto" id="img-div-t{{ thread.id }} style="max-width: 100vw;">
                     {% if thread.image %}
                         <div class="d-flex flex-column justify-content-start" style="max-width: 235px; max-height: fit-content; min-width: 200px;">
                             <img class="rounded-1 shadow" src="{{ url_for('Images.Image', id=thread.image.id) }}" onclick="maxOrMin({{ thread.id }}, 't')">
@@ -195,7 +195,7 @@
                                 <a class="chan-thread-title text-ellipsis m-0 text-decoration-none fst-italic" href="{{ url_for('Admin.Thread' if api_key else 'Threads.Thread', id=thread.id, **({'api_key': api_key} if api_key else {})) }}" style="font-weight: 500; text;">{{ thread.title }}</a>
                                 <div class="d-flex flex-column justify-content-around">
                                     <div class="d-flex align-items-center gap-1">
-                                        <p class="m-0" style="font-size: 0.7rem; color: rgba(0, 255, 136);">Admin:</p>
+                                        <p class="m-0" style="font-size: 0.7rem; color: rgba(0, 255, 136);"><span class="fw-bold">Admin:</span></p>
                                         <p class="m-0 text-ellipsis" style="font-size: 0.7rem !important; color: rgba(255, 255, 255, 0.700);">{{ thread.user_token }}</p>
                                         <img style="width: 15px; height: 15px;" src="{{ url_for('static', filename='pi.svg') }}" alt="">
                                     </div>
@@ -238,7 +238,7 @@
                     </div>    
                 </div>
             {% else %}
-                <div class="d-flex gap-1" id="img-div-t{{ thread.id }}">
+                <div class="d-flex gap-1 overflow-x-auto" id="img-div-t{{ thread.id }}" style="max-width: 100vw;">
                     {% if thread.image %}
                         <div class="d-flex flex-column justify-content-start" style="max-width: 235px; max-height: fit-content;">
                             <img class="rounded-1 shadow" src="{{ url_for('Images.Image', id=thread.image.id) }}" onclick="maxOrMin({{ thread.id }}, 't')">
@@ -255,7 +255,7 @@
                             <div class="d-flex gap-2">
                                 <a class="chan-thread-title text-ellipsis m-0 text-decoration-none fst-italic" href="{{ url_for('Admin.Thread' if api_key else 'Threads.Thread', id=thread.id, **({'api_key': api_key} if api_key else {})) }}" style="font-weight: 500; text;">{{ thread.title }}</a>
                                 <div class="d-flex flex-column justify-content-around">
-                                    <p class="m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">User: {{ thread.user_token }}</p>
+                                    <p class="m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);"><span class="fw-bold">Anon:</span> {{ thread.user_token }}</p>
                                     <p class="m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">Thread No.{{ thread.id }}</p>      
                                 </div>
                             </div>
