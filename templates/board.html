@@ -44,7 +44,7 @@
                 <p class="m-0" style="height: fit-content; font-size: 2.5rem; line-height: 1;">{{ board.name }}</p>    
             </div>
             <p class="text-white-50 text-ellipsis m-0" style="font-size: 0.7rem;">{{ board.description }}</p>
-        </div>
+        </div>   
 
         <!-- Button trigger modal -->
         <button class="chan-button fw-bold fst-italic w-100 my-3" style="max-width: 200px;" type="button" data-bs-toggle="modal" data-bs-target="#newThread">+ New Thread</button>
@@ -158,97 +158,86 @@
             {% endmacro %}
             
 
-            {% macro render_replies(replies, level, thread, count=namespace(value=0), rendered=namespace(flag=False)) %}
+            {% macro render_replies(replies, thread) %}
+            
+                {% for reply in replies[-5:] %}
 
-                {% for reply in replies %}
-
-                    {% if count.value < 5 %}
-                        {% set count.value = count.value + 1 %}
-                            <div id="r{{ reply.id }}" class="chan-{{ 'admin-' if reply.type == 1 }}thread-info d-flex flex-column" style="min-width: 350px; margin-left: {{ 20 * level }}px; width: fit-content;">
-                                <div class="d-flex justify-content-start align-content-start gap-1">
-                                    <div class="d-flex gap-1 align-items-center justify-content-start m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">
-                                        <span class="m-0 fw-bold" style="font-size: 0.7rem; {{ 'color: rgba(255, 255, 255, 0.700);' if reply.type == 0 else 'color: rgba(0, 255, 136);' }}">
-                                            {{ 'Admin:' if reply.type == 1 else 'Anon:' }}
-                                        </span>
-                                        <span class="m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">
-                                            {{ reply.user_token }}
-                                        </span>
-                                        {% if reply.user_token == thread.user_token %}
-                                            <span class="text-info m-0 text-ellipsis" style="font-size: 0.7rem;">(OP)</span>
-                                        {% endif %}
-                                        {% if reply.type == 1 %}
-                                            <img style="width: 15px; height: 15px;" src="{{ url_for('static', filename='pi.svg') }}" alt="">
-                                        {% endif %}
-                                    </div>
-                                    
-                                    <hr class="m-0" style="width: 1px; border-left: solid 1px;">
-                                    <p class="m-0 text-ellipsis" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">Reply No.{{ reply.id }}</p>
-                                    <hr class="m-0" style="width: 1px; border-left: solid 1px;">
-                                    <a
-                                        onclick="highlightPost({{ 'r' ~ (reply.reply.id | string) if reply.reply else 't' ~ (reply.thread.id | string) }})"
-                                        href="#{{ 'r' ~ (reply.reply.id | string) if reply.reply else 't' ~ (reply.thread.id | string) }}"
-                                        class="m-0 text-ellipsis" style="font-size: 11px; color: var(--post-highlight);">
-                                        Replying to: {{ 'r-' ~ (reply.reply.id | string) if reply.reply else 't-' ~ (reply.thread.id | string)}}
-                                    </a>
-                                </div>
-
-                                <p class="chan-text-content" style="min-height: {{'1.5rem' if reply.image else '2.5rem'}};">{{ reply.content|safe }}</p>
-                                {% if reply.image %}
-                                    <div class="d-flex flex-column justify-content-center" style="width: 30%;" id="img-div-r{{ reply.id }}">
-                                        <img class="rounded-1" style="width: 100%; height: auto; max-height: 400px;" src="{{ url_for('Images.Image', id=reply.image.id) }}" onclick="maxOrMin({{ reply.id }}, 'r')">
-                                        <div class="d-flex gap-1">
-                                            <p style="font-size: 0.7rem; color: #696969;" class="m-0">File: </p>
-                                            <a style="font-size: 0.7rem;" class="m-0 text-ellipsis" href="{{ url_for('Images.Image', id=reply.image.id) }}">{{ reply.image.name }}</a>
-                                        </div>
-                                        <p style="font-size: 0.7rem; color: #696969;" class="m-0 p-0">({{ (reply.image.size|int / 1024)|int }}KB {{ reply.image.measures }})</p>                    
-                                    </div>
+                    <div id="r{{ reply.id }}" class="chan-{{ 'admin-' if reply.type == 1 }}thread-info d-flex flex-column" style="min-width: 350px; width: fit-content; margin-left: {{ reply.level * 14 }}px;">
+                        <div class="d-flex justify-content-start align-content-start gap-1">
+                            <div class="d-flex gap-1 align-items-center justify-content-start m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">
+                                <span class="m-0 fw-bold" style="font-size: 0.7rem; {{ 'color: rgba(255, 255, 255, 0.700);' if reply.type == 0 else 'color: rgba(0, 255, 136);' }}">
+                                    {{ 'Admin:' if reply.type == 1 else 'Anon:' }}
+                                </span>
+                                <span class="m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">
+                                    {{ reply.user_token }}
+                                </span>
+                                {% if reply.user_token == thread.user_token %}
+                                    <span class="text-info m-0 text-ellipsis" style="font-size: 0.7rem;">(OP)</span>
                                 {% endif %}
-                                <div class="d-flex justify-content-between">
-                                    <div class="d-flex gap-1">
-                                        <p class="m-0" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">
-                                            {{ '%02d' | format(reply.date.day) }}/{{ '%02d' | format(reply.date.month) }}/{{ reply.date.year }}
-                                        </p>
-                                        <hr class="m-0 h-100" style="width: 1px; border-left: solid 1px;">
-                                        <p class="m-0" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">{{ reply.time }}</p>
-                                        <p class="m-0" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">UTC</p>
-                                    </div>
-
-                                    <div class="d-flex justify-content-center gap-1">
-                                        <button onclick="submitVote(1, {{ reply.id }}, 'r')" title="{{ reply.votes|selectattr('up_or_down', 'equalto', 1)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
-                                            <i class="fa-solid fa-caret-up px-1" id="1r{{ reply.id }}" style="font-size: 0.9rem; padding-top: 0.15rem; background-color: rgba(0, 153, 255, 0.2); border-radius: 3px; height: fit-content;"></i>
-                                        </button>
-                                        <button onclick="submitVote(0, {{ reply.id }}, 'r')" title="{{ reply.votes|selectattr('up_or_down', 'equalto', 0)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
-                                            <i class="fa-solid fa-caret-down px-1" id="0r{{ reply.id }}" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
-                                        </button>
-                                        <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('r{{ reply.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
-                                            <i style="font-size: 0.7rem;" class="fa-solid fa-reply"></i>
-                                            <p style="font-size: 0.7rem;" class="m-0">Reply</p>   
-                                        </button>
-                                        {% if api_key %}
-                                            <button onclick="deletePost({{ reply.id }}, 'r')" class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(243, 35, 35, 0.2); border-radius: 3px;" type="button">
-                                                <i style="font-size: 0.7rem;" class="fa-solid fa-eraser"></i>
-                                                <p style="font-size: 0.7rem;" class="m-0">Delete</p>   
-                                            </button>
-                                        {% endif %}
-                                    </div>
-                                </div>
+                                {% if reply.type == 1 %}
+                                    <img style="width: 15px; height: 15px;" src="{{ url_for('static', filename='pi.svg') }}" alt="">
+                                {% endif %}
                             </div>
-                        
-                        <!-- Render nested replies recursively with updated level -->
-                        {% if reply.reply_replies %}
                             
-                            {{ render_replies(reply.reply_replies, level + 1, thread, count, rendered) }}
-                            
+                            <hr class="m-0" style="width: 1px; border-left: solid 1px;">
+                            <p class="m-0 text-ellipsis" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">Reply No.{{ reply.id }}</p>
+                            <hr class="m-0" style="width: 1px; border-left: solid 1px;">
+                            <a
+                                onclick="highlightPost({{ 'r' ~ (reply.reply_id | string) if reply.reply_id else 't' ~ (reply.thread_id | string) }})"
+                                href="#{{ 'r' ~ (reply.reply_id | string) if reply.reply_id else 't' ~ (reply.thread_id | string) }}"
+                                class="m-0 text-ellipsis" style="font-size: 11px; color: var(--post-highlight);">
+                                Replying to: {{ 'r-' ~ (reply.reply_id | string) if reply.reply_id else 't-' ~ (reply.thread_id | string)}}
+                            </a>
+                        </div>
+
+                        <p class="chan-text-content" style="min-height: {{'1.5rem' if reply.image else '2.5rem'}};">{{ reply.content|safe }}</p>
+                        {% if reply.image %}
+                            <div class="d-flex flex-column justify-content-center" style="width: 30%;" id="img-div-r{{ reply.id }}">
+                                <img class="rounded-1" style="width: 100%; height: auto; max-height: 400px;" src="{{ url_for('Images.Image', id=reply.image.id) }}" onclick="maxOrMin({{ reply.id }}, 'r')">
+                                <div class="d-flex gap-1">
+                                    <p style="font-size: 0.7rem; color: #696969;" class="m-0">File: </p>
+                                    <a style="font-size: 0.7rem;" class="m-0 text-ellipsis" href="{{ url_for('Images.Image', id=reply.image.id) }}">{{ reply.image.name }}</a>
+                                </div>
+                                <p style="font-size: 0.7rem; color: #696969;" class="m-0 p-0">({{ (reply.image.size|int / 1024)|int }}KB {{ reply.image.measures }})</p>                    
+                            </div>
                         {% endif %}
+                        <div class="d-flex justify-content-between">
+                            <div class="d-flex gap-1">
+                                <p class="m-0" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">
+                                    {{ '%02d' | format(reply.date.day) }}/{{ '%02d' | format(reply.date.month) }}/{{ reply.date.year }}
+                                </p>
+                                <hr class="m-0 h-100" style="width: 1px; border-left: solid 1px;">
+                                <p class="m-0" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">{{ reply.time }}</p>
+                                <p class="m-0" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">UTC</p>
+                            </div>
+
+                            <div class="d-flex justify-content-center gap-1">
+                                <button onclick="submitVote(1, {{ reply.id }}, 'r')" title="{{ reply.votes|selectattr('up_or_down', 'equalto', 1)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                    <i class="fa-solid fa-caret-up px-1" id="1r{{ reply.id }}" style="font-size: 0.9rem; padding-top: 0.15rem; background-color: rgba(0, 153, 255, 0.2); border-radius: 3px; height: fit-content;"></i>
+                                </button>
+                                <button onclick="submitVote(0, {{ reply.id }}, 'r')" title="{{ reply.votes|selectattr('up_or_down', 'equalto', 0)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                    <i class="fa-solid fa-caret-down px-1" id="0r{{ reply.id }}" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
+                                </button>
+                                <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('r{{ reply.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
+                                    <i style="font-size: 0.7rem;" class="fa-solid fa-reply"></i>
+                                    <p style="font-size: 0.7rem;" class="m-0">Reply</p>   
+                                </button>
+                                {% if api_key %}
+                                    <button onclick="deletePost({{ reply.id }}, 'r')" class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(243, 35, 35, 0.2); border-radius: 3px;" type="button">
+                                        <i style="font-size: 0.7rem;" class="fa-solid fa-eraser"></i>
+                                        <p style="font-size: 0.7rem;" class="m-0">Delete</p>   
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                                            
+                    {% if loop.index == 5 %}
+                        <a href="{{ url_for('Admin.Thread' if api_key else 'Threads.Thread', id=thread.id, **({'api_key': api_key} if api_key else {})) }}" style="margin-left: {{ 10 * reply.level }}px; width: fit-content;">See all {{ count_replies(thread.replies) }} replies</a>  
                     {% endif %}
-                    
-                    {% if count.value >= 5 and not rendered.flag %}
-                        {% set rendered.flag = True %}
-                        <a href="{{ url_for('Admin.Thread' if api_key else 'Threads.Thread', id=thread.id, **({'api_key': api_key} if api_key else {})) }}" style="margin-left: {{ 20 * level }}px;">See all {{ count_replies(thread.replies) }} replies</a>  
-                    {% endif %}      
 
                 {% endfor %}
-
+                    
             {% endmacro %}
 
         <!-- Rendering Threads and Replies -->
@@ -257,7 +246,7 @@
             {% if page == 1 %}
                 {% for thread in admin_threads %}
                     <!-- Thread -->
-                    <div class="d-flex overflow-x-scroll gap-1" style="max-width: 100vw;" id="img-div-t{{ thread.id }}">
+                    <div class="d-flex overflow-x-scroll overflow-y-hidden gap-1 w-100" style="max-width: 100vw;" id="img-div-t{{ thread.id }}">
                         {% if thread.image %}
                             <div class="d-flex flex-column justify-content-start" style="max-width: 235px; max-height: fit-content; min-width: 200px;">
                                 <img class="rounded-1 shadow" src="{{ url_for('Images.Image', id=thread.image.id) }}" onclick="maxOrMin({{ thread.id }}, 't')">
@@ -268,7 +257,7 @@
                                 <p style="font-size: 0.7rem; color: #696969;" class="m-0 p-0">({{ (thread.image.size|int / 1024)|int }}KB {{ thread.image.measures }})</p>                    
                             </div>
                         {% endif %}
-                        <div class="d-flex flex-column gap-1 w-100">
+                        <div class="d-flex flex-column gap-2 w-100">
                             
                             <div id="t{{ thread.id }}" class="chan-admin-thread-info border-white" style="min-width: 350px; width: fit-content;">
                                 <div class="d-flex gap-2">
@@ -314,7 +303,10 @@
                                     </div>
                                 </div>
                             </div>
-                            {{ render_replies(thread.replies, 2, thread) }}    
+                            <hr class="border-white my-0 mx-3">
+                            <div class="d-flex flex-column gap-1" style="margin-left: 40px;">
+                                {{ render_replies(thread.reply_list, thread) }}     
+                            </div>       
                         </div>    
                     </div>
                     <hr class="border-white my-0 mx-auto" style="width: 100%;"> 
@@ -336,7 +328,7 @@
 
                         {% if thread.id == sorted_thread.id %}
                             <!-- Thread -->
-                            <div class="d-flex overflow-x-auto gap-1" style="max-width: 100vw;" id="img-div-t{{ thread.id }}">
+                            <div class="d-flex overflow-x-auto overflow-y-hidden gap-1 w-100" style="max-width: 100vw;" id="img-div-t{{ thread.id }}">
                                 {% if thread.image %}
                                     <div class="d-flex flex-column justify-content-start" style="max-width: 235px; max-height: fit-content; min-width: 200px;">
                                         <img class="rounded-1 shadow" src="{{ url_for('Images.Image', id=thread.image.id) }}" onclick="maxOrMin({{ thread.id }}, 't')">
@@ -347,7 +339,7 @@
                                         <p style="font-size: 0.7rem; color: #696969;" class="m-0 p-0">({{ (thread.image.size|int / 1024)|int }}KB {{ thread.image.measures }})</p>                    
                                     </div>
                                 {% endif %}
-                                <div class="d-flex flex-column gap-1 w-100">
+                                <div class="d-flex flex-column gap-2 w-100">
                                     
                                     <div id="t{{ thread.id }}" class="chan-thread-info border-info-subtle" style="min-width: 350px; width: fit-content;">
                                         <div class="d-flex gap-2">
@@ -389,7 +381,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                    {{ render_replies(thread.replies, 2, thread) }}    
+                                    {% if thread.reply_list %}
+                                        <hr class="border-white border-opacity-50 my-0 mx-3">
+                                        <div class="d-flex flex-column gap-1" style="margin-left: 40px;">
+                                            {{ render_replies(thread.reply_list, thread) }}     
+                                        </div>      
+                                    {% endif %}
                                 </div>    
                             </div>
                             <hr class="border-white my-0 mx-auto" style="width: 100%;">
@@ -413,7 +410,7 @@
 
                         {% if thread.id == sorted_thread.id %}
                             <!-- Thread -->
-                            <div class="d-flex overflow-x-auto gap-1" style="max-width: 100vw;" id="img-div-t{{ thread.id }}">
+                            <div class="d-flex overflow-x-auto overflow-y-hidden gap-1 w-100" style="max-width: 100vw;" id="img-div-t{{ thread.id }}">
                                 {% if thread.image %}
                                     <div class="d-flex flex-column justify-content-start" style="max-width: 235px; max-height: fit-content; min-width: 200px;">
                                         <img class="rounded-1 shadow img-fluid" src="{{ url_for('Images.Image', id=thread.image.id) }}" onclick="maxOrMin({{ thread.id }}, 't')">
@@ -424,7 +421,7 @@
                                         <p style="font-size: 0.7rem; color: #696969;" class="m-0 p-0">({{ (thread.image.size|int / 1024)|int }}KB {{ thread.image.measures }})</p>                    
                                     </div>
                                 {% endif %}
-                                <div class="d-flex flex-column gap-1 w-100">
+                                <div class="d-flex flex-column gap-2 w-100">
                                     
                                     <div id="t{{ thread.id }}" class="chan-thread-info" style="min-width: 350px; width: fit-content;">
                                         <div class="d-flex gap-2">
@@ -466,7 +463,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    {{ render_replies(thread.replies, 2, thread) }}    
+                                    <hr class="border-white my-0 mx-3">
+                                    <div class="d-flex flex-column gap-1" style="margin-left: 40px;">
+                                        {{ render_replies(thread.reply_list, thread) }}     
+                                    </div>     
                                 </div>    
                             </div>
                             <hr class="border-white my-0 mx-auto" style="width: 100%;">
@@ -482,7 +482,7 @@
 
                         {% if thread.id == sorted_thread.id %}
                             <!-- Thread -->
-                            <div class="d-flex overflow-x-auto gap-1" style="max-width: 100vw;" id="img-div-t{{ thread.id }}">
+                            <div class="d-flex overflow-x-auto overflow-y-hidden gap-1 w-100" style="max-width: 100vw;" id="img-div-t{{ thread.id }}">
                                 {% if thread.image %}
                                     <div class="d-flex flex-column justify-content-start" style="max-width: 235px; max-height: fit-content; min-width: 200px;">
                                         <img class="rounded-1 shadow img-fluid" src="{{ url_for('Images.Image', id=thread.image.id) }}" onclick="maxOrMin({{ thread.id }}, 't')">
@@ -493,7 +493,7 @@
                                         <p style="font-size: 0.7rem; color: #696969;" class="m-0 p-0">({{ (thread.image.size|int / 1024)|int }}KB {{ thread.image.measures }})</p>                    
                                     </div>
                                 {% endif %}
-                                <div class="d-flex flex-column gap-1 w-100">
+                                <div class="d-flex flex-column gap-2 w-100">
                                     
                                     <div id="t{{ thread.id }}" class="chan-thread-info" style="min-width: 350px; width: fit-content;">
                                         <div class="d-flex gap-2">
@@ -535,7 +535,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    {{ render_replies(thread.replies, 2, thread) }}    
+                                    <hr class="border-white my-0 mx-3">
+                                    <div class="d-flex flex-column gap-1" style="margin-left: 40px;">
+                                        {{ render_replies(thread.reply_list, thread) }}     
+                                    </div>    
                                 </div>    
                             </div>
                             <hr class="border-white my-0 mx-auto" style="width: 100%;">

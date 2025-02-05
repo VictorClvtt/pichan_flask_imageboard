@@ -84,10 +84,34 @@ def format_text(content):
 
 def format_reply_content(reply):
     """Recursively format reply content and its nested replies."""
-    reply.content = format_text(reply.content)
-    if hasattr(reply, 'reply_replies') and reply.reply_replies:
-        for nested_reply in reply.reply_replies:
-            format_reply_content(nested_reply)
+    if isinstance(reply, dict):
+        reply['content'] = format_text(reply['content'])
+        if 'reply_replies' in reply and reply['reply_replies']:
+            for nested_reply in reply['reply_replies']:
+                format_reply_content(nested_reply)
+    else:
+        reply.content = format_text(reply.content)
+        if hasattr(reply, 'reply_replies') and reply.reply_replies:
+            for nested_reply in reply.reply_replies:
+                format_reply_content(nested_reply)
+
+
+def reply_list(thread, replies, level=0):
+    # Initialize reply_list if it doesn't exist
+    if not hasattr(thread, 'reply_list'):
+        thread.reply_list = []
+
+    for reply in replies:
+        # Append each reply along with its level to the thread's reply_list
+        thread.reply_list.append({
+            **vars(reply),
+            'level': level
+        })
+        
+        # If the reply has nested replies, recurse into them
+        if hasattr(reply, 'reply_replies') and reply.reply_replies:
+            reply_list(thread, reply.reply_replies, level + 1)
+
 
 
 @blp.route('/board/<string:id>')
@@ -109,6 +133,10 @@ class Board(MethodView):
         # Limit the number of normal threads to 500
         normal_threads.items = normal_threads.items[:500]
 
+        for thread in normal_threads:
+            reply_list(thread, thread.replies)
+            
+
         # Query for admin threads
         admin_threads = ThreadModel.query.filter_by(type=1, board_id=id).order_by(ThreadModel.id.desc())
 
@@ -116,7 +144,7 @@ class Board(MethodView):
         for thread in normal_threads.items:
             thread.content = format_text(thread.content)  # Apply formatting to the thread's content
             # Format replies content recursively
-            for reply in thread.replies:
+            for reply in thread.reply_list:
                 format_reply_content(reply)
 
         # Format content for admin threads

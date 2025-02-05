@@ -156,10 +156,32 @@ def format_text(content):
 
 def format_reply_content(reply):
     """Recursively format reply content and its nested replies."""
-    reply.content = format_text(reply.content)
-    if hasattr(reply, 'reply_replies') and reply.reply_replies:
-        for nested_reply in reply.reply_replies:
-            format_reply_content(nested_reply)
+    if isinstance(reply, dict):
+        reply['content'] = format_text(reply['content'])
+        if 'reply_replies' in reply and reply['reply_replies']:
+            for nested_reply in reply['reply_replies']:
+                format_reply_content(nested_reply)
+    else:
+        reply.content = format_text(reply.content)
+        if hasattr(reply, 'reply_replies') and reply.reply_replies:
+            for nested_reply in reply.reply_replies:
+                format_reply_content(nested_reply)
+
+def reply_list(thread, replies, level=0):
+    # Initialize reply_list if it doesn't exist
+    if not hasattr(thread, 'reply_list'):
+        thread.reply_list = []
+
+    for reply in replies:
+        # Append each reply along with its level to the thread's reply_list
+        thread.reply_list.append({
+            **vars(reply),
+            'level': level
+        })
+        
+        # If the reply has nested replies, recurse into them
+        if hasattr(reply, 'reply_replies') and reply.reply_replies:
+            reply_list(thread, reply.reply_replies, level + 1)
 
 @blp.route('/board/<string:id>')
 class Board(MethodView):
@@ -168,18 +190,31 @@ class Board(MethodView):
         validate_api_key()
 
         board_groups = BoardGroupModel.query.all()
+        # Get the board and all boards for navigation
         board = BoardModel.query.get_or_404(id)
+        boards = BoardModel.query.all()
 
+        # Pagination for normal threads
         page = request.args.get('page', 1, type=int)
-        normal_threads = ThreadModel.query.filter_by(type=0, board_id=id).order_by(ThreadModel.id.desc()).paginate(page=page, per_page=20, error_out=False)
-        
+        normal_threads = ThreadModel.query.filter_by(type=0, board_id=id) \
+            .order_by(ThreadModel.id.desc()) \
+            .paginate(page=page, per_page=20, error_out=False)
+
+        # Limit the number of normal threads to 500
+        normal_threads.items = normal_threads.items[:500]
+
+        for thread in normal_threads:
+            reply_list(thread, thread.replies)
+            
+
+        # Query for admin threads
         admin_threads = ThreadModel.query.filter_by(type=1, board_id=id).order_by(ThreadModel.id.desc())
 
         # Format content for normal threads
         for thread in normal_threads.items:
             thread.content = format_text(thread.content)  # Apply formatting to the thread's content
             # Format replies content recursively
-            for reply in thread.replies:
+            for reply in thread.reply_list:
                 format_reply_content(reply)
 
         # Format content for admin threads
@@ -193,10 +228,19 @@ class Board(MethodView):
         sort = request.args.get('sort')
         order = request.args.get('order')
 
-        api_key = request.args.get('api_key', '')
+        # Render the board page with formatted threads
+        return render_template(
+            'board.html',
+            board_groups=board_groups,
+            board=board,
+            boards=boards,
+            normal_threads=normal_threads, 
+            admin_threads=admin_threads, 
+            page=page,
+            sort=sort,
+            order=order
+        )
 
-        return render_template('board.html', board=board, board_groups=board_groups, normal_threads=normal_threads, admin_threads=admin_threads, page=page, api_key=api_key, sort=sort, order=order)
-    
 @blp.route('/thread/<string:id>')
 class Thread(MethodView):
     def get(self, id):
