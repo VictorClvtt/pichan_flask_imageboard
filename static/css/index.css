@@ -6,6 +6,17 @@
     --chan-label: rgba(163, 255, 201, 0.9);
 }
 
+.ants-link{
+    border: 1px solid transparent;
+}
+
+.ants-link:hover{
+    border: 1px solid transparent !important;
+    border-image: url(../img/ants.gif) 1 repeat !important;
+    color: #f5f5f5;
+    background-color: #1b1b1b !important;
+}
+
 .chan-title{
     color: var(--chan-color);
     font-size: 50px;
@@ -63,7 +74,6 @@
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 4;  /* Change the number for more/fewer lines */
-    line-clamp: 4;
     -webkit-box-orient: vertical;
     text-align: center;
     margin: 5px 0 0 0;

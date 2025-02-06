@@ -105,6 +105,8 @@ def reply_list(thread, replies, level=0):
         # Append each reply along with its level to the thread's reply_list
         thread.reply_list.append({
             **vars(reply),
+            'related_thread_id': thread.id,
+            'image': reply.image,
             'level': level
         })
         
@@ -136,9 +138,12 @@ class Board(MethodView):
         for thread in normal_threads:
             reply_list(thread, thread.replies)
             
-
         # Query for admin threads
         admin_threads = ThreadModel.query.filter_by(type=1, board_id=id).order_by(ThreadModel.id.desc())
+        admin_threads = admin_threads[:3]
+
+        for thread in admin_threads:
+            reply_list(thread, thread.replies)
 
         # Format content for normal threads
         for thread in normal_threads.items:
@@ -151,7 +156,7 @@ class Board(MethodView):
         for thread in admin_threads:
             thread.content = format_text(thread.content)  # Apply formatting to the thread's content
             # Format replies content recursively
-            for reply in thread.replies:
+            for reply in thread.reply_list:
                 format_reply_content(reply)
 
         # Sorting and ordering parameters

@@ -31,11 +31,6 @@ const getFingerprint = async () => {
     }
 };
 
-
-
-
-
-
 async function postThread() {
     try {
         const imageInput = document.getElementById('image-t');
@@ -114,23 +109,90 @@ async function postThread() {
     }
 }
 
+function highlightPost(id) {
+    var element = document.getElementById(id.id);
+    if (element) {
+        // Store the original background color
+        var originalColor = element.style.backgroundColor;
+        
+        // Add CSS transition for smooth background color change
+        element.style.transition = "background-color 0.5s ease-in-out"; // Change over 0.5 seconds
+        
+        // Set the background color to a lighter shade
+        element.style.backgroundColor = '#00ffd963';
+
+        // After the animation, reset the background color to the original color
+        setTimeout(function() {
+            element.style.backgroundColor = originalColor;
+        }, 400); // Reset after 500 milliseconds (matching the animation duration)
+    } else {
+        console.log('Element not found with id:', id);
+    }
+}
+
+function highlightPostWithRedirect(postId, threadId) {
+    try {
+        // Ensure that postId is a string, and try to find the element with the given ID
+        let element = document.getElementById(postId); 
+
+        if (!element) {
+            // If the element is not found, log the error and redirect
+            console.error(`Post element with ID ${postId} not found.`);
+            throw new Error('Post not found');
+        }
+
+        var originalColor = element.style.backgroundColor;
+        
+        // Add CSS transition for smooth background color change
+        element.style.transition = "background-color 0.5s ease-in-out";
+        
+        // Set the background color to a lighter shade
+        element.style.backgroundColor = '#00ffd963';
+
+        // After the animation, reset the background color to the original color
+        setTimeout(function() {
+            element.style.backgroundColor = originalColor;
+        }, 400);
+    } catch (error) {
+        console.error(error.message); // Log the error
+
+        // Get the current URL's search parameters
+        const urlParams = new URLSearchParams(window.location.search);
+
+        // Check if the api_key parameter exists
+        const apiKey = urlParams.get('api_key');
+
+        // Prepare the base URL for the redirection
+        let redirectUrl = `/thread/${threadId.slice(1)}#${postId}`;
+
+        
+        if (apiKey) {
+            redirectUrl = `/admin/thread/${threadId.slice(1)}?api_key=${apiKey}#${postId}`;
+        }
+
+        // Redirect to the thread page with the api_key if it's set
+        window.location.href = redirectUrl;
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const hash = window.location.hash;
     if (hash) {
         const elementId = hash.replace('#', '');
         const element = document.getElementById(elementId);
+
         if (element) {
             setTimeout(() => {
                 element.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 history.replaceState(null, null, ' '); // Remove hash without reloading
-                highlightPost({ id: elementId });
+                // Assuming threadId is available and you want to pass elementId as postId
+                highlightPostWithRedirect(elementId, 't123'); // Pass threadId accordingly
             }, 100); // Delay to ensure full load
         } else {
             console.log('Element not found for hash:', hash);
         }
     }
 });
-
 
 function replyModal(id){
     document.getElementById('thread_or_reply_id').value = id
@@ -223,27 +285,6 @@ async function postReply(){
 
     } catch (error) {
         console.error('Error sending POST request:', error);
-    }
-}
-
-function highlightPost(id) {
-    var element = document.getElementById(id.id);
-    if (element) {
-        // Store the original background color
-        var originalColor = element.style.backgroundColor;
-        
-        // Add CSS transition for smooth background color change
-        element.style.transition = "background-color 0.5s ease-in-out"; // Change over 0.5 seconds
-        
-        // Set the background color to a lighter shade
-        element.style.backgroundColor = '#00ffd963';
-
-        // After the animation, reset the background color to the original color
-        setTimeout(function() {
-            element.style.backgroundColor = originalColor;
-        }, 400); // Reset after 500 milliseconds (matching the animation duration)
-    } else {
-        console.log('Element not found with id:', id);
     }
 }
 

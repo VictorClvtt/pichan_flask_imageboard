@@ -35,6 +35,17 @@
     --bs-white-rgb: #000000;
 }
 
+.ants-link{
+    border: 1px solid transparent !important;
+}
+
+.ants-link:hover{
+    border: 1px solid transparent !important;
+    border-image: url(../img/ants.gif) 1 repeat !important;
+    color: #ffffff !important;
+    background-color: #000000a6 !important;
+}
+
 .chan-boards-container h3{
     background-color: rgba(0, 0, 0, 0.1) !important;
 }

@@ -176,6 +176,8 @@ def reply_list(thread, replies, level=0):
         # Append each reply along with its level to the thread's reply_list
         thread.reply_list.append({
             **vars(reply),
+            'related_thread_id': thread.id,
+            'image': reply.image,
             'level': level
         })
         
@@ -192,26 +194,38 @@ class Board(MethodView):
         board_groups = BoardGroupModel.query.all()
         board = BoardModel.query.get_or_404(id)
 
+        # Pagination for normal threads
         page = request.args.get('page', 1, type=int)
-        normal_threads = ThreadModel.query.filter_by(type=0, board_id=id).order_by(ThreadModel.id.desc()).paginate(page=page, per_page=20, error_out=False)
-        
+        normal_threads = ThreadModel.query.filter_by(type=0, board_id=id) \
+            .order_by(ThreadModel.id.desc()) \
+            .paginate(page=page, per_page=20, error_out=False)
+
+        # Limit the number of normal threads to 500
+        normal_threads.items = normal_threads.items[:500]
+
         admin_threads = ThreadModel.query.filter_by(type=1, board_id=id).order_by(ThreadModel.id.desc())
+        admin_threads = admin_threads[:3]
+
+        for thread in admin_threads:
+            reply_list(thread, thread.replies)
 
         for thread in normal_threads:
             reply_list(thread, thread.replies)
 
-        # Format content for normal threads
         for thread in normal_threads.items:
             thread.content = format_text(thread.content)  # Apply formatting to the thread's content
             # Format replies content recursively
             for reply in thread.reply_list:
                 format_reply_content(reply)
 
+
+        
+
         # Format content for admin threads
         for thread in admin_threads:
             thread.content = format_text(thread.content)  # Apply formatting to the thread's content
             # Format replies content recursively
-            for reply in thread.replies:
+            for reply in thread.reply_list:
                 format_reply_content(reply)
 
         # Sorting and ordering parameters
@@ -220,7 +234,17 @@ class Board(MethodView):
 
         api_key = request.args.get('api_key', '')
 
-        return render_template('board.html', board=board, board_groups=board_groups, normal_threads=normal_threads, admin_threads=admin_threads, page=page, api_key=api_key, sort=sort, order=order)
+        return render_template(
+            'board.html',
+            board=board,
+            board_groups=board_groups,
+            normal_threads=normal_threads,
+            admin_threads=admin_threads,
+            page=page,
+            api_key=api_key,
+            sort=sort,
+            order=order
+            )
     
 @blp.route('/thread/<string:id>')
 class Thread(MethodView):

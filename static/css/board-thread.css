@@ -30,9 +30,33 @@
     --bs-red-text: rgb(255, 18, 58); /* Red text */
 }
 
+.ants-link{
+    border: 1px solid transparent !important;
+}
+
+.ants-link:hover{
+    border: 1px solid transparent !important;
+    border-image: url(../img/ants.gif) 1 repeat !important;
+    color: #ffffff !important;
+    background-color: #000000a6 !important;
+}
+
+p.chan-thread-title{
+    background-color: rgba(0, 0, 0, 0.2) !important;
+    border-radius: 2px !important;
+    border: none;
+}
+
+p.chan-thread-title:hover{
+    background-color: rgba(0, 0, 0, 0.2) !important;
+    border-radius: 2px !important;
+    color: var(--bs-body-color);
+    border: none;
+}
+
 a.chan-thread-title{
     background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 2px;
+    border-radius: 2px !important;
     border: none;
 }
 
