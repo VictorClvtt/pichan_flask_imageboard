@@ -27,8 +27,8 @@
                         
                         {% for board in board_group.boards %}
                             <a 
-                                style="font-size: 0.9rem; width: fit-content; margin: 2px 0 0 0.6rem; background-color: rgba(0, 0, 0, 0.25);" 
-                                class="px-1 text-ellipsis" 
+                                style="font-size: 0.9rem; width: fit-content; margin: 1px 0 0 0.6rem; background-color: rgba(0, 0, 0, 0.25);" 
+                                class="ants-link px-1 text-ellipsis" 
                                 href="{{ url_for('Admin.Board' if api_key else 'Boards.Board', id=board.id, page=1, **({'api_key': api_key} if api_key else {})) }}">
                                 /{{ board.id + ' - ' + board.name }}
                             </a>
@@ -278,6 +278,15 @@
                     </table>
                 </div>
             
+        </section>
+
+        <section class="d-flex justify-content-center flex-wrap gap-3 mt-4 overflow-x-auto" style="border-color: transparent;" style="max-width: 800px; " id="stack">
+            <a href="https://cachyos.org/"><img src="{{ url_for('static', filename='img/badges/button_cachy.png') }}" alt="CachyOS website"></a>
+            <a href="https://www.python.org/"><img src="{{ url_for('static', filename='img/badges/button_python.png') }}" alt="Python website"></a>
+            <a href="https://flask.palletsprojects.com/en/stable/"><img src="{{ url_for('static', filename='img/badges/button_flask.png') }}" alt="Flask website"></a>
+            <a href="https://www.docker.com/"><img src="{{ url_for('static', filename='img/badges/button_docker.png') }}" alt="Docker website"></a>
+            <a href="https://getbootstrap.com/"><img src="{{ url_for('static', filename='img/badges/button_bootstrap.png') }}" alt="Bootstrap website"></a>
+            <a href="https://code.visualstudio.com/"><img src="{{ url_for('static', filename='img/badges/button_vscode.png') }}" alt="VSCode website"></a>
         </section>
         
     </main>
