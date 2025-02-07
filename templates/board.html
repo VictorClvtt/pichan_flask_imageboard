@@ -300,11 +300,18 @@
 
                                 {% if thread.reply_list|length > 5 %}
                                     <div class="d-flex gap-2">
-                                        <button onclick="showAll('t{{ thread.id }}-all', 't{{ thread.id }}-btn', 't{{ thread.id }}-link', '{{ thread.user_token}}')" id="t{{ thread.id }}-btn" class="d-flex justify-content-center align-items-center btn p-1" style="width: 1rem; height: 1rem; position: relative; border-radius: 2px; border: solid 1px rgb(139, 243, 203) !important; background: rgba(139, 243, 203, 0.2);">
-                                            <div class="position-absolute bg-white" style="width: 2px; height: 0.6rem; display: flex;"></div>
-                                            <div class="position-absolute bg-white" style="width: 0.6rem; height: 2px; display: flex;"></div>
+                                        <button onclick="showAll('t{{ thread.id }}-all', 't{{ thread.id }}-btn', 't{{ thread.id }}-link', '{{ thread.user_token}}')" 
+                                            id="t{{ thread.id }}-btn" 
+                                            class="d-flex justify-content-center align-items-center btn p-1" 
+                                            style="width: 1rem; height: 1rem; position: relative; border-radius: 2px; border: solid 1px rgb(139, 243, 203) !important; background: rgba(139, 243, 203, 0.2);">
+                                            <!-- Vertical line -->
+                                            <div class="position-absolute bg-white" 
+                                                style="width: 2px; height: 0.6rem; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex;"></div>
+                                            <!-- Horizontal line -->
+                                            <div class="position-absolute bg-white" 
+                                                style="width: 0.6rem; height: 2px; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex;"></div>
                                         </button>
-                                        <span class="text-white text-ellipsis" style="font-size: 0.7rem; line-height: normal; margin-left: 20px; opacity: 0%; transition: transition: all 0.5s ease-in-out;;">
+                                        <span class="text-white text-ellipsis" style="font-size: 0.7rem; line-height: normal; margin-left: 20px; opacity: 0%; transition: all 0.5s ease-in-out;;">
                                             Showing all {{ thread.reply_list|length }} replies
                                             {{ 'and' if thread.reply_list|selectattr('image')|list|length > 0 else ''}}
                                             {{ thread.reply_list|selectattr('image')|list|length if thread.reply_list|selectattr('image')|list|length > 0 else ''}}
@@ -401,11 +408,19 @@
                                     
                                         {% if thread.reply_list|length > 5 %}
                                             <div class="d-flex gap-2">
-                                                <button onclick="showAll('t{{ thread.id }}-all', 't{{ thread.id }}-btn', 't{{ thread.id }}-link', '{{ thread.user_token}}')" id="t{{ thread.id }}-btn" class="d-flex justify-content-center align-items-center btn p-1" style="width: 1rem; height: 1rem; position: relative; border-radius: 2px; border: solid 1px rgb(139, 243, 203) !important; background: rgba(139, 243, 203, 0.2);">
-                                                    <div class="position-absolute bg-white" style="width: 2px; height: 0.6rem; display: flex;"></div>
-                                                    <div class="position-absolute bg-white" style="width: 0.6rem; height: 2px; display: flex;"></div>
+                                                <button onclick="showAll('t{{ thread.id }}-all', 't{{ thread.id }}-btn', 't{{ thread.id }}-link', '{{ thread.user_token}}')" 
+                                                    id="t{{ thread.id }}-btn" 
+                                                    class="d-flex justify-content-center align-items-center btn p-1" 
+                                                    style="width: 1rem; height: 1rem; position: relative; border-radius: 2px; border: solid 1px rgb(139, 243, 203) !important; background: rgba(139, 243, 203, 0.2);">
+                                                    <!-- Vertical line -->
+                                                    <div class="position-absolute bg-white" 
+                                                        style="width: 2px; height: 0.6rem; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex;"></div>
+                                                    <!-- Horizontal line -->
+                                                    <div class="position-absolute bg-white" 
+                                                        style="width: 0.6rem; height: 2px; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex;"></div>
                                                 </button>
-                                                <span class="text-white text-ellipsis" style="font-size: 0.7rem; line-height: normal; margin-left: 20px; opacity: 0%; transition: transition: all 0.5s ease-in-out;;">
+
+                                                <span class="text-white text-ellipsis" style="font-size: 0.7rem; line-height: normal; margin-left: 20px; opacity: 0%; transition: all 0.5s ease-in-out;;">
                                                     Showing all {{ thread.reply_list|length }} replies
                                                     {{ 'and' if thread.reply_list|selectattr('image')|list|length > 0 else ''}}
                                                     {{ thread.reply_list|selectattr('image')|list|length if thread.reply_list|selectattr('image')|list|length > 0 else ''}}
@@ -502,11 +517,18 @@
                                         
                                         {% if thread.reply_list|length > 5 %}
                                             <div class="d-flex gap-2">
-                                                <button onclick="showAll('t{{ thread.id }}-all', 't{{ thread.id }}-btn', 't{{ thread.id }}-link', '{{ thread.user_token}}')" id="t{{ thread.id }}-btn" class="d-flex justify-content-center align-items-center btn p-1" style="width: 1rem; height: 1rem; position: relative; border-radius: 2px; border: solid 1px rgb(139, 243, 203) !important; background: rgba(139, 243, 203, 0.2);">
-                                                    <div class="position-absolute bg-white" style="width: 2px; height: 0.6rem; display: flex;"></div>
-                                                    <div class="position-absolute bg-white" style="width: 0.6rem; height: 2px; display: flex;"></div>
+                                                <button onclick="showAll('t{{ thread.id }}-all', 't{{ thread.id }}-btn', 't{{ thread.id }}-link', '{{ thread.user_token}}')" 
+                                                    id="t{{ thread.id }}-btn" 
+                                                    class="d-flex justify-content-center align-items-center btn p-1" 
+                                                    style="width: 1rem; height: 1rem; position: relative; border-radius: 2px; border: solid 1px rgb(139, 243, 203) !important; background: rgba(139, 243, 203, 0.2);">
+                                                    <!-- Vertical line -->
+                                                    <div class="position-absolute bg-white" 
+                                                        style="width: 2px; height: 0.6rem; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex;"></div>
+                                                    <!-- Horizontal line -->
+                                                    <div class="position-absolute bg-white" 
+                                                        style="width: 0.6rem; height: 2px; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex;"></div>
                                                 </button>
-                                                <span class="text-white text-ellipsis" style="font-size: 0.7rem; line-height: normal; margin-left: 20px; opacity: 0%; transition: transition: all 0.5s ease-in-out;;">
+                                                <span class="text-white text-ellipsis" style="font-size: 0.7rem; line-height: normal; margin-left: 20px; opacity: 0%; transition: all 0.5s ease-in-out;;">
                                                     Showing all {{ thread.reply_list|length }} replies
                                                     {{ 'and' if thread.reply_list|selectattr('image')|list|length > 0 else ''}}
                                                     {{ thread.reply_list|selectattr('image')|list|length if thread.reply_list|selectattr('image')|list|length > 0 else ''}}
@@ -596,11 +618,18 @@
 
                                         {% if thread.reply_list|length > 5 %}
                                             <div class="d-flex gap-2">
-                                                <button onclick="showAll('t{{ thread.id }}-all', 't{{ thread.id }}-btn', 't{{ thread.id }}-link', '{{ thread.user_token}}')" id="t{{ thread.id }}-btn" class="d-flex justify-content-center align-items-center btn p-1" style="width: 1rem; height: 1rem; position: relative; border-radius: 2px; border: solid 1px rgb(139, 243, 203) !important; background: rgba(139, 243, 203, 0.2);">
-                                                    <div class="position-absolute bg-white" style="width: 2px; height: 0.6rem; display: flex;"></div>
-                                                    <div class="position-absolute bg-white" style="width: 0.6rem; height: 2px; display: flex;"></div>
+                                                <button onclick="showAll('t{{ thread.id }}-all', 't{{ thread.id }}-btn', 't{{ thread.id }}-link', '{{ thread.user_token}}')" 
+                                                    id="t{{ thread.id }}-btn" 
+                                                    class="d-flex justify-content-center align-items-center btn p-1" 
+                                                    style="width: 1rem; height: 1rem; position: relative; border-radius: 2px; border: solid 1px rgb(139, 243, 203) !important; background: rgba(139, 243, 203, 0.2);">
+                                                    <!-- Vertical line -->
+                                                    <div class="position-absolute bg-white" 
+                                                        style="width: 2px; height: 0.6rem; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex;"></div>
+                                                    <!-- Horizontal line -->
+                                                    <div class="position-absolute bg-white" 
+                                                        style="width: 0.6rem; height: 2px; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex;"></div>
                                                 </button>
-                                                <span class="text-white text-ellipsis" style="font-size: 0.7rem; line-height: normal; margin-left: 20px; opacity: 0%; transition: transition: all 0.5s ease-in-out;;">
+                                                <span class="text-white text-ellipsis" style="font-size: 0.7rem; line-height: normal; margin-left: 20px; opacity: 0%; transition: all 0.5s ease-in-out;;">
                                                     Showing all {{ thread.reply_list|length }} replies
                                                     {{ 'and' if thread.reply_list|selectattr('image')|list|length > 0 else ''}}
                                                     {{ thread.reply_list|selectattr('image')|list|length if thread.reply_list|selectattr('image')|list|length > 0 else ''}}

@@ -627,5 +627,4 @@ async function showAll(insert_id, button_id, thread_link_id, thread_token) {
     }
 }
 
-
 highlightVotes()

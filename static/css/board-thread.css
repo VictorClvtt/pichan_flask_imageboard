@@ -117,6 +117,7 @@ a.chan-thread-title{
 .chan-thread-info {
     color: var(--bs-body-color);
     background-color: var(--bs-green-accent);
+    min-width: fit-content !important;
     border-style: solid;
     border-width: 1px;
     border-color: var(--bs-info);
@@ -128,6 +129,7 @@ a.chan-thread-title{
 .chan-admin-thread-info {
     color: var(--bs-body-color);
     background-color: var(--bs-green-muted);
+    min-width: fit-content !important;
     border-style: solid;
     border-width: 1px;
     border-color: var(--bs-green-muted-border);
@@ -149,6 +151,7 @@ a.chan-thread-title{
     color: var(--bs-body-color);
     background-color: var(--bs-thread-title-bg);
     padding: 0px 5px;
+    min-width: fit-content;
     font-size: 1.135rem;
     display: flex;
     align-items: center;
