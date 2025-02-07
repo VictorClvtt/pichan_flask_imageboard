@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, jsonify
 from flask.views import MethodView
 from flask import render_template
 from flask_smorest import Blueprint, abort
@@ -83,11 +83,35 @@ def format_text(content):
 
 def format_reply_content(reply):
     """Recursively format reply content and its nested replies."""
-    reply.content = format_text(reply.content)
-    if hasattr(reply, 'reply_replies') and reply.reply_replies:
-        for nested_reply in reply.reply_replies:
-            format_reply_content(nested_reply)
+    if isinstance(reply, dict):
+        reply['content'] = format_text(reply['content'])
+        if 'reply_replies' in reply and reply['reply_replies']:
+            for nested_reply in reply['reply_replies']:
+                format_reply_content(nested_reply)
+    else:
+        reply.content = format_text(reply.content)
+        if hasattr(reply, 'reply_replies') and reply.reply_replies:
+            for nested_reply in reply.reply_replies:
+                format_reply_content(nested_reply)
 
+
+def reply_list(thread, replies, level=0):
+    # Initialize reply_list if it doesn't exist
+    if not hasattr(thread, 'reply_list'):
+        thread.reply_list = []
+
+    for reply in replies:
+        # Append each reply along with its level to the thread's reply_list
+        thread.reply_list.append({
+            **vars(reply),
+            'related_thread_id': thread.id,
+            'image': reply.image,
+            'level': level
+        })
+        
+        # If the reply has nested replies, recurse into them
+        if hasattr(reply, 'reply_replies') and reply.reply_replies:
+            reply_list(thread, reply.reply_replies, level + 1)
 
 @blp.route('/thread/<string:id>')
 class Thread(MethodView):

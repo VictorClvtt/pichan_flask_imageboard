@@ -1,5 +1,5 @@
 from db import db
-from sqlalchemy.orm import joinedload
+import base64
 
 class ReplyModel(db.Model):
     __tablename__ = 'reply'
@@ -25,4 +25,20 @@ class ReplyModel(db.Model):
     image = db.relationship('ImageModel', back_populates='reply', uselist=False, cascade='all, delete')
 
     votes = db.relationship('VoteModel', back_populates='reply', lazy='dynamic', cascade='all, delete')
+
+    def serialize(self):
+        """Converts the ReplyModel instance into a serializable dictionary."""
+        return {
+            "id": self.id,
+            "content": self.content,
+            "type": self.type,
+            "user_token": self.user_token,
+            "date": self.date.isoformat() if self.date else None,
+            "time": self.time.strftime("%H:%M:%S") if self.time else None,
+            "thread_id": self.thread_id,
+            "reply_id": self.reply_id,
+            "image": base64.b64encode(self.image.image).decode("utf-8") if self.image and self.image.image else None,
+            "votes_count": self.votes.count(),
+            "replies": [reply.serialize() for reply in self.reply_replies]  # Recursive serialization for replies
+        }
 

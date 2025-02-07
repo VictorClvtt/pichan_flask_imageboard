@@ -220,7 +220,7 @@
                     </div>
                                             
                     {% if loop.index == 5 and thread.reply_list|length > 5 %}
-                        <a href="{{ url_for('Admin.Thread' if api_key else 'Threads.Thread', id=thread.id, **({'api_key': api_key} if api_key else {})) }}" style="margin-left: {{ 14 * reply.level }}px; width: fit-content; font-size: 0.9rem;">
+                        <a href="{{ url_for('Admin.Thread' if api_key else 'Threads.Thread', id=thread.id, **({'api_key': api_key} if api_key else {})) }}" id="t{{ thread.id }}-link" style="margin-left: {{ 14 * reply.level }}px; width: fit-content; font-size: 0.9rem; display: flex;">
                             See {{'all' if thread.reply_list[:-5]|length > 1 else ''}} {{ thread.reply_list[:-5]|length }} {{'replies' if thread.reply_list[:-5]|length > 1 else 'reply'}}
                             {% if thread.reply_list[:-5]|selectattr('image')|list|length > 0 %}
                                 and {{ thread.reply_list[:-5]|selectattr('image')|list|length }} image{{'s' if thread.reply_list[:-5]|selectattr('image')|list|length > 1 else ''}}
@@ -252,54 +252,75 @@
                         {% endif %}
                         <div class="d-flex flex-column gap-2 w-100">
                             
-                            <div id="t{{ thread.id }}" class="chan-admin-thread-info border-white" style="min-width: 350px; width: fit-content;">
-                                <div class="d-flex gap-2">
-                                    <a class="chan-thread-title ants-link text-ellipsis m-0 text-decoration-none fst-italic" href="{{ url_for('Admin.Thread' if api_key else 'Threads.Thread', id=thread.id, **({'api_key': api_key} if api_key else {})) }}" style="font-weight: 500;">{{ thread.title }}</a>
-                                    <div class="d-flex flex-column justify-content-around">
-                                        <div class="d-flex align-items-center gap-1">
-                                            <span class="m-0 fw-bold" style="font-size: 0.7rem; color: rgba(0, 255, 136);">Admin:</span>
-                                            <span class="m-0 text-ellipsis" style="font-size: 0.7rem !important; color: rgba(255, 255, 255, 0.700);">{{ thread.user_token }}</span>
-                                            <img style="width: 15px; height: 15px;" src="{{ url_for('static', filename='pi.svg') }}" alt="">
+                            <div class="d-flex gap-1 align-items-end">
+                                <div id="t{{ thread.id }}" class="chan-admin-thread-info border-white" style="min-width: 350px; width: fit-content;">
+                                    <div class="d-flex gap-2">
+                                        <a class="chan-thread-title ants-link text-ellipsis m-0 text-decoration-none fst-italic" href="{{ url_for('Admin.Thread' if api_key else 'Threads.Thread', id=thread.id, **({'api_key': api_key} if api_key else {})) }}" style="font-weight: 500;">{{ thread.title }}</a>
+                                        <div class="d-flex flex-column justify-content-around">
+                                            <div class="d-flex align-items-center gap-1">
+                                                <span class="m-0 fw-bold" style="font-size: 0.7rem; color: rgba(0, 255, 136);">Admin:</span>
+                                                <span class="m-0 text-ellipsis" style="font-size: 0.7rem !important; color: rgba(255, 255, 255, 0.700);">{{ thread.user_token }}</span>
+                                                <img style="width: 15px; height: 15px;" src="{{ url_for('static', filename='pi.svg') }}" alt="">
+                                            </div>
+                                            <span class="m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">Thread No.{{ thread.id }}</span>      
                                         </div>
-                                        <span class="m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">Thread No.{{ thread.id }}</span>      
                                     </div>
-                                </div>
 
-                                <p class="chan-text-content">{{ thread.content|safe }}</p>
+                                    <p class="chan-text-content">{{ thread.content|safe }}</p>
 
-                                <div class="d-flex justify-content-between">
-                                    <div class="d-flex gap-1">
-                                        <span class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">
-                                            {{ '%02d' | format(thread.date.day) }}/{{ '%02d' | format(thread.date.month) }}/{{ thread.date.year }}
-                                        </span>
-                                        <hr class="m-0 h-100" style="width: 1px; border-left: solid 1px;">
-                                        <span class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">{{ thread.time }}</span>
-                                        <span class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">UTC</span>    
-                                    </div>
-                                    <div class="d-flex justify-content-center gap-1">
-                                        <button onclick="submitVote(1, {{ thread.id }}, 't')"                                    title="{{ thread.votes|selectattr('up_or_down', 'equalto', 1)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
-                                            <i class="fa-solid fa-caret-up px-1" id="1t{{ thread.id }}" style="font-size: 0.9rem; padding-top: 0.15rem; background-color: rgba(0, 153, 255, 0.2); border-radius: 3px; height: fit-content;"></i>
-                                        </button>
-                                        <button onclick="submitVote(0, {{ thread.id }}, 't')" title="{{ thread.votes|selectattr('up_or_down', 'equalto', 0)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
-                                            <i class="fa-solid fa-caret-down px-1" id="0t{{ thread.id }}" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
-                                        </button>
-                                        <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('t{{ thread.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
-                                            <i style="font-size: 0.7rem;" class="fa-solid fa-reply"></i>
-                                            <span style="font-size: 0.7rem;" class="m-0">Reply</span>   
-                                        </button>
-                                        {% if api_key %}
-                                            <button onclick="deletePost({{ thread.id }}, 't')" class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(243, 35, 35, 0.2); border-radius: 3px;" type="button">
-                                                <i style="font-size: 0.7rem;" class="fa-solid fa-eraser"></i>
-                                                <span style="font-size: 0.7rem;" class="m-0">Delete</span>   
+                                    <div class="d-flex justify-content-between">
+                                        <div class="d-flex gap-1">
+                                            <span class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">
+                                                {{ '%02d' | format(thread.date.day) }}/{{ '%02d' | format(thread.date.month) }}/{{ thread.date.year }}
+                                            </span>
+                                            <hr class="m-0 h-100" style="width: 1px; border-left: solid 1px;">
+                                            <span class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">{{ thread.time }}</span>
+                                            <span class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">UTC</span>    
+                                        </div>
+                                        <div class="d-flex justify-content-center gap-1">
+                                            <button onclick="submitVote(1, {{ thread.id }}, 't')"                                    title="{{ thread.votes|selectattr('up_or_down', 'equalto', 1)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                                <i class="fa-solid fa-caret-up px-1" id="1t{{ thread.id }}" style="font-size: 0.9rem; padding-top: 0.15rem; background-color: rgba(0, 153, 255, 0.2); border-radius: 3px; height: fit-content;"></i>
                                             </button>
-                                        {% endif %}
+                                            <button onclick="submitVote(0, {{ thread.id }}, 't')" title="{{ thread.votes|selectattr('up_or_down', 'equalto', 0)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                                <i class="fa-solid fa-caret-down px-1" id="0t{{ thread.id }}" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
+                                            </button>
+                                            <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('t{{ thread.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
+                                                <i style="font-size: 0.7rem;" class="fa-solid fa-reply"></i>
+                                                <span style="font-size: 0.7rem;" class="m-0">Reply</span>   
+                                            </button>
+                                            {% if api_key %}
+                                                <button onclick="deletePost({{ thread.id }}, 't')" class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(243, 35, 35, 0.2); border-radius: 3px;" type="button">
+                                                    <i style="font-size: 0.7rem;" class="fa-solid fa-eraser"></i>
+                                                    <span style="font-size: 0.7rem;" class="m-0">Delete</span>   
+                                                </button>
+                                            {% endif %}
+                                        </div>
                                     </div>
                                 </div>
+
+                                {% if thread.reply_list|length > 5 %}
+                                    <div class="d-flex gap-2">
+                                        <button onclick="showAll('t{{ thread.id }}-all', 't{{ thread.id }}-btn', 't{{ thread.id }}-link', '{{ thread.user_token}}')" id="t{{ thread.id }}-btn" class="d-flex justify-content-center align-items-center btn p-1" style="width: 1rem; height: 1rem; position: relative; border-radius: 2px; border: solid 1px rgb(139, 243, 203) !important; background: rgba(139, 243, 203, 0.2);">
+                                            <div class="position-absolute bg-white" style="width: 2px; height: 0.6rem; display: flex;"></div>
+                                            <div class="position-absolute bg-white" style="width: 0.6rem; height: 2px; display: flex;"></div>
+                                        </button>
+                                        <span class="text-white text-ellipsis" style="font-size: 0.7rem; line-height: normal; margin-left: 20px; opacity: 0%; transition: transition: all 0.5s ease-in-out;;">
+                                            Showing all {{ thread.reply_list|length }} replies
+                                            {{ 'and' if thread.reply_list|selectattr('image')|list|length > 0 else ''}}
+                                            {{ thread.reply_list|selectattr('image')|list|length if thread.reply_list|selectattr('image')|list|length > 0 else ''}}
+                                            {{ 'image' if thread.reply_list|selectattr('image')|list|length == 1 else 'images' if thread.reply_list|selectattr('image')|list|length > 1 }}
+                                        </span>  
+                                    </div>
+                                {% endif %}
                             </div>
+                            
                             
                             {% if thread.reply_list %}
                                 <hr class="border-white my-0 mx-3" style="border-style:  dotted; border-width: 1px 0 0 0;">
                                 <div class="d-flex flex-column gap-1" style="margin-left: 40px;">
+
+                                    <span id="t{{ thread.id }}-all" class="gap-1" style="display: none; flex-direction: column;"></span>
+
                                     {{ render_replies(thread.reply_list, thread) }}     
                                 </div>      
                             {% endif %}      
@@ -336,53 +357,72 @@
                                     </div>
                                 {% endif %}
                                 <div class="d-flex flex-column gap-2 w-100">
-                                    
-                                    <div id="t{{ thread.id }}" class="chan-thread-info border-info-subtle" style="min-width: 350px; width: fit-content;">
-                                        <div class="d-flex gap-2">
-                                            <a class="chan-thread-title ants-link text-ellipsis m-0 text-decoration-none fst-italic" href="{{ url_for('Admin.Thread' if api_key else 'Threads.Thread', id=thread.id, **({'api_key': api_key} if api_key else {})) }}" style="font-weight: 500;">{{ thread.title }}</a>
-                                            <div class="d-flex flex-column justify-content-around">
-                                                <p class="m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);"><span class="fw-bold">Anon:</span> {{ thread.user_token }}</p>
-                                                <p class="m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">Thread No.{{ thread.id }}</p>      
+                                    <div class="d-flex gap-1 align-items-end">
+                                        <div id="t{{ thread.id }}" class="chan-thread-info border-info-subtle" style="min-width: 350px; width: fit-content;">
+                                            <div class="d-flex gap-2">
+                                                <a class="chan-thread-title ants-link text-ellipsis m-0 text-decoration-none fst-italic" href="{{ url_for('Admin.Thread' if api_key else 'Threads.Thread', id=thread.id, **({'api_key': api_key} if api_key else {})) }}" style="font-weight: 500;">{{ thread.title }}</a>
+                                                <div class="d-flex flex-column justify-content-around">
+                                                    <p class="m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);"><span class="fw-bold">Anon:</span> {{ thread.user_token }}</p>
+                                                    <p class="m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">Thread No.{{ thread.id }}</p>      
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <p class="chan-text-content">{{ thread.content|safe }}</p>
+                                            <p class="chan-text-content">{{ thread.content|safe }}</p>
 
-                                        <div class="d-flex justify-content-between">
-                                            <div class="d-flex gap-1">
-                                                <p class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">
-                                                    {{ '%02d' | format(thread.date.day) }}/{{ '%02d' | format(thread.date.month) }}/{{ thread.date.year }}
-                                                </p>
-                                                <hr class="m-0 h-100" style="width: 1px; border-left: solid 1px;">
-                                                <p class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">{{ thread.time }}</p>
-                                                <p class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">UTC</p>    
-                                            </div>
-                                            <div class="d-flex justify-content-center gap-1">
-                                                <button onclick="submitVote(1, {{ thread.id }}, 't')"                                    title="{{ thread.votes|selectattr('up_or_down', 'equalto', 1)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
-                                                    <i class="fa-solid fa-caret-up px-1" id="1t{{ thread.id }}" style="font-size: 0.9rem; padding-top: 0.15rem; background-color: rgba(0, 153, 255, 0.2); border-radius: 3px; height: fit-content;"></i>
-                                                </button>
-                                                <button onclick="submitVote(0, {{ thread.id }}, 't')" title="{{ thread.votes|selectattr('up_or_down', 'equalto', 0)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
-                                                    <i class="fa-solid fa-caret-down px-1" id="0t{{ thread.id }}" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
-                                                </button>
-                                                <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('t{{ thread.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
-                                                    <i style="font-size: 0.7rem;" class="fa-solid fa-reply"></i>
-                                                    <p style="font-size: 0.7rem;" class="m-0">Reply</p>   
-                                                </button>
-                                                {% if api_key %}
-                                                    <button onclick="deletePost({{ thread.id }}, 't')" class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(243, 35, 35, 0.2); border-radius: 3px;" type="button">
-                                                        <i style="font-size: 0.7rem;" class="fa-solid fa-eraser"></i>
-                                                        <p style="font-size: 0.7rem;" class="m-0">Delete</p>   
+                                            <div class="d-flex justify-content-between">
+                                                <div class="d-flex gap-1">
+                                                    <p class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">
+                                                        {{ '%02d' | format(thread.date.day) }}/{{ '%02d' | format(thread.date.month) }}/{{ thread.date.year }}
+                                                    </p>
+                                                    <hr class="m-0 h-100" style="width: 1px; border-left: solid 1px;">
+                                                    <p class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">{{ thread.time }}</p>
+                                                    <p class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">UTC</p>    
+                                                </div>
+                                                <div class="d-flex justify-content-center gap-1">
+                                                    <button onclick="submitVote(1, {{ thread.id }}, 't')"                                    title="{{ thread.votes|selectattr('up_or_down', 'equalto', 1)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                                        <i class="fa-solid fa-caret-up px-1" id="1t{{ thread.id }}" style="font-size: 0.9rem; padding-top: 0.15rem; background-color: rgba(0, 153, 255, 0.2); border-radius: 3px; height: fit-content;"></i>
                                                     </button>
-                                                {% endif %}
+                                                    <button onclick="submitVote(0, {{ thread.id }}, 't')" title="{{ thread.votes|selectattr('up_or_down', 'equalto', 0)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                                        <i class="fa-solid fa-caret-down px-1" id="0t{{ thread.id }}" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
+                                                    </button>
+                                                    <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('t{{ thread.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
+                                                        <i style="font-size: 0.7rem;" class="fa-solid fa-reply"></i>
+                                                        <p style="font-size: 0.7rem;" class="m-0">Reply</p>   
+                                                    </button>
+                                                    {% if api_key %}
+                                                        <button onclick="deletePost({{ thread.id }}, 't')" class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(243, 35, 35, 0.2); border-radius: 3px;" type="button">
+                                                            <i style="font-size: 0.7rem;" class="fa-solid fa-eraser"></i>
+                                                            <p style="font-size: 0.7rem;" class="m-0">Delete</p>   
+                                                        </button>
+                                                    {% endif %}
+                                                </div>
                                             </div>
                                         </div>
+                                    
+                                        {% if thread.reply_list|length > 5 %}
+                                            <div class="d-flex gap-2">
+                                                <button onclick="showAll('t{{ thread.id }}-all', 't{{ thread.id }}-btn', 't{{ thread.id }}-link', '{{ thread.user_token}}')" id="t{{ thread.id }}-btn" class="d-flex justify-content-center align-items-center btn p-1" style="width: 1rem; height: 1rem; position: relative; border-radius: 2px; border: solid 1px rgb(139, 243, 203) !important; background: rgba(139, 243, 203, 0.2);">
+                                                    <div class="position-absolute bg-white" style="width: 2px; height: 0.6rem; display: flex;"></div>
+                                                    <div class="position-absolute bg-white" style="width: 0.6rem; height: 2px; display: flex;"></div>
+                                                </button>
+                                                <span class="text-white text-ellipsis" style="font-size: 0.7rem; line-height: normal; margin-left: 20px; opacity: 0%; transition: transition: all 0.5s ease-in-out;;">
+                                                    Showing all {{ thread.reply_list|length }} replies
+                                                    {{ 'and' if thread.reply_list|selectattr('image')|list|length > 0 else ''}}
+                                                    {{ thread.reply_list|selectattr('image')|list|length if thread.reply_list|selectattr('image')|list|length > 0 else ''}}
+                                                    {{ 'image' if thread.reply_list|selectattr('image')|list|length == 1 else 'images' if thread.reply_list|selectattr('image')|list|length > 1 }}
+                                                </span>  
+                                            </div>
+                                        {% endif %}
                                     </div>
                                     {% if thread.reply_list %}
                                         <hr class="border-white my-0 mx-3" style="border-style:  dotted; border-width: 1px 0 0 0;">
                                         <div class="d-flex flex-column gap-1" style="margin-left: 40px;">
+
+                                            <span id="t{{ thread.id }}-all" class="gap-1" style="display: none; flex-direction: column;"></span>
+
                                             {{ render_replies(thread.reply_list, thread) }}     
                                         </div>      
-                                    {% endif %}
+                                    {% endif %} 
                                 </div>    
                             </div>
                             <hr class="border-white my-0 mx-auto" style="width: 100%;">
@@ -418,50 +458,69 @@
                                     </div>
                                 {% endif %}
                                 <div class="d-flex flex-column gap-2 w-100">
-                                    
-                                    <div id="t{{ thread.id }}" class="chan-thread-info" style="min-width: 350px; width: fit-content;">
-                                        <div class="d-flex gap-2">
-                                            <a class="chan-thread-title ants-link text-ellipsis m-0 text-decoration-none fst-italic" href="{{ url_for('Admin.Thread' if api_key else 'Threads.Thread', id=thread.id, **({'api_key': api_key} if api_key else {})) }}" style="font-weight: 500;">{{ thread.title }}</a>
-                                            <div class="d-flex flex-column justify-content-around">
-                                                <span class="m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);"><span class="fw-bold">Anon:</span> {{ thread.user_token }}</span>
-                                                <span class="m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">Thread No.{{ thread.id }}</span>      
+                                    <div class="d-flex gap-1 align-items-end">
+                                        <div id="t{{ thread.id }}" class="chan-thread-info" style="min-width: 350px; width: fit-content;">
+                                            <div class="d-flex gap-2">
+                                                <a class="chan-thread-title ants-link text-ellipsis m-0 text-decoration-none fst-italic" href="{{ url_for('Admin.Thread' if api_key else 'Threads.Thread', id=thread.id, **({'api_key': api_key} if api_key else {})) }}" style="font-weight: 500;">{{ thread.title }}</a>
+                                                <div class="d-flex flex-column justify-content-around">
+                                                    <span class="m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);"><span class="fw-bold">Anon:</span> {{ thread.user_token }}</span>
+                                                    <span class="m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">Thread No.{{ thread.id }}</span>      
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <p class="chan-text-content">{{ thread.content|safe }}</p>
+                                            <p class="chan-text-content">{{ thread.content|safe }}</p>
 
-                                        <div class="d-flex justify-content-between">
-                                            <div class="d-flex gap-1">
-                                                <span class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">
-                                                    {{ '%02d' | format(thread.date.day) }}/{{ '%02d' | format(thread.date.month) }}/{{ thread.date.year }}
-                                                </span>
-                                                <hr class="m-0 h-100" style="width: 1px; border-left: solid 1px;">
-                                                <span class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">{{ thread.time }}</span>
-                                                <span class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">UTC</span>    
-                                            </div>
-                                            <div class="d-flex justify-content-center gap-1">
-                                                <button onclick="submitVote(1, {{ thread.id }}, 't')"                                    title="{{ thread.votes|selectattr('up_or_down', 'equalto', 1)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
-                                                    <i class="fa-solid fa-caret-up px-1" id="1t{{ thread.id }}" style="font-size: 0.9rem; padding-top: 0.15rem; background-color: rgba(0, 153, 255, 0.2); border-radius: 3px; height: fit-content;"></i>
-                                                </button>
-                                                <button onclick="submitVote(0, {{ thread.id }}, 't')" title="{{ thread.votes|selectattr('up_or_down', 'equalto', 0)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
-                                                    <i class="fa-solid fa-caret-down px-1" id="0t{{ thread.id }}" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
-                                                </button>
-                                                <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('t{{ thread.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
-                                                    <i style="font-size: 0.7rem;" class="fa-solid fa-reply"></i>
-                                                    <span style="font-size: 0.7rem;" class="m-0">Reply</span>   
-                                                </button>
-                                                {% if api_key %}
-                                                    <button onclick="deletePost({{ thread.id }}, 't')" class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(243, 35, 35, 0.2); border-radius: 3px;" type="button">
-                                                        <i style="font-size: 0.7rem;" class="fa-solid fa-eraser"></i>
-                                                        <span style="font-size: 0.7rem;" class="m-0">Delete</span>   
+                                            <div class="d-flex justify-content-between">
+                                                <div class="d-flex gap-1">
+                                                    <span class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">
+                                                        {{ '%02d' | format(thread.date.day) }}/{{ '%02d' | format(thread.date.month) }}/{{ thread.date.year }}
+                                                    </span>
+                                                    <hr class="m-0 h-100" style="width: 1px; border-left: solid 1px;">
+                                                    <span class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">{{ thread.time }}</span>
+                                                    <span class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">UTC</span>    
+                                                </div>
+                                                <div class="d-flex justify-content-center gap-1">
+                                                    <button onclick="submitVote(1, {{ thread.id }}, 't')"                                    title="{{ thread.votes|selectattr('up_or_down', 'equalto', 1)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                                        <i class="fa-solid fa-caret-up px-1" id="1t{{ thread.id }}" style="font-size: 0.9rem; padding-top: 0.15rem; background-color: rgba(0, 153, 255, 0.2); border-radius: 3px; height: fit-content;"></i>
                                                     </button>
-                                                {% endif %}
+                                                    <button onclick="submitVote(0, {{ thread.id }}, 't')" title="{{ thread.votes|selectattr('up_or_down', 'equalto', 0)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                                        <i class="fa-solid fa-caret-down px-1" id="0t{{ thread.id }}" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
+                                                    </button>
+                                                    <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('t{{ thread.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
+                                                        <i style="font-size: 0.7rem;" class="fa-solid fa-reply"></i>
+                                                        <span style="font-size: 0.7rem;" class="m-0">Reply</span>   
+                                                    </button>
+                                                    {% if api_key %}
+                                                        <button onclick="deletePost({{ thread.id }}, 't')" class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(243, 35, 35, 0.2); border-radius: 3px;" type="button">
+                                                            <i style="font-size: 0.7rem;" class="fa-solid fa-eraser"></i>
+                                                            <span style="font-size: 0.7rem;" class="m-0">Delete</span>   
+                                                        </button>
+                                                    {% endif %}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                        
+                                        {% if thread.reply_list|length > 5 %}
+                                            <div class="d-flex gap-2">
+                                                <button onclick="showAll('t{{ thread.id }}-all', 't{{ thread.id }}-btn', 't{{ thread.id }}-link', '{{ thread.user_token}}')" id="t{{ thread.id }}-btn" class="d-flex justify-content-center align-items-center btn p-1" style="width: 1rem; height: 1rem; position: relative; border-radius: 2px; border: solid 1px rgb(139, 243, 203) !important; background: rgba(139, 243, 203, 0.2);">
+                                                    <div class="position-absolute bg-white" style="width: 2px; height: 0.6rem; display: flex;"></div>
+                                                    <div class="position-absolute bg-white" style="width: 0.6rem; height: 2px; display: flex;"></div>
+                                                </button>
+                                                <span class="text-white text-ellipsis" style="font-size: 0.7rem; line-height: normal; margin-left: 20px; opacity: 0%; transition: transition: all 0.5s ease-in-out;;">
+                                                    Showing all {{ thread.reply_list|length }} replies
+                                                    {{ 'and' if thread.reply_list|selectattr('image')|list|length > 0 else ''}}
+                                                    {{ thread.reply_list|selectattr('image')|list|length if thread.reply_list|selectattr('image')|list|length > 0 else ''}}
+                                                    {{ 'image' if thread.reply_list|selectattr('image')|list|length == 1 else 'images' if thread.reply_list|selectattr('image')|list|length > 1 }}
+                                                </span>  
+                                            </div>
+                                        {% endif %}
+                                    </div> 
                                     {% if thread.reply_list %}
                                         <hr class="border-white my-0 mx-3" style="border-style:  dotted; border-width: 1px 0 0 0;">
                                         <div class="d-flex flex-column gap-1" style="margin-left: 40px;">
+
+                                            <span id="t{{ thread.id }}-all" class="gap-1" style="display: none; flex-direction: column;"></span>
+
                                             {{ render_replies(thread.reply_list, thread) }}     
                                         </div>      
                                     {% endif %}    
@@ -493,49 +552,69 @@
                                 {% endif %}
                                 <div class="d-flex flex-column gap-2 w-100">
                                     
-                                    <div id="t{{ thread.id }}" class="chan-thread-info" style="min-width: 350px; width: fit-content;">
-                                        <div class="d-flex gap-2">
-                                            <a class="chan-thread-title ants-link text-ellipsis m-0 text-decoration-none fst-italic" href="{{ url_for('Admin.Thread' if api_key else 'Threads.Thread', id=thread.id, **({'api_key': api_key} if api_key else {})) }}" style="font-weight: 500;">{{ thread.title }}</a>
-                                            <div class="d-flex flex-column justify-content-around">
-                                                <span class="m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);"><span class="fw-bold">Anon:</span> {{ thread.user_token }}</span>
-                                                <span class="m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">Thread No.{{ thread.id }}</span>      
+                                    <div class="d-flex gap-1 align-items-end">
+                                        <div id="t{{ thread.id }}" class="chan-thread-info" style="min-width: 350px; width: fit-content;">
+                                            <div class="d-flex gap-2">
+                                                <a class="chan-thread-title ants-link text-ellipsis m-0 text-decoration-none fst-italic" href="{{ url_for('Admin.Thread' if api_key else 'Threads.Thread', id=thread.id, **({'api_key': api_key} if api_key else {})) }}" style="font-weight: 500;">{{ thread.title }}</a>
+                                                <div class="d-flex flex-column justify-content-around">
+                                                    <span class="m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);"><span class="fw-bold">Anon:</span> {{ thread.user_token }}</span>
+                                                    <span class="m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">Thread No.{{ thread.id }}</span>      
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <p class="chan-text-content">{{ thread.content|safe }}</p>
+                                            <p class="chan-text-content">{{ thread.content|safe }}</p>
 
-                                        <div class="d-flex justify-content-between">
-                                            <div class="d-flex gap-1">
-                                                <span class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">
-                                                    {{ '%02d' | format(thread.date.day) }}/{{ '%02d' | format(thread.date.month) }}/{{ thread.date.year }}
-                                                </span>
-                                                <hr class="m-0 h-100" style="width: 1px; border-left: solid 1px;">
-                                                <span class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">{{ thread.time }}</span>
-                                                <span class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">UTC</span>    
-                                            </div>
-                                            <div class="d-flex justify-content-center gap-1">
-                                                <button onclick="submitVote(1, {{ thread.id }}, 't')"                                    title="{{ thread.votes|selectattr('up_or_down', 'equalto', 1)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
-                                                    <i class="fa-solid fa-caret-up px-1" id="1t{{ thread.id }}" style="font-size: 0.9rem; padding-top: 0.15rem; background-color: rgba(0, 153, 255, 0.2); border-radius: 3px; height: fit-content;"></i>
-                                                </button>
-                                                <button onclick="submitVote(0, {{ thread.id }}, 't')" title="{{ thread.votes|selectattr('up_or_down', 'equalto', 0)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
-                                                    <i class="fa-solid fa-caret-down px-1" id="0t{{ thread.id }}" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
-                                                </button>
-                                                <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('t{{ thread.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
-                                                    <i style="font-size: 0.7rem;" class="fa-solid fa-reply"></i>
-                                                    <span style="font-size: 0.7rem;" class="m-0">Reply</span>   
-                                                </button>
-                                                {% if api_key %}
-                                                    <button onclick="deletePost({{ thread.id }}, 't')" class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(243, 35, 35, 0.2); border-radius: 3px;" type="button">
-                                                        <i style="font-size: 0.7rem;" class="fa-solid fa-eraser"></i>
-                                                        <span style="font-size: 0.7rem;" class="m-0">Delete</span>   
+                                            <div class="d-flex justify-content-between">
+                                                <div class="d-flex gap-1">
+                                                    <span class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">
+                                                        {{ '%02d' | format(thread.date.day) }}/{{ '%02d' | format(thread.date.month) }}/{{ thread.date.year }}
+                                                    </span>
+                                                    <hr class="m-0 h-100" style="width: 1px; border-left: solid 1px;">
+                                                    <span class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">{{ thread.time }}</span>
+                                                    <span class="m-0" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">UTC</span>    
+                                                </div>
+                                                <div class="d-flex justify-content-center gap-1">
+                                                    <button onclick="submitVote(1, {{ thread.id }}, 't')"                                    title="{{ thread.votes|selectattr('up_or_down', 'equalto', 1)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                                        <i class="fa-solid fa-caret-up px-1" id="1t{{ thread.id }}" style="font-size: 0.9rem; padding-top: 0.15rem; background-color: rgba(0, 153, 255, 0.2); border-radius: 3px; height: fit-content;"></i>
                                                     </button>
-                                                {% endif %}
+                                                    <button onclick="submitVote(0, {{ thread.id }}, 't')" title="{{ thread.votes|selectattr('up_or_down', 'equalto', 0)|list|length }}" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                                        <i class="fa-solid fa-caret-down px-1" id="0t{{ thread.id }}" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
+                                                    </button>
+                                                    <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('t{{ thread.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
+                                                        <i style="font-size: 0.7rem;" class="fa-solid fa-reply"></i>
+                                                        <span style="font-size: 0.7rem;" class="m-0">Reply</span>   
+                                                    </button>
+                                                    {% if api_key %}
+                                                        <button onclick="deletePost({{ thread.id }}, 't')" class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(243, 35, 35, 0.2); border-radius: 3px;" type="button">
+                                                            <i style="font-size: 0.7rem;" class="fa-solid fa-eraser"></i>
+                                                            <span style="font-size: 0.7rem;" class="m-0">Delete</span>   
+                                                        </button>
+                                                    {% endif %}
+                                                </div>
                                             </div>
                                         </div>
+
+                                        {% if thread.reply_list|length > 5 %}
+                                            <div class="d-flex gap-2">
+                                                <button onclick="showAll('t{{ thread.id }}-all', 't{{ thread.id }}-btn', 't{{ thread.id }}-link', '{{ thread.user_token}}')" id="t{{ thread.id }}-btn" class="d-flex justify-content-center align-items-center btn p-1" style="width: 1rem; height: 1rem; position: relative; border-radius: 2px; border: solid 1px rgb(139, 243, 203) !important; background: rgba(139, 243, 203, 0.2);">
+                                                    <div class="position-absolute bg-white" style="width: 2px; height: 0.6rem; display: flex;"></div>
+                                                    <div class="position-absolute bg-white" style="width: 0.6rem; height: 2px; display: flex;"></div>
+                                                </button>
+                                                <span class="text-white text-ellipsis" style="font-size: 0.7rem; line-height: normal; margin-left: 20px; opacity: 0%; transition: transition: all 0.5s ease-in-out;;">
+                                                    Showing all {{ thread.reply_list|length }} replies
+                                                    {{ 'and' if thread.reply_list|selectattr('image')|list|length > 0 else ''}}
+                                                    {{ thread.reply_list|selectattr('image')|list|length if thread.reply_list|selectattr('image')|list|length > 0 else ''}}
+                                                    {{ 'image' if thread.reply_list|selectattr('image')|list|length == 1 else 'images' if thread.reply_list|selectattr('image')|list|length > 1 }}
+                                                </span>    
+                                            </div>
+                                        {% endif %}
                                     </div>
                                     {% if thread.reply_list %}
                                         <hr class="border-white my-0 mx-3" style="border-style:  dotted; border-width: 1px 0 0 0;">
                                         <div class="d-flex flex-column gap-1" style="margin-left: 40px;">
+                                            
+                                            <span id="t{{ thread.id }}-all" class="gap-1" style="display: none; flex-direction: column;"></span>
+                                            
                                             {{ render_replies(thread.reply_list, thread) }}     
                                         </div>      
                                     {% endif %}   
