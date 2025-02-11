@@ -507,6 +507,7 @@ async function sortAndOrder() {
 }
 
 async function showAll(insert_id, button_id, thread_link_id, thread_token) {
+    
     let div = document.getElementById(button_id).getElementsByTagName('div')[0];
 
     if (div.style.display === 'flex') { // Use comparison instead of assignment
@@ -530,91 +531,117 @@ async function showAll(insert_id, button_id, thread_link_id, thread_token) {
             console.error('Error fetching data:', error);
         });
 
+        const threadData = await fetch(`/thread_data/${insert_id.slice(1, 3)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json(); // Parse JSON data
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
+
         const urlParams = new URLSearchParams(window.location.search);
         const api_key = urlParams.get('api_key');
 
-        for (let i = 0; i < replyList.length - 5; i++) {
-            let reply = replyList[i]; // Assuming replyList contains the necessary reply objects
+        for (let i = 0; i < replyList.length - 5; i++) { // Loop through all items except the last 5
+            let reply = replyList[i];
         
-            console.log(reply.image); // Check if image data exists
-
-            document.getElementById(insert_id).innerHTML += `
-                <div id="r${reply.id}" class="chan-${reply.type === 1 ? 'admin-' : ''}thread-info d-flex flex-column" style="min-width: 350px; width: fit-content; margin-left: ${reply.level * 14}px;">
-                    <div class="d-flex justify-content-start align-content-start gap-1">
-                        <div class="d-flex gap-1 align-items-center justify-content-start m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">
-                            <span class="m-0 fw-bold" style="font-size: 0.7rem; ${reply.type === 0 ? 'color: rgba(255, 255, 255, 0.700);' : 'color: rgba(0, 255, 136);'}">
-                                ${reply.type === 1 ? 'Admin:' : 'Anon:'}
-                            </span>
-                            <span class="m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">
-                                ${reply.user_token}
-                            </span>
-                            ${reply.user_token === thread_token ? `<span class="text-info m-0 text-ellipsis" style="font-size: 0.7rem;">(OP)</span>` : ''}
-                            ${reply.type === 1 ? `<img style="width: 15px; height: 15px;" src="/static/pi.svg" alt="">` : ''}
-                        </div>
+            if (reply) {
+                console.log(reply.id, reply.content); // Log the ID and content of each reply to ensure they're loaded
         
-                        <hr class="m-0" style="width: 1px; border-left: solid 1px;">
-                        <span class="m-0 text-ellipsis" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">Reply No.${reply.id}</span>
-                        <hr class="m-0" style="width: 1px; border-left: solid 1px;">
-                        <a onclick="highlightPostWithRedirect('${reply.reply_id ? 'r' + reply.reply_id : 't' + reply.thread_id}', 't${insert_id.slice(1, 3)}')" 
-                           href="#${reply.reply_id ? 'r' + reply.reply_id : 't' + reply.thread_id}" 
-                           class="m-0 text-ellipsis" style="font-size: 11px; color: var(--post-highlight);">
-                            Replying to: ${reply.reply_id ? 'r-' + reply.reply_id : 't-' + reply.thread_id}
-                        </a>
-                    </div>
-        
-                    <p class="chan-text-content" id="format-r${reply.id}" style="min-height: ${reply.image ? '1.5rem' : '2.5rem'};"></p>
-        
-                    ${reply.image ? `
-                        <div class="d-flex flex-column justify-content-center" style="width: 30%;" id="img-div-r${reply.id}">
-                            <img class="rounded-1" style="width: 100%; height: auto; max-height: 400px;" 
-                                 src="/image/${reply.image.id}" onclick="maxOrMin(${reply.id}, 'r')">
-                            <div class="d-flex gap-1">
-                                <span style="font-size: 0.7rem; color: #696969;" class="m-0">File: </span>
-                                <a style="font-size: 0.7rem;" class="m-0 text-ellipsis" href="/image/${reply.image.id}">${reply.image.name}</a>
+                document.getElementById(insert_id).innerHTML += `
+                    <div id="r${reply.id}" class="chan-${reply.type === 1 ? 'admin-' : ''}thread-info d-flex flex-column" style="min-width: 350px; width: fit-content; margin-left: ${reply.level * 14}px;">
+                        <div class="d-flex justify-content-start align-content-start gap-1">
+                            <div class="d-flex gap-1 align-items-center justify-content-start m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">
+                                <span class="m-0 fw-bold" style="font-size: 0.7rem; ${reply.type === 0 ? 'color: rgba(255, 255, 255, 0.700);' : 'color: rgba(0, 255, 136);'}">
+                                    ${reply.type === 1 ? 'Admin:' : 'Anon:'}
+                                </span>
+                                <span class="m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">
+                                    ${reply.user_token}
+                                </span>
+                                ${reply.user_token === thread_token ? `<span class="text-info m-0 text-ellipsis" style="font-size: 0.7rem;">(OP)</span>` : ''}
+                                ${reply.type === 1 ? `<img style="width: 15px; height: 15px;" src="/static/pi.svg" alt="">` : ''}
                             </div>
-                            <span style="font-size: 0.7rem; color: #696969;" class="m-0 p-0">(${Math.floor(reply.image.size / 1024)}KB ${reply.image.measures})</span>                    
+                            <hr class="m-0" style="width: 1px; border-left: solid 1px;">
+                            <span class="m-0 text-ellipsis" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">Reply No.${reply.id}</span>
+                            <hr class="m-0" style="width: 1px; border-left: solid 1px;">
+                            <a
+                                data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="right"
+                                title='<div class="d-flex flex-column text-white">
+                                    <span>${reply.reply ? reply.reply.user_token + " | Reply No." + reply.reply.id : threadData.user_token + " | Thread No." + threadData.id}</span>
+                                    <hr class="my-1">
+                                    <span class="fw-bold">${reply.reply ? reply.reply.content : threadData.content}</span>
+                                    ${reply.reply ? (reply.reply.image ? `<img src="/image/${reply.reply.image.id}">` : '') : (threadData.image ? `<img src="/image/${threadData.image.id}">` : '')}
+                                    <hr class="my-1">
+                                    <span>${reply.reply ? reply.reply.date.slice(8, 10)+'/'+reply.reply.date.slice(5, 7)+'/'+reply.reply.date.slice(0, 4) : threadData.date.slice(8, 10)+'/'+threadData.date.slice(5, 7)+'/'+threadData.date.slice(0, 4)} | ${reply.reply ? reply.reply.time : threadData.time} UTC</span>
+                                </div>'
+
+                                onclick="highlightPostWithRedirect('${reply.reply_id ? 'r' + reply.reply_id : 't' + reply.thread_id}', 't${insert_id.slice(1, 3)}')"
+                                id="reference-${reply.id}"
+                                href="#${reply.reply_id ? 'r' + reply.reply_id : 't' + reply.thread_id}" 
+                                class="m-0 text-ellipsis" style="font-size: 11px; color: var(--post-highlight);">
+                                Replying to: ${reply.reply_id ? 'r-' + reply.reply_id : 't-' + reply.thread_id}
+                            </a>
                         </div>
-                    ` : ''}
-        
-                    <div class="d-flex justify-content-between">
-                        <div class="d-flex gap-1">
-                            <span class="m-0" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">
-                                ${reply.date.slice(8, 10).toString()}/${reply.date.slice(5, 7).toString()}/${reply.date.slice(0, 4)}
-                            </span>
-                            <hr class="m-0 h-100" style="width: 1px; border-left: solid 1px;">
-                            <span class="m-0" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">${reply.time} UTC</span>
-                        </div>
-        
-                        <div class="d-flex justify-content-center gap-1">
-                            <button onclick="submitVote(1, ${reply.id}, 'r')" title="${Array.isArray(reply.votes) ? reply.votes.filter(v => v.up_or_down === 1).length : 0}" 
-                                    class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
-                                <i class="fa-solid fa-caret-up px-1" id="1r${reply.id}" 
-                                   style="font-size: 0.9rem; padding-top: 0.15rem; background-color: rgba(0, 153, 255, 0.2); border-radius: 3px; height: fit-content;"></i>
-                            </button>
-                            <button onclick="submitVote(0, ${reply.id}, 'r')" title="${Array.isArray(reply.votes) ? reply.votes.filter(v => v.up_or_down === 0).length : 0}" 
-                                    class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
-                                <i class="fa-solid fa-caret-down px-1" id="0r${reply.id}" 
-                                   style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
-                            </button>
-                            <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" 
-                                    style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" 
-                                    onclick="replyModal('r${reply.id}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
-                                <i style="font-size: 0.7rem;" class="fa-solid fa-reply"></i>
-                                <span style="font-size: 0.7rem;" class="m-0">Reply</span>   
-                            </button>
-                            ${api_key ? `
-                                <button onclick="deletePost(${reply.id}, 'r')" class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" 
-                                        style="background-color: rgba(243, 35, 35, 0.2); border-radius: 3px;" type="button">
-                                    <i style="font-size: 0.7rem;" class="fa-solid fa-eraser"></i>
-                                    <span style="font-size: 0.7rem;" class="m-0">Delete</span>   
+                        <p class="chan-text-content" id="format-r${reply.id}" style="min-height: ${reply.image ? '1.5rem' : '2.5rem'};"></p>
+                        ${reply.image ? 
+                            `<div class="d-flex flex-column justify-content-center" style="width: 30%;" id="img-div-r${reply.id}">
+                                <img class="rounded-1" style="width: 100%; height: auto; max-height: 400px;" 
+                                     src="/image/${reply.image.id}" onclick="maxOrMin(${reply.id}, 'r')">
+                                <div class="d-flex gap-1">
+                                    <span style="font-size: 0.7rem; color: #696969;" class="m-0">File: </span>
+                                    <a style="font-size: 0.7rem;" class="m-0 text-ellipsis" href="/image/${reply.image.id}">${reply.image.name}</a>
+                                </div>
+                                <span style="font-size: 0.7rem; color: #696969;" class="m-0 p-0">(${Math.floor(reply.image.size / 1024)}KB ${reply.image.measures})</span>                    
+                            </div>` : ''}
+                        <div class="d-flex justify-content-between">
+                            <div class="d-flex gap-1">
+                                <span class="m-0" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">
+                                    ${reply.date.slice(8, 10).toString()}/${reply.date.slice(5, 7).toString()}/${reply.date.slice(0, 4)}
+                                </span>
+                                <hr class="m-0 h-100" style="width: 1px; border-left: solid 1px;">
+                                <span class="m-0" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">${reply.time} UTC</span>
+                            </div>
+                            <div class="d-flex justify-content-center gap-1">
+                                <button onclick="submitVote(1, ${reply.id}, 'r')" title="${Array.isArray(reply.votes) ? reply.votes.filter(v => v.up_or_down === 1).length : 0}" 
+                                        class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                    <i class="fa-solid fa-caret-up px-1" id="1r${reply.id}" 
+                                       style="font-size: 0.9rem; padding-top: 0.15rem; background-color: rgba(0, 153, 255, 0.2); border-radius: 3px; height: fit-content;"></i>
                                 </button>
-                            ` : ''}
+                                <button onclick="submitVote(0, ${reply.id}, 'r')" title="${Array.isArray(reply.votes) ? reply.votes.filter(v => v.up_or_down === 0).length : 0}" 
+                                        class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
+                                    <i class="fa-solid fa-caret-down px-1" id="0r${reply.id}" 
+                                       style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
+                                </button>
+                                <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" 
+                                        style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" 
+                                        onclick="replyModal('r${reply.id}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
+                                    <i style="font-size: 0.7rem;" class="fa-solid fa-reply"></i>
+                                    <span style="font-size: 0.7rem;" class="m-0">Reply</span>   
+                                </button>
+                                ${api_key ? 
+                                    `<button onclick="deletePost(${reply.id}, 'r')" class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" 
+                                            style="background-color: rgba(243, 35, 35, 0.2); border-radius: 3px;" type="button">
+                                        <i style="font-size: 0.7rem;" class="fa-solid fa-eraser"></i>
+                                        <span style="font-size: 0.7rem;" class="m-0">Delete</span>   
+                                    </button>` 
+                                 : ''}
+                            </div>
                         </div>
                     </div>
-                </div>
-            `;
-            document.getElementById(`format-r${reply.id}`).innerHTML += reply.content    
+                `;
+                document.getElementById(`format-r${reply.id}`).innerHTML += reply.content;
+
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                    tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl);
+                });
+            }
         }
+        
+        
         
         
     } else {
@@ -626,5 +653,7 @@ async function showAll(insert_id, button_id, thread_link_id, thread_token) {
         document.getElementById(button_id).parentElement.getElementsByTagName('span')[0].style.marginLeft = '20px'
     }
 }
+
+
 
 highlightVotes()

@@ -30,6 +30,29 @@
     --bs-red-text: rgb(255, 18, 58); /* Red text */
 }
 
+.tooltip .tooltip-inner {
+    max-width: none !important; /* Allow tooltip to expand dynamically */
+    white-space: nowrap; /* Prevent text from breaking into new lines */
+    color: #fff; /* Optional: Customize tooltip text color */
+    padding: 8px;
+    border-radius: 6px;
+}
+
+.tooltip .tooltip-inner span {
+    font-size: 0.7rem;
+}
+
+.tooltip .tooltip-inner img {
+    max-height: 150px;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.tooltip .tooltip-inner .spoiler {
+    background-color: #27272a;
+    color: #27272a;
+}
+
 .ants-link{
     border: 1px solid transparent !important;
 }

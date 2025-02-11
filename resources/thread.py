@@ -9,7 +9,7 @@ from models.thread import ThreadModel
 from models.board import BoardModel
 from models.board_group import BoardGroupModel
 from models.image import ImageModel
-from marshmallow_schemas import ThreadSchema
+from marshmallow_schemas import ThreadSchema, PlainThreadSchema
 
 
 blp = Blueprint('Threads', __name__, description='Operations on threads')
@@ -134,8 +134,6 @@ class Thread(MethodView):
         # Return the rendered template with the formatted content
         return render_template('thread.html', thread=thread, board_groups=board_groups, image=image)
 
-
-
     def delete(self, id):
 
         validate_api_key()
@@ -146,3 +144,28 @@ class Thread(MethodView):
         db.session.commit()
 
         return {'message': f'Thread {id} deleted.'}
+    
+@blp.route('/thread_data/<string:id>')
+class Thread(MethodView):
+
+    @blp.response(200, ThreadSchema)
+    def get(self, id):
+        thread = ThreadModel.query.get_or_404(id)
+        image = ImageModel.query.filter_by(thread_id=id).first()
+
+        # Format thread content
+        thread.content = format_text(thread.content)
+
+        # Add image details to the response
+        return {
+            "id": thread.id,
+            "title": thread.title,
+            "content": thread.content,
+            "user_token": thread.user_token,
+            "type": thread.type,
+            "date": thread.date,
+            "time": thread.time,
+            "image": {
+                "id": image.id
+                }
+        }

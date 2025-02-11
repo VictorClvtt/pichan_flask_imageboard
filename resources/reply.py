@@ -6,7 +6,8 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from db import db
 from models.reply import ReplyModel
 from models.thread import ThreadModel
-from marshmallow_schemas import ReplySchema
+from models.image import ImageModel
+from marshmallow_schemas import ReplySchema, PlainReplySchema
 
 
 blp = Blueprint('Replies', __name__, description='Operations on replies')
@@ -52,8 +53,24 @@ class Reply(MethodView):
 
     @blp.response(200, ReplySchema)
     def get(self, id):
+        # Fetch the reply
         reply = ReplyModel.query.get_or_404(id)
+
+        reply = {
+            "content": reply.content,
+            "date": reply.date,
+            "id": reply.id,
+            "time": reply.time,
+            "type": reply.type,
+            "user_token": reply.user_token,
+            "image": {
+                "id": reply.image.id
+            }
+        }
+
+        
         return reply
+
 
     def delete(self, id):
 
@@ -85,9 +102,9 @@ def format_text(content):
     formatted_lines = []
     for line in content.split('\n'):
         if line.startswith('&gt;'):  # Escaped '>'
-            formatted_lines.append(f'<span class="green-text">{line}</span>')
+            formatted_lines.append(f"<span class='green-text'>{line}</span>")
         elif line.startswith('&lt;'):  # Escaped '<'
-            formatted_lines.append(f'<span class="red-text">{line}</span>')
+            formatted_lines.append(f"<span class='red-text'>{line}</span>")
         else:
             formatted_lines.append(line)
 
@@ -131,16 +148,30 @@ def serialize_reply(reply, thread_id, level=0):
         "time": reply.time.strftime("%H:%M:%S") if reply.time else None,
         "thread_id": thread_id,
         "reply_id": reply.reply_id,
+        "reply": {
+            "id": reply.reply.id if reply.reply else None,
+            "user_token": reply.reply.user_token if reply.reply else None,
+            "date": reply.reply.date.isoformat() if reply.reply and reply.reply.date else None,
+            "time": reply.reply.time.strftime("%H:%M:%S") if reply.reply and reply.reply.time else None,
+            "content": reply.reply.content if reply.reply else None,
+            "image": {
+                "id": reply.reply.image.id if reply.reply and reply.reply.image else None,
+                "name": reply.reply.image.name if reply.reply and reply.reply.image else None,
+                "size": reply.reply.image.size if reply.reply and reply.reply.image else None,
+                "measures": reply.reply.image.measures if reply.reply and reply.reply.image else None
+            } if reply.reply and reply.reply.image else None
+        } if reply.reply else None,
         "image": {
             "id": reply.image.id if reply.image else None,
             "name": reply.image.name if reply.image else None,
             "size": reply.image.size if reply.image else None,
             "measures": reply.image.measures if reply.image else None
         } if reply.image else None,
-        "votes": reply.votes.count(),
+        "votes": reply.votes.count() if reply.votes else 0,  # Ensure safe handling of votes
         "level": level,
         "reply_replies": [serialize_reply(nested_reply, thread_id, level + 1) for nested_reply in reply.reply_replies]
     }
+
 
 def flatten_replies(replies, thread_id, level=0):
     """Converts a list of replies and nested replies into a flat list."""
@@ -160,9 +191,14 @@ class RepliesByThread(MethodView):
     def get(self, thread_id):
         replies = ReplyModel.query.filter_by(thread_id=thread_id).all()
 
-        # Format reply content
+        # Format main replies (before processing nested ones)
+        for reply in replies:
+            reply.content = format_text(reply.content)
+
+        # Format nested replies (ensures all levels are formatted)
         for reply in replies:
             format_reply_content(reply)
 
         # Convert replies and nested replies into a flat list
         return jsonify(flatten_replies(replies, thread_id))
+

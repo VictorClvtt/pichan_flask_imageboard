@@ -95,7 +95,6 @@ def format_reply_content(reply):
             for nested_reply in reply.reply_replies:
                 format_reply_content(nested_reply)
 
-
 def reply_list(thread, replies, level=0):
     # Initialize reply_list if it doesn't exist
     if not hasattr(thread, 'reply_list'):
@@ -105,6 +104,7 @@ def reply_list(thread, replies, level=0):
         # Append each reply along with its level to the thread's reply_list
         thread.reply_list.append({
             **vars(reply),
+            'reply': reply.reply,
             'related_thread_id': thread.id,
             'image': reply.image,
             'level': level
@@ -113,7 +113,6 @@ def reply_list(thread, replies, level=0):
         # If the reply has nested replies, recurse into them
         if hasattr(reply, 'reply_replies') and reply.reply_replies:
             reply_list(thread, reply.reply_replies, level + 1)
-
 
 
 @blp.route('/board/<string:id>')
