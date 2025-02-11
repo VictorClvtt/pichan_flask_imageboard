@@ -174,7 +174,7 @@
                                         <hr class='my-1'>
                                         <span class='fw-bold'>{{ reply.reply.content }}</span>
                                         {% if reply.reply.image %}
-                                            <img src='/image/{{ thread.image.id }}'>
+                                            <img src='/image/{{ reply.reply.image.id }}'>
                                         {% endif %}
                                         <hr class='my-1'>
                                         <span>{{ thread.date.strftime('%d/%m/%Y') }} | {{ thread.time }} UTC</span>
@@ -354,7 +354,7 @@
                             
                             
                             {% if thread.reply_list %}
-                                <hr class="border-white my-0 mx-3" style="border-style:  dotted; border-width: 1px 0 0 0;">
+                                <hr class="border-white my-0 mx-3" style="border-style: dotted; border-width: 1px 0 0 0;">
                                 <div class="d-flex flex-column gap-1" style="margin-left: 40px;">
 
                                     <span id="t{{ thread.id }}-all" class="gap-1" style="display: none; flex-direction: column;"></span>
@@ -461,7 +461,7 @@
                                         {% endif %}
                                     </div>
                                     {% if thread.reply_list %}
-                                        <hr class="border-white my-0 mx-3" style="border-style:  dotted; border-width: 1px 0 0 0;">
+                                        <hr class="border-white my-0 mx-3" style="border-style: dotted; border-width: 1px 0 0 0;">
                                         <div class="d-flex flex-column gap-1" style="margin-left: 40px;">
 
                                             <span id="t{{ thread.id }}-all" class="gap-1" style="display: none; flex-direction: column;"></span>
@@ -569,7 +569,7 @@
                                         {% endif %}
                                     </div> 
                                     {% if thread.reply_list %}
-                                        <hr class="border-white my-0 mx-3" style="border-style:  dotted; border-width: 1px 0 0 0;">
+                                        <hr class="border-white my-0 mx-3" style="border-style: dotted; border-width: 1px 0 0 0;">
                                         <div class="d-flex flex-column gap-1" style="margin-left: 40px;">
 
                                             <span id="t{{ thread.id }}-all" class="gap-1" style="display: none; flex-direction: column;"></span>
@@ -670,7 +670,7 @@
                                         {% endif %}
                                     </div>
                                     {% if thread.reply_list %}
-                                        <hr class="border-white my-0 mx-3" style="border-style:  dotted; border-width: 1px 0 0 0;">
+                                        <hr class="border-white my-0 mx-3" style="border-style: dotted; border-width: 1px 0 0 0;">
                                         <div class="d-flex flex-column gap-1" style="margin-left: 40px;">
                                             
                                             <span id="t{{ thread.id }}-all" class="gap-1" style="display: none; flex-direction: column;"></span>

@@ -632,6 +632,7 @@ async function showAll(insert_id, button_id, thread_link_id, thread_token) {
                         </div>
                     </div>
                 `;
+                
                 document.getElementById(`format-r${reply.id}`).innerHTML += reply.content;
 
                 var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
