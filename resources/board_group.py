@@ -10,7 +10,7 @@ from marshmallow_schemas import BoardGroupSchema
 blp = Blueprint('Board Groups', __name__, description='Operations on board groups')
 
 
-API_KEYS = {"cu", "valid_api_key_2"}
+API_KEYS = {"senha", "password"}
 
 def validate_api_key():
     api_key = request.args.get('api_key')  # Get the API key from the query string

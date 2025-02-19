@@ -34,12 +34,16 @@
     max-width: none !important; /* Allow tooltip to expand dynamically */
     white-space: nowrap; /* Prevent text from breaking into new lines */
     color: #fff; /* Optional: Customize tooltip text color */
-    padding: 8px;
+    padding: 4px 10px;
     border-radius: 6px;
 }
 
 .tooltip .tooltip-inner span {
     font-size: 0.7rem;
+}
+
+.tooltip .tooltip-inner .vote-tooltip {
+    font-size: 0.75rem !important;
 }
 
 .tooltip .tooltip-inner img {

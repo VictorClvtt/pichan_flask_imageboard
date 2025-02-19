@@ -15,7 +15,7 @@ from marshmallow_schemas import PlainBoardSchema, BoardSchema
 blp = Blueprint('Boards', __name__, description='Operations on boards')
 
 
-API_KEYS = {"cu", "valid_api_key_2"}
+API_KEYS = {"senha", "password"}
 
 def validate_api_key():
     api_key = request.args.get('api_key')  # Get the API key from the query string
@@ -103,10 +103,12 @@ def reply_list(thread, replies, level=0):
     for reply in replies:
         # Append each reply along with its level to the thread's reply_list
         thread.reply_list.append({
+            'id': reply.id,
             **vars(reply),
             'reply': reply.reply,
             'related_thread_id': thread.id,
             'image': reply.image,
+            'votes': reply.votes,
             'level': level
         })
         
@@ -145,7 +147,7 @@ class Board(MethodView):
             reply_list(thread, thread.replies)
 
         # Format content for normal threads
-        for thread in normal_threads.items:
+        for thread in normal_threads:
             thread.content = format_text(thread.content)  # Apply formatting to the thread's content
             # Format replies content recursively
             for reply in thread.reply_list:

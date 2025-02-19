@@ -15,7 +15,7 @@ from marshmallow_schemas import ThreadSchema, PlainThreadSchema
 blp = Blueprint('Threads', __name__, description='Operations on threads')
 
 
-API_KEYS = {"cu", "valid_api_key_2"}
+API_KEYS = {"senha", "password"}
 
 def validate_api_key():
     api_key = request.args.get('api_key')  # Get the API key from the query string

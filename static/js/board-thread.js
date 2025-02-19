@@ -448,7 +448,7 @@ function maxOrMin(id, post_type){
             element.getElementsByTagName('div')[0].style.maxHeight = 'fit-content'
         }else{
             element.classList.add('flex-column')
-            element.getElementsByTagName('div')[0].style.maxWidth = 'unset';
+            element.getElementsByTagName('div')[0].style.maxWidth = 'unset'
             element.getElementsByTagName('div')[0].style.maxHeight = 'unset'
         }    
     }else{
@@ -605,12 +605,12 @@ async function showAll(insert_id, button_id, thread_link_id, thread_token) {
                                 <span class="m-0" style="font-size: 11px; color: rgba(255, 255, 255, 0.700);">${reply.time} UTC</span>
                             </div>
                             <div class="d-flex justify-content-center gap-1">
-                                <button onclick="submitVote(1, ${reply.id}, 'r')" title="${Array.isArray(reply.votes) ? reply.votes.filter(v => v.up_or_down === 1).length : 0}" 
+                                <button onclick="submitVote(1, ${reply.id}, 'r')" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="top" title="<span class='vote-tooltip'>${ reply.upvotes }</span>" 
                                         class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
                                     <i class="fa-solid fa-caret-up px-1" id="1r${reply.id}" 
                                        style="font-size: 0.9rem; padding-top: 0.15rem; background-color: rgba(0, 153, 255, 0.2); border-radius: 3px; height: fit-content;"></i>
                                 </button>
-                                <button onclick="submitVote(0, ${reply.id}, 'r')" title="${Array.isArray(reply.votes) ? reply.votes.filter(v => v.up_or_down === 0).length : 0}" 
+                                <button onclick="submitVote(0, ${reply.id}, 'r')" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="top" title="<span class='vote-tooltip'>${ reply.downvotes }</span>" 
                                         class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
                                     <i class="fa-solid fa-caret-down px-1" id="0r${reply.id}" 
                                        style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
@@ -642,7 +642,7 @@ async function showAll(insert_id, button_id, thread_link_id, thread_token) {
             }
         }
         
-        
+        highlightVotes()
         
         
     } else {
@@ -654,7 +654,6 @@ async function showAll(insert_id, button_id, thread_link_id, thread_token) {
         document.getElementById(button_id).parentElement.getElementsByTagName('span')[0].style.marginLeft = '20px'
     }
 }
-
 
 
 highlightVotes()

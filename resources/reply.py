@@ -24,7 +24,7 @@ def validate_api_key():
 @blp.route('/reply')
 class ReplyList(MethodView):
 
-    @blp.response(200, ReplySchema(many=True))
+    @blp.response(200, PlainReplySchema(many=True))
     def get(self):
         return ReplyModel.query.all()
     
@@ -167,7 +167,8 @@ def serialize_reply(reply, thread_id, level=0):
             "size": reply.image.size if reply.image else None,
             "measures": reply.image.measures if reply.image else None
         } if reply.image else None,
-        "votes": reply.votes.count() if reply.votes else 0,  # Ensure safe handling of votes
+        "upvotes" : sum(1 for vote in reply.votes if vote.up_or_down == 1),
+        "downvotes": sum(1 for vote in reply.votes if vote.up_or_down == 0),
         "level": level,
         "reply_replies": [serialize_reply(nested_reply, thread_id, level + 1) for nested_reply in reply.reply_replies]
     }
@@ -188,6 +189,8 @@ def flatten_replies(replies, thread_id, level=0):
 
 @blp.route('/replies/<int:thread_id>')
 class RepliesByThread(MethodView):
+
+    @blp.response(200, ReplySchema)
     def get(self, thread_id):
         replies = ReplyModel.query.filter_by(thread_id=thread_id).all()
 

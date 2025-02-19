@@ -70,7 +70,7 @@ class ReplySchema(PlainReplySchema):
     thread = fields.Nested(PlainThreadSchema(), dump_only=True)
 
     reply_id = fields.String(required=True, load_only=True)
-    reply = fields.Nested('ReplySchema', dump_only=True)
+    reply = fields.Nested('PlainReplySchema', dump_only=True)
     reply_replies = fields.List(fields.Nested("ReplySchema"), dump_only=True)
 
     image = fields.Nested(ImageSchema(), dump_only=True)
