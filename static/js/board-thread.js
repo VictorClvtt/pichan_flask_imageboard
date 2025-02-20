@@ -635,14 +635,19 @@ async function showAll(insert_id, button_id, thread_link_id, thread_token) {
                 
                 document.getElementById(`format-r${reply.id}`).innerHTML += reply.content;
 
+                
                 var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-                    tooltipTriggerList.map(function (tooltipTriggerEl) {
-                    return new bootstrap.Tooltip(tooltipTriggerEl);
+                tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl, {
+                        trigger: "hover"
+                    });
                 });
+                
+
             }
         }
         
-        highlightVotes()
+        highlightVotes()   
         
         
     } else {

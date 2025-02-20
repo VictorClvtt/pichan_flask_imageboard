@@ -30,6 +30,14 @@
     --bs-red-text: rgb(255, 18, 58); /* Red text */
 }
 
+.tooltip[data-popper-placement="right"] {
+    margin-left: 3px !important;
+}
+
+.tooltip[data-popper-placement="top"] {
+    margin-bottom: 3px !important;
+}
+
 .tooltip .tooltip-inner {
     max-width: none !important; /* Allow tooltip to expand dynamically */
     white-space: nowrap; /* Prevent text from breaking into new lines */

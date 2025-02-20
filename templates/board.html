@@ -270,7 +270,7 @@
             {% if page == 1 %}
                 {% for thread in admin_threads %}
                     <!-- Thread -->
-                    <div class="d-flex overflow-x-scroll overflow-y-hidden gap-1 w-100" style="max-width: 100vw;" id="img-div-t{{ thread.id }}">
+                    <div class="d-flex overflow-x-auto overflow-y-hidden gap-1 w-100" style="max-width: 100vw;" id="img-div-t{{ thread.id }}">
                         {% if thread.image %}
                             <div class="d-flex flex-column justify-content-start" style="max-width: 235px; max-height: fit-content; min-width: 200px;">
                                 <img class="rounded-1 shadow" src="{{ url_for('Images.Image', id=thread.image.id) }}" onclick="maxOrMin({{ thread.id }}, 't')">
@@ -785,11 +785,12 @@
     </script>
     
     <script>
-        // Initialize Bootstrap tooltips
         document.addEventListener("DOMContentLoaded", function () {
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    trigger: "hover"
+                });
             });
         });
     </script>  
