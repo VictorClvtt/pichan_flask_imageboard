@@ -86,18 +86,8 @@ class ReplyList(MethodView):
 
         # Check referer to determine where to redirect
         referer = request.headers.get('Referer')
-        board_id = request.form.get("board_id")
-        main_thread_id = request.form.get("main_thread_id")
-
-        if referer and f'/board/{board_id}/thread/' in referer:
-            # Came from /board/{}/thread/{}, so redirect to the thread page
-            return redirect(f'/board/{board_id}/thread/{main_thread_id}#r{new_reply.id}')
-        elif referer and f'/board/{board_id}' in referer:
-            # Came from /board/{}, so redirect to the board page
-            return redirect(f'/board/{board_id}#r{new_reply.id}')
-        else:
-            # Default redirect if no specific referer is found
-            return redirect(f'/board/{board_id}/thread/{main_thread_id}#r{new_reply.id}')
+        
+        return redirect(f'{referer}#r{new_reply.id}')
 
 
 @blp.route('/reply/<string:id>')

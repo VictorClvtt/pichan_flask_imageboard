@@ -111,11 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-function replyModal(id, t_id){
+function replyModal(id){
     document.getElementById('thread_or_reply_id').value = id
-    document.getElementById('main_thread_id').value = t_id
-
-    console.log(document.getElementById('thread_or_reply_id').value)
 }
 
 async function postReply(){

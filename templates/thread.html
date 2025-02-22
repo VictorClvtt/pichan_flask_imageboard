@@ -71,8 +71,6 @@
 
                             <input type="hidden" name="thread_or_reply_id" id="thread_or_reply_id" value="">
                             <input type="hidden" name="user_token" id="reply_user_token" value="">
-                            <input type="hidden" name="board_id" id="reply_board_id" value="{{ thread.board.id }}">
-                            <input type="hidden" name="main_thread_id" id="main_thread_id" value="">
 
                             <div class="d-flex justify-content-between modal-footer" style="border-color: #5e5e5e;">
                                 <button type="button" class="btn btn-secondary chan-button-close w-100" style="max-width: 80px;" data-bs-dismiss="modal">Close</button>
@@ -209,7 +207,7 @@
                                 <button onclick="submitVote(0, {{ reply.id }}, 'r')" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="top" title="<span class='vote-tooltip'>{{ reply.votes|selectattr('up_or_down', 'equalto', 0)|list|length }}</span>" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
                                     <i class="fa-solid fa-caret-down px-1" id="0r{{ reply.id }}" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
                                 </button>
-                                <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('r{{ reply.id }}', '{{ thread.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
+                                <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('r{{ reply.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
                                     <i style="font-size: 0.7rem;" class="fa-solid fa-reply"></i>
                                     <p style="font-size: 0.7rem;" class="m-0">Reply</p>   
                                 </button>
@@ -282,7 +280,7 @@
                                     <button onclick="submitVote(0, {{ thread.id }}, 't')" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="top" title="<span class='vote-tooltip'>{{ thread.votes|selectattr('up_or_down', 'equalto', 0)|list|length }}</span>" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
                                         <i class="fa-solid fa-caret-down px-1" id="0t{{ thread.id }}" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
                                     </button>
-                                    <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('t{{ thread.id }}', '{{ thread.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
+                                    <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('t{{ thread.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
                                         <i style="font-size: 0.7rem;" class="fa-solid fa-reply"></i>
                                         <p style="font-size: 0.7rem;" class="m-0">Reply</p>   
                                     </button>
@@ -340,7 +338,7 @@
                                     <button onclick="submitVote(0, {{ thread.id }}, 't')" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="top" title="<span class='vote-tooltip'>{{ thread.votes|selectattr('up_or_down', 'equalto', 0)|list|length }}</span>" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
                                         <i class="fa-solid fa-caret-down px-1" id="0t{{ thread.id }}" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
                                     </button>
-                                    <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('t{{ thread.id }}', '{{ thread.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
+                                    <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('t{{ thread.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
                                         <i style="font-size: 0.7rem;" class="fa-solid fa-reply"></i>
                                         <p style="font-size: 0.7rem;" class="m-0">Reply</p>   
                                     </button>
