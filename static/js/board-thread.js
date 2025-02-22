@@ -115,94 +115,6 @@ function replyModal(id){
     document.getElementById('thread_or_reply_id').value = id
 }
 
-async function postReply(){
-    try {
-        const token = await getFingerprint();
-        console.log('User Token:', token);
-
-        const contentInput = document.getElementById('reply_content').value;
-        const threadOrReplyIdInput = document.getElementById('thread_or_reply_id').value;
-
-        const content = contentInput ? contentInput.trim() : '';
-        const thread_or_reply_id = threadOrReplyIdInput ? threadOrReplyIdInput.trim() : '';
-
-        // Initialize variables to ensure they are available outside the conditionals
-        let thread_id = '';
-        let reply_id = '';
-
-        // Checking if it's a reply to a thread or a reply
-        if (thread_or_reply_id[0] === 't') {
-            thread_id = thread_or_reply_id.slice(1);
-            console.log('Thread ID:', thread_id);
-        } else if (thread_or_reply_id[0] === 'r') {
-            reply_id = thread_or_reply_id.slice(1);
-            console.log('Reply ID:', reply_id);
-        }
-
-        if (!content || !thread_or_reply_id) {
-            console.error('Content or thread/reply ID is missing.');
-            return;
-        }
-
-        // Clear input fields after extracting their values
-        if (contentInput) contentInput.value = '';
-
-        const type = document.getElementById('new_reply_type').value;
-
-        const currentDateTime = new Date();
-        const year = currentDateTime.getUTCFullYear();
-        const month = String(currentDateTime.getUTCMonth() + 1).padStart(2, '0');
-        const day = String(currentDateTime.getUTCDate()).padStart(2, '0');
-        const date = `${year}-${month}-${day}`;
-
-        const hours = String(currentDateTime.getUTCHours()).padStart(2, '0');
-        const minutes = String(currentDateTime.getUTCMinutes()).padStart(2, '0');
-        const seconds = String(currentDateTime.getUTCSeconds()).padStart(2, '0');
-        const time = `${hours}:${minutes}:${seconds}`;
-
-        const replyData = {
-            user_token: token,
-            content: content,
-            type: type,
-            date: date,
-            time: time,
-            thread_id: thread_id,
-            reply_id: reply_id
-        };
-
-        console.log('Reply data:', replyData);
-
-        const response = await fetch(`/reply`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(replyData),
-        })
-
-        if (!response.ok) {
-            throw new Error(`Server error: ${response.status}`);
-        }
-
-        const responseData = await response.json();
-
-        const newReplyId = responseData.id; // Replace with the actual key from the server response
-        window.location.hash = `r${newReplyId}`;
-
-        document.getElementById('reply_content').value = ''
-
-        if(document.getElementById('image-r').files && document.getElementById('image-r').files.length > 0){
-            uploadImage(null, newReplyId)    
-        }else{
-            location.reload()
-        }
-        
-
-    } catch (error) {
-        console.error('Error sending POST request:', error);
-    }
-}
-
 async function submitVote(vote, target_id, target_type){
     
     const currentDateTime = new Date();
@@ -517,7 +429,6 @@ async function showAll(insert_id, button_id, thread_link_id, thread_token) {
         document.getElementById(button_id).parentElement.getElementsByTagName('span')[0].style.marginLeft = '20px'
     }
 }
-
 
 async function putFingerprint() {
     const fingerprint = await getFingerprint(); // Wait for the Promise to resolve

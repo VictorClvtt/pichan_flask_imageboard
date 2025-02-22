@@ -49,11 +49,35 @@ def home():
         for image in images
     ]
 
+    total_image_size = sum(image["size"] for image in images)
+
     board_stats = []
     for board in boards:
         # Total threads and replies
         total_threads = board.threads.count()
-        total_replies = sum(thread.replies.count() for thread in board.threads)
+        def count_replies(replies):
+            replies = list(replies)  # Convert AppenderQuery to a list
+            total = len(replies)  # Count direct replies
+            for reply in replies:
+                total += count_replies(reply.reply_replies)  # Recursively count nested replies
+            return total
+
+        # Calculate total replies recursively for all threads in a board
+        total_replies = sum(count_replies(thread.replies) for thread in board.threads)
+
+
+        def count_images_in_replies(replies):
+            total_size = 0
+            for reply in replies:
+                # Add image size of the current reply if it has an image
+                if reply.image:
+                    total_size += int(reply.image.size)
+                
+                # Recursively count images in replies of this reply
+                if reply.reply_replies:
+                    total_size += count_images_in_replies(reply.reply_replies)
+            
+            return total_size
 
         # Sum of image sizes (thread + reply images)
         total_image_size = sum(
@@ -62,12 +86,29 @@ def home():
         ) + sum(
             int(image.size) for thread in board.threads
             for reply in thread.replies for image in [reply.image] if image
+        ) + sum(
+            count_images_in_replies(thread.replies) for thread in board.threads
         )
 
-        # Calculate total votes for threads and replies
+        def count_votes_in_replies(replies):
+            total_votes = 0
+            for reply in replies:
+                # Add votes count of the current reply
+                total_votes += reply.votes.count()
+                
+                # Recursively count votes in replies of this reply
+                if reply.reply_replies:
+                    total_votes += count_votes_in_replies(reply.reply_replies)
+            
+            return total_votes
+
+        # Sum of total votes (thread votes + reply votes)
         total_votes = sum(thread.votes.count() for thread in board.threads) + sum(
             reply.votes.count() for thread in board.threads for reply in thread.replies
+        ) + sum(
+            count_votes_in_replies(thread.replies) for thread in board.threads
         )
+
 
         # Calculate time range for mean posts and votes per hour/day
         now = datetime.utcnow()
@@ -112,6 +153,7 @@ def home():
         replies=replies,
         boards=boards,
         images=images,
+        total_image_size=total_image_size,
         popular_threads=popular_threads,
         board_stats=board_stats
     )

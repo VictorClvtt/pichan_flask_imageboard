@@ -214,7 +214,7 @@
                             {% if popular_thread %}
                                 <div class="d-flex flex-column align-items-center chan-thread" style="max-width: 175px; max-height: 275px;">
                                     <a href="{{ url_for('Admin.Board' if api_key else 'Boards.Board', id=board.id, **({'api_key': api_key} if api_key else {})) }}" class="chan-title text-decoration-underline fw-bold m-0 py-1" style="font-size: 0.9rem;">{{ board.name }}</a>
-                                    <a href="{{ url_for('Admin.Thread' if api_key else 'Threads.Thread', id=popular_thread.id, **({'api_key': api_key} if api_key else {})) }}" title="{{ popular_thread.title }}">
+                                    <a href="{{ url_for('Admin.Thread' if api_key else 'Boards.Thread', t_id=popular_thread.id, b_id=popular_thread.board.id, **({'api_key': api_key} if api_key else {})) }}" title="{{ popular_thread.title }}">
                                         <img style="max-width: 150px; max-height: 150px; border: 1px solid var(--chan-color); background: rgba(0, 255, 234, 0.05);" src="{{ url_for('Images.Image', id=popular_thread.image.id) }}" alt="">
                                     </a>
                                     <p class="ellipsis-multiline text-white">
@@ -272,7 +272,7 @@
                                 <td class="fw-bold border-bottom-0" style="font-size: 0.9rem;">{{ board_stats | map(attribute='total_votes') | sum }}</td>
                                 <td class="fw-bold border-bottom-0" style="font-size: 0.9rem;">{{ board_stats | map(attribute='mean_votes_per_hour') | sum | round(1) }}</td>
                                 <td class="fw-bold border-bottom-0" style="font-size: 0.9rem;">{{ board_stats | map(attribute='mean_votes_per_day') | sum | round(1) }}</td>
-                                <td class="fw-bold border-bottom-0 border-end-0" style="font-size: 0.9rem;">{{ ((images | map(attribute='size') | sum) / 1024)|int }} KB</td>
+                                <td class="fw-bold border-bottom-0 border-end-0" style="font-size: 0.9rem;">{{ (total_image_size / 1024)|int }} KB</td>
                             </tr>
                         </tbody>
                     </table>
