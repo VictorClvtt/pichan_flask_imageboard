@@ -3,9 +3,9 @@ import uuid
 from flask import request, jsonify
 from flask_smorest import Blueprint
 
-blp = Blueprint('fingerprint', __name__, description="Fingerprint API")
+blp = Blueprint('Fingerprint', __name__, description="Fingerprint API")
 
-# Simulated storage (Replace this with a database or Redis)
+# Simulated storage for fingerprints
 fingerprint_store = {}
 
 def generate_fingerprint():

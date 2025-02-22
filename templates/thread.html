@@ -51,26 +51,56 @@
             <div class="modal-dialog" data-bs-theme="dark">
                 <div class="modal-content chan-thread-modal">
                     <div class="modal-header" style="border-color: #5e5e5e;">
-                    <h1 class="modal-title bg-body-secondary border border-1 border-dark fs-5 px-1 font-monospace" id="exampleModalLabel">Reply data:</h1>
+                    <h1 class="modal-title bg-body-secondary border border-1 border-dark fs-5 px-1 font-monospace" id="exampleModalLabel">New Reply data:</h1>
                     <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form class="d-flex flex-column gap-2" action="" method="post">
-
+                        <form class="d-flex flex-column gap-2" method="POST" action="/reply" enctype="multipart/form-data" id="reply-form">
+                            
                             <div>
                                 <label class="d-flex gap-1 align-items-center fst-italic text-white m-0" style="max-width: 800px; font-size: 0.8rem; font-family: 'Courier New', Courier, monospace; white-space: nowrap;">Reply content:<hr class="border-white w-100 my-0" style="height: fit-content; margin-bottom: 1px !important;"></label>
-                                <textarea class="w-100" placeholder="Enter content" id="reply_content" required></textarea> 
+                                <textarea class="w-100" name="content" placeholder="Enter content" id="reply_content" required></textarea> 
                             </div>
-
+                               
                             <input type="hidden" name="new_reply_type" value="{{ 1 if api_key else 0 }}" id="new_reply_type" required>
-                            <input type="file" name="" accept=".jpg,.png,.gif" id="image-r" >
+                            <input type="file" name="image" accept=".jpg,.png,.gif" id="image-r">
 
-                            <input type="hidden" id="thread_or_reply_id" value="">
+                            <input type="hidden" name="image_width" id="image_width-r">
+                            <input type="hidden" name="image_height" id="image_height-r">
+                            <input type="hidden" name="image_size" id="image_size-r">
+
+                            <input type="hidden" name="thread_or_reply_id" id="thread_or_reply_id" value="">
+                            <input type="hidden" name="user_token" id="reply_user_token" value="">
+                            <input type="hidden" name="board_id" id="reply_board_id" value="{{ thread.board.id }}">
+                            <input type="hidden" name="main_thread_id" id="main_thread_id" value="">
+
+                            <div class="d-flex justify-content-between modal-footer" style="border-color: #5e5e5e;">
+                                <button type="button" class="btn btn-secondary chan-button-close w-100" style="max-width: 80px;" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary chan-button w-100" style="max-width: 150px;">Post reply</button>
+                            </div>
                         </form>
-                    </div>
-                    <div class="d-flex justify-content-between modal-footer" style="border-color: #5e5e5e;">
-                    <button type="button" class="btn btn-secondary chan-button-close w-100" style="max-width: 80px;" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary chan-button w-100" style="max-width: 150px;" onclick="postReply()">Post reply</button>
+                        <script>
+                            document.getElementById('image-r').addEventListener('change', function(event) {
+                                const fileInput = document.getElementById('image-r');
+                                const file = fileInput.files[0];
+                            
+                                if (file) {
+                                    const image = new Image();
+                            
+                                    // Create an object URL for the selected file
+                                    const objectURL = URL.createObjectURL(file);
+                                    image.onload = function() {
+                                        // Set the hidden fields with image properties
+                                        document.getElementById('image_width-r').value = image.width;
+                                        document.getElementById('image_height-r').value = image.height;
+                                        document.getElementById('image_size-r').value = file.size; // Size in bytes
+                                    };
+                            
+                                    // Set image source to the object URL to trigger loading
+                                    image.src = objectURL;
+                                }
+                            });
+                        </script>
                     </div>
                 </div>
             </div>
@@ -179,7 +209,7 @@
                                 <button onclick="submitVote(0, {{ reply.id }}, 'r')" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="top" title="<span class='vote-tooltip'>{{ reply.votes|selectattr('up_or_down', 'equalto', 0)|list|length }}</span>" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
                                     <i class="fa-solid fa-caret-down px-1" id="0r{{ reply.id }}" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
                                 </button>
-                                <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('r{{ reply.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
+                                <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('r{{ reply.id }}', '{{ thread.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
                                     <i style="font-size: 0.7rem;" class="fa-solid fa-reply"></i>
                                     <p style="font-size: 0.7rem;" class="m-0">Reply</p>   
                                 </button>
@@ -252,7 +282,7 @@
                                     <button onclick="submitVote(0, {{ thread.id }}, 't')" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="top" title="<span class='vote-tooltip'>{{ thread.votes|selectattr('up_or_down', 'equalto', 0)|list|length }}</span>" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
                                         <i class="fa-solid fa-caret-down px-1" id="0t{{ thread.id }}" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
                                     </button>
-                                    <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('t{{ thread.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
+                                    <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('t{{ thread.id }}', '{{ thread.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
                                         <i style="font-size: 0.7rem;" class="fa-solid fa-reply"></i>
                                         <p style="font-size: 0.7rem;" class="m-0">Reply</p>   
                                     </button>
@@ -310,7 +340,7 @@
                                     <button onclick="submitVote(0, {{ thread.id }}, 't')" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="top" title="<span class='vote-tooltip'>{{ thread.votes|selectattr('up_or_down', 'equalto', 0)|list|length }}</span>" class="d-flex p-0 border-0 bg-transparent text-white" style="height: fit-content;">
                                         <i class="fa-solid fa-caret-down px-1" id="0t{{ thread.id }}" style="font-size: 0.9rem; padding-bottom: 0.15rem; background-color: rgba(255, 78, 78, 0.2); border-radius: 3px; height: fit-content;"></i>
                                     </button>
-                                    <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('t{{ thread.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
+                                    <button class="d-flex gap-1 align-items-center text-white p-0 border-0 px-1" style="background-color: rgba(0, 255, 89, 0.1); border-radius: 3px;" onclick="replyModal('t{{ thread.id }}', '{{ thread.id }}')" type="button" data-bs-toggle="modal" data-bs-target="#newReply">
                                         <i style="font-size: 0.7rem;" class="fa-solid fa-reply"></i>
                                         <p style="font-size: 0.7rem;" class="m-0">Reply</p>   
                                     </button>

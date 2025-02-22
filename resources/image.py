@@ -34,6 +34,7 @@ class ImageList(MethodView):
 
 
     @blp.response(201, ImageSchema)
+    @blp.arguments(ImageSchema)
     def post(self):
         image_file = request.files.get('image')
         name = request.form.get('name')

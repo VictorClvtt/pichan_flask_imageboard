@@ -26,84 +26,6 @@ const getFingerprint = async () => {
     }
 };
 
-async function postThread() {
-    try {
-        const imageInput = document.getElementById('image-t');
-
-        if (imageInput && imageInput.files && imageInput.files.length > 0) {
-            const token = await getFingerprint();
-            console.log('User Token:', token);
-
-            const titleInput = document.getElementById('title');
-            const contentInput = document.getElementById('content');
-            const boardIdInput = document.getElementById('board_id');
-
-            const title = titleInput ? titleInput.value.trim() : '';
-            const content = contentInput ? contentInput.value.trim() : '';
-            const board_id = boardIdInput ? boardIdInput.value.trim() : '';
-
-            if (!title || !content || !board_id) {
-                console.error('Title, content, or board ID is missing.');
-                return;
-            }
-
-            // Clear input fields after extracting their values
-            if (titleInput) titleInput.value = '';
-            if (contentInput) contentInput.value = '';
-
-            const currentDateTime = new Date();
-            const year = currentDateTime.getUTCFullYear();
-            const month = String(currentDateTime.getUTCMonth() + 1).padStart(2, '0');
-            const day = String(currentDateTime.getUTCDate()).padStart(2, '0');
-            const date = `${year}-${month}-${day}`;
-
-            const hours = String(currentDateTime.getUTCHours()).padStart(2, '0');
-            const minutes = String(currentDateTime.getUTCMinutes()).padStart(2, '0');
-            const seconds = String(currentDateTime.getUTCSeconds()).padStart(2, '0');
-            const time = `${hours}:${minutes}:${seconds}`;
-
-            const type = document.getElementById('new_thread_type').value;
-
-            const postData = {
-                user_token: token,
-                title: title,
-                content: content,
-                board_id: board_id,
-                date: date,
-                time: time,
-                type: type,
-            };
-
-            console.log('Post data:', postData);
-
-            const response = await fetch(`/thread`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(postData),
-            });
-
-            if (!response.ok) {
-                throw new Error(`Server error: ${response.status}`);
-            }
-
-            // Assuming the server responds with the thread ID of the newly created thread
-            const responseData = await response.json();
-            console.log('Response from server:', responseData);
-
-            // Set the hash to the new thread ID
-            
-            const newThreadId = responseData.id; // Replace with the actual key from the server response
-            uploadImage(newThreadId, null);
-        } else {
-            console.log('No image selected.');
-        }
-    } catch (error) {
-        console.error('Error sending POST request:', error);
-    }
-}
-
 function highlightPost(id) {
     var element = document.getElementById(id.id);
     if (element) {
@@ -125,7 +47,7 @@ function highlightPost(id) {
     }
 }
 
-function highlightPostWithRedirect(postId, threadId) {
+function highlightPostWithRedirect(postId, threadId, boardId) {
     try {
         // Ensure that postId is a string, and try to find the element with the given ID
         let element = document.getElementById(postId); 
@@ -158,11 +80,11 @@ function highlightPostWithRedirect(postId, threadId) {
         const apiKey = urlParams.get('api_key');
 
         // Prepare the base URL for the redirection
-        let redirectUrl = `/thread/${threadId.slice(1)}#${postId}`;
+        let redirectUrl = `/board/${boardId}/thread/${threadId.slice(1)}#${postId}`;
 
         
         if (apiKey) {
-            redirectUrl = `/admin/thread/${threadId.slice(1)}?api_key=${apiKey}#${postId}`;
+            redirectUrl = `/admin/board/${boardId}/thread/${threadId.slice(1)}?api_key=${apiKey}#${postId}`;
         }
 
         // Redirect to the thread page with the api_key if it's set
@@ -189,8 +111,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-function replyModal(id){
+function replyModal(id, t_id){
     document.getElementById('thread_or_reply_id').value = id
+    document.getElementById('main_thread_id').value = t_id
 
     console.log(document.getElementById('thread_or_reply_id').value)
 }
@@ -282,68 +205,6 @@ async function postReply(){
         console.error('Error sending POST request:', error);
     }
 }
-
-const uploadImage = async (thread_id, reply_id) => {
-    const fileInput = document.getElementById(thread_id ? 'image-t' : 'image-r');
-    const file = fileInput.files[0];
-    const threadId = thread_id;
-    const replyId = reply_id
-
-    if(thread_id){
-        if (!file) {
-            console.error("File required");
-            return;
-        }    
-    }
-    
-
-    const fileSize = file.size;
-
-    const img = new Image();
-    img.src = URL.createObjectURL(file);
-
-    img.onload = async () => {
-        const width = img.width;
-        const height = img.height;
-
-        const formData = new FormData();
-        formData.append('image', file);
-        formData.append('name', file.name);
-        formData.append('size', fileSize);
-        formData.append('measures', `${width}x${height}`);
-        formData.append('thread_id', threadId);
-        formData.append('reply_id', replyId);
-
-        try {
-            const response = await fetch(`/image`, {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (response.ok) {
-                const responseData = await response.json();
-                console.log('Image uploaded successfully:', responseData);
-                fileInput.value = ''
-                window.location.hash = threadId ? `t${threadId}` : `r${replyId}`;
-                window.location.reload();
-            } else {
-                const errorData = await response.json();
-                console.error('Failed to upload image:', errorData.error || response.statusText);
-            }
-        } catch (error) {
-            console.error('Error uploading image:', error);
-        } finally {
-            URL.revokeObjectURL(img.src);
-        }
-    };
-
-    
-    
-
-    img.onerror = () => {
-        console.error('Error loading image to get dimensions');
-    };
-};
 
 async function submitVote(vote, target_id, target_type){
     
@@ -661,4 +522,13 @@ async function showAll(insert_id, button_id, thread_link_id, thread_token) {
 }
 
 
+async function putFingerprint() {
+    const fingerprint = await getFingerprint(); // Wait for the Promise to resolve
+    if(document.getElementById('thread_user_token')){
+        document.getElementById('thread_user_token').value = fingerprint;
+    }
+    
+    document.getElementById('reply_user_token').value = fingerprint; // Set the resolved value
+}
+putFingerprint()
 highlightVotes()

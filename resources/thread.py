@@ -1,14 +1,13 @@
 from flask import request, jsonify
 from flask.views import MethodView
-from flask import render_template
+from flask import render_template, redirect
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
 from db import db
 from models.thread import ThreadModel
-from models.board import BoardModel
-from models.board_group import BoardGroupModel
 from models.image import ImageModel
+from models.board_group import BoardGroupModel
 from marshmallow_schemas import ThreadSchema, PlainThreadSchema
 
 
@@ -23,6 +22,9 @@ def validate_api_key():
         abort(403, message="Invalid or missing API key.")
 
 
+
+from datetime import datetime, timezone
+
 @blp.route('/thread')
 class ThreadList(MethodView):
 
@@ -30,24 +32,66 @@ class ThreadList(MethodView):
     def get(self):
         return ThreadModel.query.all()
     
-    @blp.arguments(ThreadSchema)
     @blp.response(201, ThreadSchema)
-    def post(self, req_data):
+    def post(self):
+        # Get form data
+        title = request.form.get('title')
+        content = request.form.get('content')
+        thread_type = request.form.get('type', 0)  # Default to 0
+        user_token = request.form.get('user_token')
+        board_id = request.form.get('board_id')
 
-        board = BoardModel.query.get(req_data['board_id'])
-        if not board:
-            abort(400, message='Invalid board ID.')
+        # Get image file
+        image_file = request.files.get('image')
+        image_name = request.form.get('image_name')  # Image metadata
+        measures = request.form.get('image_width') + 'x' + request.form.get('image_height')
+        size = request.form.get('image_size')
 
-        new_thread = ThreadModel(**req_data)
+        # Validate inputs
+        if not title or not content or not user_token or not board_id or not image_file:
+            return jsonify({"error": {"All fields are required."}}), 400
 
-        # Inserting new Thread
+        current_datetime = datetime.now()
+
+        # Extract the current date and time
+        current_date = current_datetime.date()
+        current_time = current_time = current_datetime.replace(microsecond=0).time()
+
+        # Start transaction
         try:
-            db.session.add(new_thread)
-            db.session.commit() 
-        except SQLAlchemyError:
-            abort(500, message='An error occurred while inserting the data.')  
+            # Create new thread
+            new_thread = ThreadModel(
+                title=title,
+                content=content,
+                type=int(thread_type),
+                user_token=user_token,
+                date=current_date,
+                time=current_time,
+                board_id=board_id
+            )
 
-        return new_thread, 201
+            db.session.add(new_thread)
+            db.session.flush()  # Ensure thread ID is generated
+
+            # Create new image and link to thread
+            new_image = ImageModel(
+                name=image_name or image_file.filename,  # Default to filename
+                measures=measures,
+                size=size,
+                image=image_file.read(),
+                thread_id=new_thread.id,
+                reply_id=None
+            )
+
+            db.session.add(new_image)
+            db.session.commit()
+
+            return redirect(f'/board/{new_thread.board.id}#t{new_thread.id}')
+
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            return jsonify({"error": str(e)}), 500
+
 
 import html
 import bleach
@@ -93,7 +137,6 @@ def format_reply_content(reply):
         if hasattr(reply, 'reply_replies') and reply.reply_replies:
             for nested_reply in reply.reply_replies:
                 format_reply_content(nested_reply)
-
 
 def reply_list(thread, replies, level=0):
     # Initialize reply_list if it doesn't exist

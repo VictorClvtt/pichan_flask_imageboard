@@ -1,4 +1,4 @@
-from flask import request, jsonify, url_for
+from flask import request, jsonify, redirect
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
@@ -20,6 +20,7 @@ def validate_api_key():
     if api_key not in API_KEYS:
         abort(403, message="Invalid or missing API key.")
 
+from datetime import datetime
 
 @blp.route('/reply')
 class ReplyList(MethodView):
@@ -28,25 +29,76 @@ class ReplyList(MethodView):
     def get(self):
         return ReplyModel.query.all()
     
-    @blp.arguments(ReplySchema)
-    @blp.response(201, ReplySchema)
-    def post(self, req_data):
+    
+    def post(self):
+        thread_or_reply_id = request.form.get('thread_or_reply_id')
 
-        thread = ThreadModel.query.get(req_data['thread_id'])
-        reply = ReplyModel.query.get(req_data['reply_id'])
-        if not thread and not reply:
-            abort(400, message='Invalid thread or reply ID.')
+        if not thread_or_reply_id:
+            return jsonify({"error": "thread_or_reply_id is required."}), 400
 
-        new_reply = ReplyModel(**req_data)
+        current_datetime = datetime.now()
+        current_date = current_datetime.date()
+        current_time = current_datetime.replace(microsecond=0).time()
 
-        # Inserting new Thread
-        try:
-            db.session.add(new_reply)
-            db.session.commit() 
-        except SQLAlchemyError:
-            abort(500, message='An error occurred while inserting the data.')  
+        # Determine if it's a thread reply or a reply to another reply
+        if thread_or_reply_id[0] == 't':
+            thread = ThreadModel.query.get_or_404(thread_or_reply_id[1:])
 
-        return new_reply, 201
+            new_reply = ReplyModel(
+                content=request.form.get('content'),
+                type=int(request.form.get('new_reply_type')),  # Default to 0
+                user_token=request.form.get('user_token'),
+                date=current_date,
+                time=current_time,
+                thread_id=thread.id,
+                reply_id=None  # It's a direct reply to a thread
+            )
+        else:
+            reply = ReplyModel.query.get_or_404(thread_or_reply_id[1:])
+
+            new_reply = ReplyModel(
+                content=request.form.get('content'),
+                type=int(request.form.get('new_reply_type')),
+                user_token=request.form.get('user_token'),
+                date=current_date,
+                time=current_time,
+                thread_id=None,  # It's a reply to another reply
+                reply_id=reply.id
+            )
+
+        db.session.add(new_reply)
+        db.session.flush()  # Assigns an ID but doesn't commit yet
+
+        # Handle image upload if provided
+        image_file = request.files.get('image')
+        if image_file:
+            new_image = ImageModel(
+                name=image_file.filename,
+                measures=f"{request.form.get('image_width')}x{request.form.get('image_height')}",
+                size=request.form.get('image_size'),
+                image=image_file.read(),
+                thread_id=None,
+                reply_id=new_reply.id
+            )
+            db.session.add(new_image)
+
+        db.session.commit()  # Commit all changes at once
+
+        # Check referer to determine where to redirect
+        referer = request.headers.get('Referer')
+        board_id = request.form.get("board_id")
+        main_thread_id = request.form.get("main_thread_id")
+
+        if referer and f'/board/{board_id}/thread/' in referer:
+            # Came from /board/{}/thread/{}, so redirect to the thread page
+            return redirect(f'/board/{board_id}/thread/{main_thread_id}#r{new_reply.id}')
+        elif referer and f'/board/{board_id}' in referer:
+            # Came from /board/{}, so redirect to the board page
+            return redirect(f'/board/{board_id}#r{new_reply.id}')
+        else:
+            # Default redirect if no specific referer is found
+            return redirect(f'/board/{board_id}/thread/{main_thread_id}#r{new_reply.id}')
+
 
 @blp.route('/reply/<string:id>')
 class Reply(MethodView):

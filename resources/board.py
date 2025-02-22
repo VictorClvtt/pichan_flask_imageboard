@@ -8,6 +8,7 @@ from db import db
 from models.board_group import BoardGroupModel
 from models.board import BoardModel
 from models.thread import ThreadModel
+from models.image import ImageModel
 from models.reply import ReplyModel
 from models.vote import VoteModel
 from marshmallow_schemas import PlainBoardSchema, BoardSchema
@@ -191,3 +192,25 @@ class Board(MethodView):
         db.session.commit()
 
         return {'message': f'Board {id} deleted.'}
+
+@blp.route('/board/<string:b_id>/thread/<string:t_id>')
+class Thread(MethodView):
+
+    def get(self, b_id, t_id):
+        board_groups = BoardGroupModel.query.all()
+
+        # Get the thread that matches both board_id and thread_id
+        thread = ThreadModel.query.filter_by(id=t_id, board_id=b_id).first_or_404()
+
+        # Get the associated image
+        image = ImageModel.query.filter_by(thread_id=t_id).first()
+
+        # Format thread content
+        thread.content = format_text(thread.content)
+
+        # Format replies content recursively
+        for reply in thread.replies:
+            format_reply_content(reply)
+
+        # Return the rendered template with the formatted content
+        return render_template('thread.html', thread=thread, board_groups=board_groups, image=image)

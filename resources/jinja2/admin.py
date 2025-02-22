@@ -246,16 +246,21 @@ class Board(MethodView):
             order=order
             )
     
-@blp.route('/thread/<string:id>')
+@blp.route('/board/<string:b_id>/thread/<string:t_id>')
 class Thread(MethodView):
-    def get(self, id):
+    def get(self, b_id, t_id):
 
         validate_api_key()
 
+        # Fetch board groups
         board_groups = BoardGroupModel.query.all()
-        thread = ThreadModel.query.get_or_404(id)
+
+        # Get the thread that matches both board_id and thread_id
+        thread = ThreadModel.query.filter_by(id=t_id, board_id=b_id).first_or_404()
+
+        # Get all boards and the associated image
         boards = BoardModel.query.all()
-        image = ImageModel.query.filter_by(thread_id=id).first()
+        image = ImageModel.query.filter_by(thread_id=t_id).first()
 
         # Format thread content
         thread.content = format_text(thread.content)
@@ -264,6 +269,8 @@ class Thread(MethodView):
         for reply in thread.replies:
             format_reply_content(reply)
 
+        # Get the API key from query params
         api_key = request.args.get('api_key', '')
-        
+
+        # Return the rendered template with all the data
         return render_template('thread.html', thread=thread, boards=boards, board_groups=board_groups, image=image, api_key=api_key)
