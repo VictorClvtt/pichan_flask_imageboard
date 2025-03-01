@@ -209,7 +209,7 @@
             <div class="chan-threads-container w-100">
                 {% for board, popular_thread in popular_threads %}
                     
-                    {% if loop.index <= 4 %}
+                    {% if loop.index <= 8 %}
         
                             {% if popular_thread %}
                                 <div class="d-flex flex-column align-items-center chan-thread" style="max-width: 175px; max-height: 275px;">
@@ -260,7 +260,7 @@
                                     <td style="font-size: 0.9rem;">{{ board.total_votes }}</td>
                                     <td style="font-size: 0.9rem;">{{ board.mean_votes_per_hour | round(1) }}</td>
                                     <td style="font-size: 0.9rem;">{{ board.mean_votes_per_day | round(1) }}</td>
-                                    <td class="border-end-0" style="font-size: 0.9rem;">{{ (board.total_image_size / 1024)|int }} KB</td>
+                                    <td class="border-end-0" style="font-size: 0.9rem;">{{ ((board.total_image_size / 1024) / 1024)|round(2) }} MB</td>
                                 </tr>
                             {% endfor %}
                             <tr style="background: rgba(20, 108, 241, 0.3);">
@@ -272,7 +272,7 @@
                                 <td class="fw-bold border-bottom-0" style="font-size: 0.9rem;">{{ board_stats | map(attribute='total_votes') | sum }}</td>
                                 <td class="fw-bold border-bottom-0" style="font-size: 0.9rem;">{{ board_stats | map(attribute='mean_votes_per_hour') | sum | round(1) }}</td>
                                 <td class="fw-bold border-bottom-0" style="font-size: 0.9rem;">{{ board_stats | map(attribute='mean_votes_per_day') | sum | round(1) }}</td>
-                                <td class="fw-bold border-bottom-0 border-end-0" style="font-size: 0.9rem;">{{ (total_image_size / 1024)|int }} KB</td>
+                                <td class="fw-bold border-bottom-0 border-end-0" style="font-size: 0.9rem;">{{ ((total_image_size / 1024) / 1024)|round(2) }} MB</td>
                             </tr>
                         </tbody>
                     </table>
@@ -281,7 +281,7 @@
         </section>
 
         <section class="d-flex justify-content-center flex-wrap gap-3 mt-4 overflow-x-auto" style="border-color: transparent;" style="max-width: 800px; " id="stack">
-            <a href="https://cachyos.org/"><img src="{{ url_for('static', filename='img/badges/button_cachy.png') }}" alt="CachyOS website"></a>
+            <a href="https://archlinux.org/"><img src="{{ url_for('static', filename='img/badges/button_arch.png') }}" alt="Arch Linux website"></a>
             <a href="https://www.python.org/"><img src="{{ url_for('static', filename='img/badges/button_python.png') }}" alt="Python website"></a>
             <a href="https://flask.palletsprojects.com/en/stable/"><img src="{{ url_for('static', filename='img/badges/button_flask.png') }}" alt="Flask website"></a>
             <a href="https://www.docker.com/"><img src="{{ url_for('static', filename='img/badges/button_docker.png') }}" alt="Docker website"></a>
