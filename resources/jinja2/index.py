@@ -49,8 +49,6 @@ def home():
         for image in images
     ]
 
-    total_image_size = sum(image["size"] for image in images)
-
     board_stats = []
     for board in boards:
         # Total threads and replies
@@ -153,7 +151,6 @@ def home():
         replies=replies,
         boards=boards,
         images=images,
-        total_image_size=total_image_size,
         popular_threads=popular_threads,
         board_stats=board_stats
     )

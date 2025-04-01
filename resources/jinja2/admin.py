@@ -64,8 +64,6 @@ def home():
         for image in images
     ]
 
-    total_image_size = sum(image["size"] for image in images)
-
     api_key = request.args.get('api_key', '')
 
     board_stats = []
@@ -161,7 +159,7 @@ def home():
         })
 
     # Render the template and pass the board_groups data
-    return render_template('index.html', board_groups=board_groups, total_image_size=total_image_size, threads=threads, replies=replies, boards=boards, images=images, board_stats=board_stats, popular_threads=popular_threads, api_key=api_key)
+    return render_template('index.html', board_groups=board_groups, threads=threads, replies=replies, boards=boards, images=images, board_stats=board_stats, popular_threads=popular_threads, api_key=api_key)
 
 import html
 import bleach

@@ -289,8 +289,11 @@ async function showAll(insert_id, button_id, thread_link_id, thread_token) {
         document.getElementById(button_id).parentElement.getElementsByTagName('span')[0].style.opacity = '75%'
         document.getElementById(button_id).parentElement.getElementsByTagName('span')[0].style.marginLeft = '0px'
 
-        console.log(insert_id.slice(1, 3))
-        const replyList = await fetch(`/replies/${insert_id.slice(1, 3)}`)
+        const match = insert_id.match(/^t(\d+)-all$/);
+        const id = match ? match[1] : null;
+
+        console.log(id)
+        const replyList = await fetch(`/replies/${id}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -301,7 +304,7 @@ async function showAll(insert_id, button_id, thread_link_id, thread_token) {
             console.error('Error fetching data:', error);
         });
 
-        const threadData = await fetch(`/thread_data/${insert_id.slice(1, 3)}`)
+        const threadData = await fetch(`/thread_data/${id}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -321,8 +324,12 @@ async function showAll(insert_id, button_id, thread_link_id, thread_token) {
             if (reply) {
                 console.log(reply.id, reply.content); // Log the ID and content of each reply to ensure they're loaded
         
+
+                const justifyBtn = document.getElementById(`t${ id }-justify`);
+                const justifyBtnbars = justifyBtn.querySelectorAll("div");
+                
                 document.getElementById(insert_id).innerHTML += `
-                    <div id="r${reply.id}" class="chan-${reply.type === 1 ? 'admin-' : ''}thread-info d-flex flex-column" style="min-width: 350px; width: fit-content; margin-left: ${reply.level * 14}px;">
+                    <div id="r${reply.id}" class="chan-${reply.type === 1 ? 'admin-' : ''}thread-info d-flex flex-column ${justifyBtnbars[2].style.left === "35%" ? 'm-0' : ''}" style="min-width: 350px; width: fit-content; margin-left: ${reply.level * 14}px;">
                         <div class="d-flex justify-content-start align-content-start gap-1">
                             <div class="d-flex gap-1 align-items-center justify-content-start m-0 text-ellipsis" style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.700);">
                                 <span class="m-0 fw-bold" style="font-size: 0.7rem; ${reply.type === 0 ? 'color: rgba(255, 255, 255, 0.700);' : 'color: rgba(0, 255, 136);'}">
@@ -417,7 +424,8 @@ async function showAll(insert_id, button_id, thread_link_id, thread_token) {
             }
         }
         
-        highlightVotes()   
+        highlightVotes()
+        
         
         
     } else {
@@ -428,7 +436,64 @@ async function showAll(insert_id, button_id, thread_link_id, thread_token) {
         document.getElementById(button_id).parentElement.getElementsByTagName('span')[0].style.opacity = '0%'
         document.getElementById(button_id).parentElement.getElementsByTagName('span')[0].style.marginLeft = '20px'
     }
+
+    
+
 }
+
+function justifyLeft(buttonId, threadId) {
+    const button = document.getElementById(buttonId);
+    if (!button) return;
+
+    const bars = button.querySelectorAll("div");
+    if (bars.length < 3) return; // Ensure there are at least 3 bars
+
+    // Find the container element with id `t${threadId}-all`
+    const containerElement = document.getElementById(`t${threadId}-all`);
+    if (!containerElement) return;
+
+    // Get the closest parent container
+    const parentContainer = containerElement.closest("div");
+    if (!parentContainer) return;
+
+    // Toggle behavior
+    if (bars[2].style.left === "35%") {
+        // Reset to original positions
+        bars.forEach((bar, index) => {
+            bar.style.left = `${35 + index * 15}%`; 
+        });
+
+        // Remove Bootstrap margin class (`m-0`) from all child elements of the parent container and the `t{threadId}-all` container
+        parentContainer.querySelectorAll("div").forEach((child) => {
+            child.classList.remove("m-0");
+        });
+
+        containerElement.querySelectorAll("div").forEach((child) => {
+            child.classList.remove("m-0");
+        });
+
+        document.getElementById(`t${threadId}-link`).classList.remove("m-0")
+
+    } else {
+        // Move all bars to the left
+        bars.forEach((bar) => {
+            bar.style.left = "35%";
+        });
+
+        // Add Bootstrap margin class (`m-0`) to all child elements of the parent container and the `t{threadId}-all` container
+        parentContainer.querySelectorAll("div").forEach((child) => {
+            child.classList.add("m-0");
+        });
+
+        containerElement.querySelectorAll("div").forEach((child) => {
+            child.classList.add("m-0");
+        });
+
+        document.getElementById(`t${threadId}-link`).classList.add("m-0")
+    }
+}
+
+
 
 async function putFingerprint() {
     const fingerprint = await getFingerprint(); // Wait for the Promise to resolve

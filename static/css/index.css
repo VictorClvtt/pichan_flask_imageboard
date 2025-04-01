@@ -40,9 +40,10 @@
 }
 
 .chan-boards-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between; /* Aligns incomplete rows to the left */
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    display: grid;
+    gap: 10px;
+    justify-content: space-around; /* Aligns incomplete rows to the left */
     margin: 0 auto;
     max-width: 800px; /* Adjust as needed */
 }

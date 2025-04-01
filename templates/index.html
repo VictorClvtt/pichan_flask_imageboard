@@ -272,7 +272,9 @@
                                 <td class="fw-bold border-bottom-0" style="font-size: 0.9rem;">{{ board_stats | map(attribute='total_votes') | sum }}</td>
                                 <td class="fw-bold border-bottom-0" style="font-size: 0.9rem;">{{ board_stats | map(attribute='mean_votes_per_hour') | sum | round(1) }}</td>
                                 <td class="fw-bold border-bottom-0" style="font-size: 0.9rem;">{{ board_stats | map(attribute='mean_votes_per_day') | sum | round(1) }}</td>
-                                <td class="fw-bold border-bottom-0 border-end-0" style="font-size: 0.9rem;">{{ ((total_image_size / 1024) / 1024)|round(2) }} MB</td>
+                                <td class="fw-bold border-bottom-0 border-end-0" style="font-size: 0.9rem;">
+                                    {{ (board_stats | map(attribute='total_image_size') | sum / 1024 / 1024) | round(2) }} MB
+                                </td>
                             </tr>
                         </tbody>
                     </table>
