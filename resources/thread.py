@@ -37,7 +37,7 @@ class ThreadList(MethodView):
         # Get form data
         title = request.form.get('title')
         content = request.form.get('content')
-        thread_type = request.form.get('type', 0)  # Default to 0
+        thread_type = request.form.get('new_thread_type')
         user_token = request.form.get('user_token')
         board_id = request.form.get('board_id')
 
@@ -86,7 +86,13 @@ class ThreadList(MethodView):
             db.session.add(new_image)
             db.session.commit()
 
-            return redirect(f'/board/{new_thread.board.id}#t{new_thread.id}')
+
+            if int(thread_type) == 0:
+                return redirect(f'/board/{new_thread.board.id}#t{new_thread.id}')
+            elif int(thread_type) == 1:
+                api_key = request.args.get('api_key')
+                page = request.args.get('page')
+                return redirect(f'/admin/board/{new_thread.board.id}?page={page}&api_key={api_key}#t{new_thread.id}')
 
         except SQLAlchemyError as e:
             db.session.rollback()

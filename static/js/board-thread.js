@@ -457,11 +457,11 @@ function justifyLeft(buttonId, threadId) {
     if (!parentContainer) return;
 
     // Toggle behavior
-    if (bars[2].style.left === "35%") {
+    if (bars[2].style.left === "2px") {
         // Reset to original positions
-        bars.forEach((bar, index) => {
-            bar.style.left = `${35 + index * 15}%`; 
-        });
+        bars[0].style.left = '2px';
+        bars[1].style.left = '4px';
+        bars[2].style.left = '6px';
 
         // Remove Bootstrap margin class (`m-0`) from all child elements of the parent container and the `t{threadId}-all` container
         parentContainer.querySelectorAll("div").forEach((child) => {
@@ -477,7 +477,7 @@ function justifyLeft(buttonId, threadId) {
     } else {
         // Move all bars to the left
         bars.forEach((bar) => {
-            bar.style.left = "35%";
+            bar.style.left = "2px";
         });
 
         // Add Bootstrap margin class (`m-0`) to all child elements of the parent container and the `t{threadId}-all` container
@@ -493,6 +493,60 @@ function justifyLeft(buttonId, threadId) {
     }
 }
 
+function justifyLeftThread(buttonId) {
+    const button = document.getElementById(buttonId);
+    if (!button) return;
+
+    const bars = button.querySelectorAll("div");
+    if (bars.length < 3) return; // Ensure there are at least 3 bars
+
+    // Extract the thread ID from the button ID (assuming button ID is like "btn-123")
+    const threadId = buttonId.match(/\d+/)?.[0]; 
+    if (!threadId) return;
+
+    // Find the thread container element with id `t{threadId}`
+    const threadContainer = document.getElementById(`t${threadId}`);
+    if (!threadContainer) return;
+
+    // Select all elements whose ID starts with "r" followed by a number
+    const rElements = Array.from(document.querySelectorAll('[id^="r"]'))
+        .filter(el => /^r\d+$/.test(el.id));
+
+    // Toggle behavior
+    if (bars[2].style.left === "2px") {
+        // Reset to original positions
+        bars[0].style.left = '2px';
+        bars[1].style.left = '4px';
+        bars[2].style.left = '6px';
+
+        // Remove `m-0` from thread container children
+        threadContainer.querySelectorAll("div").forEach(child => {
+            child.classList.remove("custom-ml");
+        });
+
+        // Remove `m-0` from elements with id matching "r" followed by a number
+        rElements.forEach(el => el.classList.remove("custom-ml"));
+
+    } else {
+        // Move all bars to the left
+        bars.forEach(bar => {
+            bar.style.left = "2px";
+        });
+
+        
+
+        // Add `m-0` to elements with id matching "r" followed by a number
+        rElements.forEach(el => el.classList.add("custom-ml"));
+    }
+}
+
+
+const rElements = Array.from(document.querySelectorAll('[id^="r"]'))
+        .filter(el => /^r\d+$/.test(el.id));
+
+if(rElements.length > 1){
+    document.getElementById('justify-button').classList.remove('d-none')
+}
 
 
 async function putFingerprint() {
