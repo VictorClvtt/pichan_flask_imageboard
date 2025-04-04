@@ -34,6 +34,10 @@ class ThreadList(MethodView):
     
     @blp.response(201, ThreadSchema)
     def post(self):
+
+        print("Form Data:", request.form)
+        print("Files:", request.files)
+
         # Get form data
         title = request.form.get('title')
         content = request.form.get('content')

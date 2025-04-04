@@ -94,28 +94,7 @@
                             </div>
                         </form>
                         
-                        <script>
-                            document.getElementById('image-t').addEventListener('change', function(event) {
-                                const fileInput = document.getElementById('image-t');
-                                const file = fileInput.files[0];
-                            
-                                if (file) {
-                                    const image = new Image();
-                            
-                                    // Create an object URL for the selected file
-                                    const objectURL = URL.createObjectURL(file);
-                                    image.onload = function() {
-                                        // Set the hidden fields with image properties
-                                        document.getElementById('image_width-t').value = image.width;
-                                        document.getElementById('image_height-t').value = image.height;
-                                        document.getElementById('image_size-t').value = file.size; // Size in bytes
-                                    };
-                            
-                                    // Set image source to the object URL to trigger loading
-                                    image.src = objectURL;
-                                }
-                            });
-                        </script>
+                        
                         
                     </div>
                     
@@ -942,7 +921,42 @@
                 });
             });
         });
-    </script>  
+    </script>
+    <script>
+        document.getElementById('image-t').addEventListener('change', function(event) {
+            const fileInput = document.getElementById('image-t');
+            const file = fileInput.files[0];
+        
+            if (file) {
+                const image = new Image();
+        
+                // Create an object URL for the selected file
+                const objectURL = URL.createObjectURL(file);
+                image.onload = function() {
+                    // Set the hidden fields with image properties
+                    document.getElementById('image_width-t').value = image.width;
+                    document.getElementById('image_height-t').value = image.height;
+                    document.getElementById('image_size-t').value = file.size; // Size in bytes
+                };
+        
+                // Set image source to the object URL to trigger loading
+                image.src = objectURL;
+            }
+        });
+        
+        async function putFingerprint() {
+            const fingerprint = await getFingerprint(); // Wait for the Promise to resolve
+            if(document.getElementById('thread_user_token')){
+                document.getElementById('thread_user_token').value = fingerprint;
+            }
+            
+            document.getElementById('reply_user_token').value = fingerprint; // Set the resolved value
+        }
+        
+        document.addEventListener("DOMContentLoaded", async () => {
+            await putFingerprint();
+        });
+    </script>
     
     {% if api_key %}
         <script>

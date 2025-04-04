@@ -557,5 +557,9 @@ async function putFingerprint() {
     
     document.getElementById('reply_user_token').value = fingerprint; // Set the resolved value
 }
-putFingerprint()
+
+document.addEventListener("DOMContentLoaded", async () => {
+    await putFingerprint();
+});
+
 highlightVotes()
