@@ -222,13 +222,13 @@ function maxOrMin(id, post_type){
             element.getElementsByTagName('div')[0].style.maxHeight = 'unset'
         }    
     }else{
-        if(element.style.width == '30%'){
+        if(element.style.width == '8.5rem'){
             element.style.width = 'unset'
             
             element.getElementsByTagName('img')[0].style.maxHeight = 'unset'
             element.getElementsByTagName('img')[0].style.height = 'unset'
         }else{
-            element.style.width = '30%'
+            element.style.width = '8.5rem'
             
             element.getElementsByTagName('img')[0].style.maxHeight = '400px'
             element.getElementsByTagName('img')[0].style.height = 'auto'
@@ -549,17 +549,6 @@ if(rElements.length > 1){
 }
 
 
-async function putFingerprint() {
-    const fingerprint = await getFingerprint(); // Wait for the Promise to resolve
-    if(document.getElementById('thread_user_token')){
-        document.getElementById('thread_user_token').value = fingerprint;
-    }
-    
-    document.getElementById('reply_user_token').value = fingerprint; // Set the resolved value
-}
 
-document.addEventListener("DOMContentLoaded", async () => {
-    await putFingerprint();
-});
 
 highlightVotes()

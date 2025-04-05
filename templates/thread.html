@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/board-thread.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
-    <title>πchan - /{{ thread.board.id }}</title>
+    <title>πchan - /{{ thread.board.id }} - Thread No.{{ thread.id }}</title>
 </head>
 <body class="chan-bg vh-100 overflow-x-hidden d-flex flex-column align-items-center">
     <nav class="chan-nav d-flex w-100 border-bottom" style="height: fit-content; padding: 0.3rem 0.25rem;">
@@ -181,7 +181,7 @@
 
                         <p class="chan-text-content" style="min-height: {{'1.5rem' if reply.image else '2.5rem'}};">{{ reply.content|safe }}</p>
                         {% if reply.image %}
-                            <div class="d-flex flex-column justify-content-center" style="width: 30%;" id="img-div-r{{ reply.id }}">
+                            <div class="d-flex flex-column justify-content-center" style="width: 8.5rem;" id="img-div-r{{ reply.id }}">
                                 <img class="rounded-1" style="width: 100%; height: auto; max-height: 400px;" src="{{ url_for('Images.Image', id=reply.image.id) }}" onclick="maxOrMin({{ reply.id }}, 'r')">
                                 <div class="d-flex gap-1">
                                     <p style="font-size: 0.7rem; color: #696969;" class="m-0">File: </p>
@@ -293,7 +293,9 @@
                                 </div>
                             </div>
                         </div>
-                        <hr class="border-white my-1 mx-3" style="border-style: dotted; border-width: 1px 0 0 0;">
+                        {% if thread.replies.count() > 0 %}
+                            <hr class="border-white my-1 mx-3" style="border-style: dotted; border-width: 1px 0 0 0;">
+                        {% endif %}
                         {{ render_replies(thread.replies, 2, thread) }}    
                     </div>   
                      
@@ -380,8 +382,9 @@
                             </div>  
                               
                         </div>
-                         
-                        
+                        {% if thread.replies.count() > 0 %}
+                            <hr class="border-white my-1 mx-3" style="border-style: dotted; border-width: 1px 0 0 0;">
+                        {% endif %}
                         {{ render_replies(thread.replies, 2, thread) }}    
                     </div>    
                 </div>
