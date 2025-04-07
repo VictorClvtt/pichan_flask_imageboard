@@ -179,7 +179,7 @@
                             {% endif %}
                         </div>
 
-                        <p class="chan-text-content" style="min-height: {{'1.5rem' if reply.image else '2.5rem'}};">{{ reply.content|safe }}</p>
+                        <p class="chan-text-content" style="min-height: {{'1.5rem' if reply.image else '2.5rem'}}; padding-bottom: 0.6rem !important;">{{ reply.content|safe }}</p>
                         {% if reply.image %}
                             <div class="d-flex flex-column justify-content-center" style="width: 8.5rem;" id="img-div-r{{ reply.id }}">
                                 <img class="rounded-1" style="width: 100%; height: auto; max-height: 400px;" src="{{ url_for('Images.Image', id=reply.image.id) }}" onclick="maxOrMin({{ reply.id }}, 'r')">
