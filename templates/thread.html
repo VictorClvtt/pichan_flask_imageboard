@@ -72,7 +72,7 @@
                             <input type="hidden" name="thread_or_reply_id" id="thread_or_reply_id" value="">
                             <input type="hidden" name="user_token" id="reply_user_token" value="">
 
-                            <div class="d-flex justify-content-between modal-footer" style="border-color: #5e5e5e;">
+                            <div class="d-flex justify-content-between border-1 border-top" style="border-color: #5e5e5e; padding-top: 1rem; margin-top: 0.5rem;">
                                 <button type="button" class="btn btn-secondary chan-button-close w-100" style="max-width: 80px;" data-bs-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-primary chan-button w-100" style="max-width: 150px;">Post reply</button>
                             </div>
@@ -453,7 +453,41 @@
                 });
             });
         });
-    </script> 
+    </script>
+    <script>
+        document.getElementById('image-t').addEventListener('change', function(event) {
+            const fileInput = document.getElementById('image-t');
+            const file = fileInput.files[0];
+        
+            if (file) {
+                const image = new Image();
+        
+                // Create an object URL for the selected file
+                const objectURL = URL.createObjectURL(file);
+                image.onload = function() {
+                    // Set the hidden fields with image properties
+                    document.getElementById('image_width-t').value = image.width;
+                    document.getElementById('image_height-t').value = image.height;
+                    document.getElementById('image_size-t').value = file.size; // Size in bytes
+                };
+        
+                // Set image source to the object URL to trigger loading
+                image.src = objectURL;
+            }
+        });  
+    </script>
+    <script>
+        async function putFingerprint() {
+            const fingerprint = await getFingerprint(); // Wait for the Promise to resolve
+            
+            
+            document.getElementById('reply_user_token').value = fingerprint; // Set the resolved value
+        }
+        
+        document.addEventListener("DOMContentLoaded", async () => {
+            await putFingerprint();
+        });
+    </script>
     {% if api_key %}
         <script>
             async function deletePost(id, post_type){
