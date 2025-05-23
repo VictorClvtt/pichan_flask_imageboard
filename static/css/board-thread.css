@@ -165,6 +165,7 @@ a.chan-thread-title{
     border-radius: 2px;
     height: fit-content;
     padding: 10px 15px;
+    max-width: 75vw !important;
 }
 
 .chan-admin-thread-info {
@@ -219,6 +220,8 @@ a.chan-thread-title{
     margin: 0;
     padding: 0.2rem 0;
     line-height: 1.05rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .text-ellipsis {
