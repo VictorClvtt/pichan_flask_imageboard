@@ -192,12 +192,14 @@ a.chan-thread-title{
     color: var(--bs-body-color);
     background-color: var(--bs-thread-title-bg);
     padding: 0px 5px;
-    min-width: fit-content;
     font-size: 1.025rem;
-    display: flex;
+    display: block;
+    justify-content: center;
     align-items: center;
+    align-content: center;
     border-radius: 3px;
     border: 1px var(--bs-thread-title-border) solid;
+
 }
 
 .chan-thread-title:hover {

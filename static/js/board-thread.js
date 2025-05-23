@@ -280,7 +280,7 @@ async function showAll(insert_id, button_id, thread_link_id, thread_token) {
     
     let div = document.getElementById(button_id).getElementsByTagName('div')[0];
 
-    if (div.style.display === 'flex') { // Use comparison instead of assignment
+    if (div.style.display === 'flex') {
         div.style.display = 'none';
         document.getElementById(thread_link_id).style.display = 'none';
         document.getElementById(insert_id).style.display = 'flex';
@@ -425,7 +425,19 @@ async function showAll(insert_id, button_id, thread_link_id, thread_token) {
         }
         
         highlightVotes()
+
+        const buttonId = insert_id.split("-")[0] + '-justify'
+
+        const button = document.getElementById(buttonId);
+        if (!button) return;
         
+        const bars = button.querySelectorAll("div");
+        if (bars.length < 3) return
+
+        if (bars[2].style.left === "2px"){
+            document.getElementById(buttonId).click()
+            document.getElementById(buttonId).click()
+        }
         
         
     } else {
