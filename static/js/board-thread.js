@@ -541,14 +541,17 @@ function justifyLeftThread(buttonId) {
 }
 
 
-const rElements = Array.from(document.querySelectorAll('[id^="r"]'))
+document.addEventListener('DOMContentLoaded', () => {
+    const rElements = Array.from(document.querySelectorAll('[id^="r"]'))
         .filter(el => /^r\d+$/.test(el.id));
 
-if(rElements.length > 1){
-    document.getElementById('justify-button').classList.remove('d-none')
-}
-
-
-
+    if (rElements.length > 1) {
+        const button = document.getElementById('justify-button');
+        
+        if (button) {
+            button.classList.remove('d-none');
+        }
+    }
+});
 
 highlightVotes()

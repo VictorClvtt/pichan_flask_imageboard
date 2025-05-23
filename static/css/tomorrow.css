@@ -139,7 +139,7 @@ a.chan-thread-title{
     color: var(--bs-body-color);
     background-color: var(--bs-thread-title-bg);
     padding: 0px 5px;
-    font-size: 1.135rem;
+    font-size: 1.025rem;
     display: flex;
     align-items: center;
     border-radius: 3px;

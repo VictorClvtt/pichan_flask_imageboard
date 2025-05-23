@@ -119,6 +119,21 @@ button i{
     background-color: var(--bs-nav-bg);
 }
 
+#thread-form > div:nth-child(2) > label{
+    color: var(--bs-bg-gradient-end) !important;
+}
+
+#thread-form > div:nth-child(1) > label{
+    color: var(--bs-bg-gradient-end) !important;
+}
+
+body > nav:nth-child(3) > ul > li:nth-child(2) > a{
+    color: var(--bs-primary) !important;
+}
+
+#justify-button button > div {
+    background-color: var(--bs-primary) !important;
+}  
 
 /* Custom Theme Styles */
 .chan-button {
@@ -213,7 +228,7 @@ button i{
     color: var(--bs-body-color);
     background-color: var(--bs-thread-title-bg);
     padding: 0px 5px;
-    font-size: 1.135rem;
+    font-size: 1.025rem;
     display: flex;
     align-items: center;
     border-radius: 3px;

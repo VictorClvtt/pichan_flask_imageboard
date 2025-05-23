@@ -1,7 +1,7 @@
 /* Redefine Bootstrap Variables */
 :root {
     --bs-nav-bg: #27272a; /* Navigation background */
-    --bs-bg-gradient-start: rgb(28, 44, 37); /* Start of gradient */
+    --bs-bg-gradient-start: rgb(19, 32, 26); /* Start of gradient */
     --bs-bg-gradient-end: rgb(21, 26, 24); /* End of gradient */
     --bs-label-gradient-start: #1827209c; /* Start of gradient */
     --bs-label-gradient-end: rgba(0, 0, 0, 0); /* End of gradient */
