@@ -39,7 +39,7 @@
 }
 
 .tooltip .tooltip-inner {
-    max-width: none !important; /* Allow tooltip to expand dynamically */
+    max-width: 500px !important; /* Allow tooltip to expand dynamically */
     white-space: nowrap; /* Prevent text from breaking into new lines */
     color: #fff; /* Optional: Customize tooltip text color */
     padding: 4px 10px;
@@ -48,6 +48,13 @@
 
 .tooltip .tooltip-inner span {
     font-size: 0.7rem;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;  /* Change the number for more/fewer lines */
+    -webkit-box-orient: vertical;
+    text-align: center;
 }
 
 .tooltip .tooltip-inner .vote-tooltip {
@@ -152,7 +159,6 @@ a.chan-thread-title{
 .chan-thread-info {
     color: var(--bs-body-color);
     background-color: var(--bs-green-accent);
-    min-width: fit-content !important;
     border-style: solid;
     border-width: 1px;
     border-color: var(--bs-info);
@@ -164,7 +170,6 @@ a.chan-thread-title{
 .chan-admin-thread-info {
     color: var(--bs-body-color);
     background-color: var(--bs-green-muted);
-    min-width: fit-content !important;
     border-style: solid;
     border-width: 1px;
     border-color: var(--bs-green-muted-border);

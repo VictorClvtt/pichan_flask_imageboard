@@ -329,7 +329,7 @@
                         <div class="d-flex flex-column gap-2 w-100">
                             
                             <div class="d-flex gap-1 align-items-end">
-                                <div id="t{{ thread.id }}" class="chan-admin-thread-info border-white" style="min-width: 350px; width: fit-content;">
+                                <div id="t{{ thread.id }}" class="chan-admin-thread-info border-white" style="width: fit-content;">
                                     <div class="d-flex gap-2">
                                         <a class="chan-thread-title ants-link text-ellipsis m-0 text-decoration-none fst-italic" href="{{ url_for('Admin.Thread' if api_key else 'Boards.Thread', t_id=thread.id, b_id=board.id, **({'api_key': api_key} if api_key else {})) }}" style="font-weight: 500;">{{ thread.title }}</a>
                                         <div class="d-flex flex-column justify-content-around">
@@ -462,7 +462,7 @@
                                 {% endif %}
                                 <div class="d-flex flex-column gap-2 w-100">
                                     <div class="d-flex gap-1 align-items-end">
-                                        <div id="t{{ thread.id }}" class="chan-thread-info border-info-subtle" style="min-width: 350px; width: fit-content;">
+                                        <div id="t{{ thread.id }}" class="chan-thread-info border-info-subtle" style="width: fit-content;">
                                             <div class="d-flex gap-2">
                                                 <a class="chan-thread-title ants-link text-ellipsis m-0 text-decoration-none fst-italic" href="{{ url_for('Admin.Thread' if api_key else 'Boards.Thread', t_id=thread.id, b_id=board.id, **({'api_key': api_key} if api_key else {})) }}" style="font-weight: 500;">{{ thread.title }}</a>
                                                 <div class="d-flex flex-column justify-content-around">
@@ -593,7 +593,7 @@
                                 {% endif %}
                                 <div class="d-flex flex-column gap-2 w-100">
                                     <div class="d-flex gap-1 align-items-end">
-                                        <div id="t{{ thread.id }}" class="chan-thread-info" style="min-width: 350px; width: fit-content;">
+                                        <div id="t{{ thread.id }}" class="chan-thread-info" style="width: fit-content;">
                                             <div class="d-flex gap-2">
                                                 <a class="chan-thread-title ants-link text-ellipsis m-0 text-decoration-none fst-italic" href="{{ url_for('Admin.Thread' if api_key else 'Boards.Thread', t_id=thread.id, b_id=board.id, **({'api_key': api_key} if api_key else {})) }}" style="font-weight: 500;">{{ thread.title }}</a>
                                                 <div class="d-flex flex-column justify-content-around">
@@ -715,7 +715,7 @@
                                 <div class="d-flex flex-column gap-2 w-100">
                                     
                                     <div class="d-flex gap-1 align-items-end">
-                                        <div id="t{{ thread.id }}" class="chan-thread-info" style="min-width: 350px; width: fit-content;">
+                                        <div id="t{{ thread.id }}" class="chan-thread-info" style="width: fit-content;">
                                             <div class="d-flex gap-2">
                                                 <a class="chan-thread-title ants-link text-ellipsis m-0 text-decoration-none fst-italic" href="{{ url_for('Admin.Thread' if api_key else 'Boards.Thread', t_id=thread.id, b_id=board.id, **({'api_key': api_key} if api_key else {})) }}" style="font-weight: 500;">{{ thread.title }}</a>
                                                 <div class="d-flex flex-column justify-content-around">
